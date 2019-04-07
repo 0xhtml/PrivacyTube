@@ -1,20 +1,13 @@
 <main>
-    <div class="flex">
-        <div class="full three-fourth-800">
-            <video src="dl/{{videoID}}.mp4" class="full" controls autoplay></video>
-            <h1>{{videoTitle}}</h1>
-            <div class="flex">
-                <p style="margin: 0">{{videoViews}} Views</p>
-                <p style="margin: 0; text-align: right">{{videoLikes}} Likes {{videoDislikes}} Dislikes</p>
-            </div>
-            <hr>
-            <p>
-                {{videoChannelName}}<br>
-                Uploaded on {{videoDate}}
-            </p>
-        </div>
-        <div class="full fourth-800">
-            <h2>Abos</h2>
-        </div>
+    <video src="dl/{{videoID}}.mp4" style="width: 100%" controls autoplay></video>
+    <h1>{{videoTitle}}</h1>
+    <div>
+        <p style="margin: 0">{{videoViews}} Views</p>
+        <p style="margin: 0; text-align: right">{{videoLikes}} Likes {{videoDislikes}} Dislikes</p>
     </div>
+    <hr>
+    <p>
+        {{videoChannelName}}<br>
+        Uploaded on {{videoDate}}
+    </p>
 </main>
