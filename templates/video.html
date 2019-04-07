@@ -1,0 +1,22 @@
+<main>
+    <div class="flex">
+        <div class="full three-fourth-800">
+            <video src="dl/{{videoID}}.mp4" class="full" controls autoplay></video>
+            <h1>{{videoTitle}}</h1>
+            <div class="flex">
+                <p style="margin: 0">{{videoViews}} Views</p>
+                <p style="margin: 0; text-align: right">{{videoLikes}} Likes {{videoDislikes}} Dislikes</p>
+            </div>
+            <div class="flex" style="border-top: 1px solid #666; border-bottom: 1px solid #666">
+                <p>
+                    {{videoChannelName}}<br>
+                    Uploaded on {{videoDate}}
+                </p>
+            </div>
+            <p>{{videoDescription}}</p>
+        </div>
+        <div class="full fourth-800">
+            <h2>Recommended</h2>
+        </div>
+    </div>
+</main>
