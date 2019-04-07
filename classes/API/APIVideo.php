@@ -11,10 +11,6 @@ class APIVideo {
             $this->error = true;
             return;
         }
-        if (!file_exists("dl/" . $this->get_id() . ".mp4")) {
-            set_time_limit(0);
-            exec("youtube-dl --format mp4 -o \"dl/" . $this->get_id() . ".mp4\" \"" . $this->get_id() . "\"");
-        }
     }
 
     public function get_id() {
