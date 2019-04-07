@@ -1,0 +1,24 @@
+header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    font-size: 1.4em;
+}
+
+header > a {
+    color: black;
+}
+
+header > label, button, input[type="submit"] {
+    cursor: pointer;
+    border-radius: .2em;
+    padding: .3em .9em;
+    margin: .3em 0;
+    background-color: transparent;
+    transition: background-color .3s;
+}
+
+header > label:hover, button:hover, input[type="submit"]:hover {
+    background-color: rgba(17,17,17,0.1);
+}
