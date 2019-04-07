@@ -2,7 +2,12 @@ header {
     position: fixed;
     top: 0;
     right: 0;
-    width: 100%;
+    left: 0;
+    height: 3em;
+    padding: 0 .6em;
+    background-color: white;
+    z-index: 100;
+    box-shadow: 0 0 0 .2em rgba(17,17,17,.2);
     font-size: 1.4em;
 }
 
@@ -21,5 +26,5 @@ header > label, button, input[type="submit"] {
 }
 
 header > label:hover, button:hover, input[type="submit"]:hover {
-    background-color: rgba(17,17,17,0.1);
+    background-color: rgba(17,17,17,.1);
 }
