@@ -1,29 +1,124 @@
+body {
+    margin: 0;
+    padding: 3.5em .5em .5em 11.5em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
 header {
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
     height: 3em;
-    padding: 0 .6em;
+    padding: 0 .7em;
     background-color: white;
-    z-index: 100;
+    z-index: 200;
     box-shadow: 0 0 .2em rgba(17,17,17,.2);
 }
 
 header > a {
     color: black;
-}
-
-header > label, button, input[type="submit"] {
-    cursor: pointer;
-    border-radius: .2em;
-    padding: .3em .9em;
-    margin: .3em 0;
-    background-color: transparent;
-    transition: background-color .3s;
+    font-size: 1.4em;
+    text-decoration: none;
+    padding: .5em 0;
     display: inline-block;
 }
 
-header > label:hover, button:hover, input[type="submit"]:hover {
+nav {
+    position: fixed;
+    left: 0;
+    top: 3em;
+    height: calc(100vh - 3em);
+    padding: 0;
+    background-color: white;
+    box-shadow: 0 0 .2em rgba(17,17,17,.2);
+    z-index: 100;
+    width: 11em;
+}
+
+nav > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav > ul > li > a {
+    padding: .5em;
+    display: inline-block;
+    color: black;
+    text-decoration: none;
+    font-size: 1.2em;
+    width: calc(100% - 1em);
+    transition: background-color .3s;
+}
+
+nav > ul > li > a:hover {
     background-color: rgba(17,17,17,.1);
+}
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+main > section {
+    padding: 0 .5em;
+}
+
+#video > video {
+    width: 100%;
+}
+
+#recommendations {
+    width: calc(100% / 4 - 1em);
+}
+
+#videoInfo {
+    width: calc(100% / 4 * 3 - 1em);
+}
+
+#videoTitle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+#videoTitle > div > * {
+    margin-bottom: 0;
+}
+
+#videoStatistics {
+    display: flex;
+    align-items: center;
+}
+
+#videoChannelImage {
+    height: 5em;
+}
+
+#videoChannelImage > img {
+    height: 5em;
+    width: 5em;
+}
+
+#videoChannelTitle {
+    padding: 0 .5em;
+    margin-right: auto;
+}
+
+@media all and (max-width: 1100px) {
+    nav {
+        display: none;
+    }
+    body {
+        padding: 3.5em .5em .5em .5em;
+    }
+}
+
+@media all and (max-width: 950px) {
+    #recommendations, #videoInfo {
+        width: calc(100% - 1em);
+    }
 }

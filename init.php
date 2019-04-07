@@ -2,6 +2,7 @@
 require_once "classes/Template.php";
 
 require_once "classes/API/API.php";
+require_once "classes/API/APIChannel.php";
 require_once "classes/API/APIVideo.php";
 
 $key_file = fopen("../key.txt", "r");

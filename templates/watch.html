@@ -1,15 +1,32 @@
 <main>
     <section id="video">
-        <video src="dl/{{videoID}}.mp4" style="width: 100%" controls autoplay></video>
+        <video src="dl/{{videoID}}.mp4" controls autoplay></video>
     </section>
     <section id="videoInfo">
-        <h1>{{videoTitle}}</h1>
-        <p>{{videoViews}} Views</p>
-        <p>{{videoLikes}} Likes {{videoDislikes}} Dislikes</p>
+        <div id="videoTitle">
+            <div>
+                <h1>{{videoTitle}}</h1>
+            </div>
+            <div>
+                <p>{{videoViews}} Views</p>
+            </div>
+        </div>
         <hr>
-        <p>
-            {{videoChannelName}}<br>
-            Uploaded on {{videoDate}}
-        </p>
+        <div id="videoStatistics">
+            <div id="videoChannelImage">
+                <img src="{{channelImage}}" alt="Channel image of {{channelTitle}}">
+            </div>
+            <div id="videoChannelTitle">
+                <p>{{channelTitle}}<br>{{channelSubscribers}} Subscribers</p>
+            </div>
+            <div id="videoUploaded">
+                <p>{{videoLikes}} Likes {{videoDislikes}} Dislikes<br>Uploaded on {{videoDate}}</p>
+            </div>
+        </div>
+        <hr>
+        <p>{{videoDescription}}</p>
+    </section>
+    <section id="recommendations">
+        <h2>Recommendations</h2>
     </section>
 </main>

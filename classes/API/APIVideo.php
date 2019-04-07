@@ -29,8 +29,8 @@ class APIVideo {
         return $this->content->items[0]->snippet->description;
     }
 
-    public function get_channel_name() {
-        return $this->content->items[0]->snippet->channelTitle;
+    public function get_channel_id() {
+        return $this->content->items[0]->snippet->channelId;
     }
 
     public function get_views() {
