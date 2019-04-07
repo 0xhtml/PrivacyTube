@@ -17,6 +17,7 @@ header > label, button, input[type="submit"] {
     margin: .3em 0;
     background-color: transparent;
     transition: background-color .3s;
+    display: inline-block;
 }
 
 header > label:hover, button:hover, input[type="submit"]:hover {
