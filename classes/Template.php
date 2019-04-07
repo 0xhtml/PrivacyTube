@@ -17,7 +17,11 @@ class Template {
     }
 
     public function set_var(string $name, string $content) {
+        if (!preg_match("/^[a-zA-Z]*$/", $name)) {
+            return false;
+        }
         $this->vars[$name] = $content;
+        return true;
     }
 
     public function render() {
@@ -25,6 +29,7 @@ class Template {
         foreach ($this->vars as $name => $content) {
             $rendered = str_replace("{{" . $name .  "}}", $content, $rendered);
         }
+        $rendered = preg_replace("/{{[a-zA-Z]*}}/", "", $rendered);
         return $rendered;
     }
 
