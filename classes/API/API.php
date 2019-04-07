@@ -20,7 +20,11 @@ class API {
             }
             $url .= $key . "=" . $value;
         }
-        return json_decode(file_get_contents(self::URL . $url));
+        $curl= curl_init(self::URL . $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($data);
     }
 
 }
