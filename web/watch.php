@@ -13,22 +13,24 @@ if ($video->error) {
     die();
 }
 
-$video_template = new Template("../templates/video.html");
-$video_template->set_var("videoID", $video->get_id());
-$video_template->set_var("videoTitle", $video->get_title());
-$video_template->set_var("videoDescription", nl2br($video->get_description()));
-$video_template->set_var("videoChannelName", $video->get_channel_name());
-$video_template->set_var("videoViews", number_format($video->get_views()));
-$video_template->set_var("videoLikes", number_format($video->get_likes()));
-$video_template->set_var("videoDislikes", number_format($video->get_dislikes()));
-$video_template->set_var("videoThumbnail", $video->get_thumbnail());
-$video_template->set_var("videoDate", date(DATE_COOKIE, $video->get_date()));
+$template = new Template("../templates/watch.html");
+$template->set_var("videoID", $video->get_id());
+$template->set_var("videoTitle", $video->get_title());
+$template->set_var("videoDescription", nl2br($video->get_description()));
+$template->set_var("videoChannelName", $video->get_channel_name());
+$template->set_var("videoViews", number_format($video->get_views()));
+$template->set_var("videoLikes", number_format($video->get_likes()));
+$template->set_var("videoDislikes", number_format($video->get_dislikes()));
+$template->set_var("videoDate", date(DATE_COOKIE, $video->get_date()));
+
+$header_template = new Template("../templates/header.html");
 
 $nav_template = new Template("../templates/nav.html");
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $video->get_title() . " - PrivacyTube");
-
+$page_template->set_var("header", $header_template->render());
 $page_template->set_var("nav", $nav_template->render());
-$page_template->set_var("main", $video_template->render());
+$page_template->set_var("main", $template->render());
+
 echo $page_template->render();

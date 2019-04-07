@@ -45,10 +45,6 @@ class APIVideo {
         return $this->content->items[0]->statistics->dislikeCount;
     }
 
-    public function get_thumbnail() {
-        return $this->content->items[0]->snippet->thumbnails->maxres->url;
-    }
-
     public function get_date() {
         return strtotime($this->content->items[0]->snippet->publishedAt);
     }
