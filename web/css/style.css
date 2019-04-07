@@ -2,7 +2,7 @@ main {
     padding: 10px;
     max-width: 1400px;
     width: 100%;
-    margin: 60px auto;
+    margin: 60px auto 0 auto;
 }
 
 h1 {
