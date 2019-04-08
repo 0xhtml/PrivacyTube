@@ -30,7 +30,7 @@ class APIChannel {
     public function get_videos() {
         $result = array();
         $id = $this->content->items[0]->contentDetails->relatedPlaylists->uploads;
-        $data = $this->API->get("/playlistItems", array("playlistItems" => $id, "part" => "snippet", "maxResults" => "50"));
+        $data = $this->API->get("/playlistItems", array("playlistId" => $id, "part" => "snippet", "maxResults" => "50"));
         foreach ($data->items as $item) {
             $result[] = new APIVideo($this->API, $item->snippet->resourceId->videoId);
         }
