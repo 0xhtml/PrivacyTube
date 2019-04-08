@@ -9,7 +9,8 @@ class APIOAuth extends API {
             "client_id" => $client_id,
             "redirect_uri" => $redirect_uri,
             "scope" => "https://www.googleapis.com/auth/youtube.readonly",
-            "access_type" => "online"
+            "access_type" => "online",
+            "response_type" => "authorization_code"
         ));
         header("Location: " . $url);
         die();
