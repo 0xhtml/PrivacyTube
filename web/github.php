@@ -19,4 +19,4 @@ $payload_hash = hash_hmac($algo, $payload, $key);
 if ($payload_hash !== $hash) {
     die();
 }
-exec("cd .. && git pull");
+exec("cd .. && git checkout . && git pull");
