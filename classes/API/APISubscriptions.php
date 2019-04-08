@@ -15,10 +15,21 @@ class APISubscriptions {
         }
     }
 
-    public function get_subscriptions() {
+    public function get_videos() {
         $result = array();
+        $channels = array();
         foreach ($this->content->items as $subscription) {
-            $result[] = new APIChannel($this->API, $subscription->snippet->resourceId->channelId);
+            $channels[] = $subscription->snippet->resourceId->channelId;
+        }
+        $channels = join(",", $channels);
+        $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => 50));
+        foreach ($data->items as $item) {
+            $videos = $this->API->get("/playlistItems", array("playlistId" => $item->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => "1"));
+            $result[] = array(
+                "title" => $videos->items[0]->snippet->title,
+                "thumbnail" => $videos->items[0]->snippet->thumbnails->maxres->url,
+                "channel" => $videos->items[0]->snippet->channelTile
+            );
         }
         return $result;
     }
