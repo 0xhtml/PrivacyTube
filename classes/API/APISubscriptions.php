@@ -6,7 +6,7 @@ class APISubscriptions {
     private $content;
 
     public function __construct(APIOAuth $API) {
-        $this->content = $API->get("/subscriptions", array("mySubscribers" => "true", "part" => "snippet"));
+        $this->content = $API->get("/subscriptions", array("mine" => "true", "part" => "snippet"));
         if (count($this->content->items) == 0) {
             $this->error = true;
             return;
