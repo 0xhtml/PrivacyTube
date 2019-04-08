@@ -2,7 +2,7 @@
 class APIOAuth extends API {
 
     private const OAUTH_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
-    private const OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v2/token";
+    private const OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token";
 
     public static function redirect(string $client_id, string $redirect_uri) {
         $url = self::build_url(self::OAUTH_AUTH_URL, array(
