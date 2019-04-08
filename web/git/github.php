@@ -1,5 +1,5 @@
 <?php
-include "../init.php";
+include "../../init.php";
 
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
 $event = $_SERVER['HTTP_X_GITHUB_EVENT'];
