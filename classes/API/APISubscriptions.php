@@ -18,7 +18,7 @@ class APISubscriptions {
     public function get_subscriptions() {
         $result = array();
         foreach ($this->content->items as $subscription) {
-            $result[] = new APIChannel($this->API, $subscription->snippet->channelId);
+            $result[] = new APIChannel($this->API, $subscription->snippet->resourceId->channelId);
         }
         return $result;
     }
