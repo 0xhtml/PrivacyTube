@@ -11,11 +11,16 @@ if (isset($_COOKIE["token"])) {
     }
 }
 
-$subscriptions = new APISubscriptions($userAPI);
-$subscriptions->get_data();
+$subscriptions = new APISubscriptions($userAPI, $API);
+$subscriptions_html = "";
+foreach ($subscriptions->get_subscriptions() as $subscription) {
+    foreach ($subscription->get_videos() as $video) {
+        $subscriptions_html .= "<p>" . $subscription->get_title() . " " . $video->get_title() . "</p>";
+    }
+}
 
 $template = new Template("../templates/subscriptions.html");
-$template->set_var("subscriptions", "No Subscriptions.");
+$template->set_var("subscriptions", $subscriptions_html);
 
 $header_template = new Template("../templates/header.html");
 
