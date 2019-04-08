@@ -11,5 +11,6 @@ $key_file = fopen("../key.txt", "r");
 $key = str_replace(["\n", "\r"], "", fgets($key_file));
 $client_id = str_replace(["\n", "\r"], "", fgets($key_file));
 $client_secret = str_replace(["\n", "\r"], "", fgets($key_file));
+$mysql_pass = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
-$API = new API($key);
+$API = new API($key, mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube"));

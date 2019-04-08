@@ -6,7 +6,7 @@ class APIVideo {
     private $content;
 
     public function __construct(API $API, string $id) {
-        $this->content = $API->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
+        $this->content = $API->get("/videos", array("id" => $id, "part" => "statistics,snippet"), true);
         if (count($this->content->items) == 0) {
             $this->error = true;
             return;
