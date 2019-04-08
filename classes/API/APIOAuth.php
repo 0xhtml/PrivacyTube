@@ -1,10 +1,11 @@
 <?php
 class APIOAuth extends API {
 
-    private const OAUTH_URL = "https://accounts.google.com/o/oauth2/v2";
+    private const OAUTH_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
+    private const OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 
     public static function redirect(string $client_id, string $redirect_uri) {
-        $url = self::build_url(self::OAUTH_URL. "/auth", array(
+        $url = self::build_url(self::OAUTH_AUTH_URL, array(
             "client_id" => $client_id,
             "redirect_uri" => $redirect_uri,
             "scope" => "https://www.googleapis.com/auth/youtube.readonly",
@@ -16,7 +17,7 @@ class APIOAuth extends API {
     }
 
     public function __construct(string $client_id, string $client_secret, string $code, string $redirect_uri){
-        $url = self::build_url(self::OAUTH_URL . "/token", array(
+        $url = self::build_url(self::OAUTH_TOKEN_URL, array(
             "client_id" => $client_id,
             "client_secret" => $client_secret,
             "code" => $code,
