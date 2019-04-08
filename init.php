@@ -7,8 +7,8 @@ require_once "classes/API/APIOAuth.php";
 require_once "classes/API/APIVideo.php";
 
 $key_file = fopen("../key.txt", "r");
-$key = fgets($key_file);
-$client_id = fgets($key_file);
-$client_secret = fgets($key_file);
+$key = str_replace(["\n", "\r"], "", fgets($key_file));
+$client_id = str_replace(["\n", "\r"], "", fgets($key_file));
+$client_secret = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
 $API = new API($key);
