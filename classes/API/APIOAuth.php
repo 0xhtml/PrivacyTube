@@ -33,7 +33,7 @@ class APIOAuth {
         $data = curl_exec($curl);
         curl_close($curl);
         $json = json_decode($data);
-        setcookie("token", $json->access_token, time() + 60 * 60 * 24 * 10000, "/");
+        setcookie("token", $json->access_token, time() + $json->expires_in, "/");
         return new APIOAuth($json->access_token);
     }
 
