@@ -1,11 +1,13 @@
 <?php
-class APIOAuth extends API {
+class APIOAuth {
 
+    private const URL = "https://www.googleapis.com/youtube/v3";
     private const OAUTH_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
     private const OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token";
+    private $access_token;
 
     public static function redirect(string $client_id, string $redirect_uri) {
-        $url = self::build_url(self::OAUTH_AUTH_URL, array(
+        $url = self::OAUTH_AUTH_URL . "?" . http_build_query(array(
             "client_id" => $client_id,
             "redirect_uri" => $redirect_uri,
             "scope" => "https://www.googleapis.com/auth/youtube.readonly",
@@ -16,7 +18,7 @@ class APIOAuth extends API {
         die();
     }
 
-    public function __construct(string $client_id, string $client_secret, string $code, string $redirect_uri){
+    public static function get_from_code(string $client_id, string $client_secret, string $code, string $redirect_uri) {
         $params = array(
             "client_id" => $client_id,
             "client_secret" => $client_secret,
@@ -32,7 +34,20 @@ class APIOAuth extends API {
         curl_close($curl);
         $json = json_decode($data);
         setcookie("token", $json->access_token, time() + 60 * 60 * 24 * 10000, "/");
-        parent::__construct($json->access_token);
+        return new APIOAuth($json->access_token);
+    }
+
+    public function __construct(string $access_token){
+        $this->access_token = $access_token;
+    }
+
+    public function get(string $url, array $params) {
+        $params["access_token"] = $this->access_token;
+        $curl= curl_init(self::URL . $url . "?" . http_build_query($params));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($data);
     }
 
 }
