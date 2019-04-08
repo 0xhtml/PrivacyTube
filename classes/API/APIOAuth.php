@@ -17,15 +17,17 @@ class APIOAuth extends API {
     }
 
     public function __construct(string $client_id, string $client_secret, string $code, string $redirect_uri){
-        $url = self::build_url(self::OAUTH_TOKEN_URL, array(
+        $params = array(
             "client_id" => $client_id,
             "client_secret" => $client_secret,
             "code" => $code,
             "redirect_uri" => $redirect_uri,
             "grant_type" => "authorization_code"
-        ));
-        $curl= curl_init($url);
+        );
+        $curl= curl_init(self::OAUTH_TOKEN_URL);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
         $data = curl_exec($curl);
         curl_close($curl);
         $json = json_decode($data);
