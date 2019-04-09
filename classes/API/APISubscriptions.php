@@ -25,13 +25,14 @@ class APISubscriptions {
         $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => 50));
         foreach ($data->items as $item) {
             $videos = $this->API->get("/playlistItems", array("playlistId" => $item->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => "1"));
-            $result[] = array(
+            $result[strtotime($videos->item[0]->snippet->publishedAt)] = array(
                 "title" => $videos->items[0]->snippet->title,
                 "thumbnail" => $videos->items[0]->snippet->thumbnails->maxres->url,
                 "channel" => $videos->items[0]->snippet->channelTile
             );
         }
-        return $result;
+        ksort($result);
+        return array_reverse($result);
     }
 
 }
