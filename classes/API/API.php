@@ -13,7 +13,7 @@ class API {
 
     public function get(string $url, array $params, bool $save = true)
     {
-        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) LIMIT 1");
+        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 HOUR) LIMIT 1");
         $params_json = json_encode($params);
         $statement->bind_param("ss", $url, $params_json);
         if ($statement->execute()) {
