@@ -8,7 +8,7 @@ class APISubscriptions {
 
     public function __construct(APIOAuth $privateAPI, API $API) {
         $this->API = $API;
-        $this->content = $privateAPI->get("/subscriptions", array("mine" => "true", "part" => "snippet", "maxResults" => "50"));
+        $this->content = $privateAPI->get("/subscriptions", array("mine" => "true", "part" => "snippet", "maxResults" => 50));
         if (count($this->content->items) == 0) {
             $this->error = true;
             return;
@@ -24,12 +24,14 @@ class APISubscriptions {
         $channels = join(",", $channels);
         $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => 50));
         foreach ($data->items as $item) {
-            $videos = $this->API->get("/playlistItems", array("playlistId" => $item->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => "1"));
-            $result[strtotime($videos->items[0]->snippet->publishedAt)] = array(
-                "title" => $videos->items[0]->snippet->title,
-                "thumbnail" => $videos->items[0]->snippet->thumbnails->maxres->url,
-                "channel" => $videos->items[0]->snippet->channelTile
-            );
+            $videos = $this->API->get("/playlistItems", array("playlistId" => $item->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
+            foreach ($videos->items as $video) {
+                $result[strtotime($video->snippet->publishedAt)] = array(
+                    "title" => $video->snippet->title,
+                    "thumbnail" => $video->snippet->thumbnails->maxres->url,
+                    "channel" => $video->snippet->channelTile
+                );
+            }
         }
         ksort($result);
         return array_reverse($result);
