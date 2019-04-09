@@ -108,6 +108,15 @@ main > section {
     margin-right: auto;
 }
 
+.videoPreview {
+    display: flex;
+    align-items: center;
+}
+
+.videoPreviewTitle {
+    flex-grow: 1;
+}
+
 @media all and (max-width: 1100px) {
     nav {
         display: none;

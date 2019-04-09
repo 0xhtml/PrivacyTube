@@ -12,9 +12,15 @@ if (isset($_COOKIE["token"])) {
 }
 
 $subscriptions = new APISubscriptions($userAPI, $API);
+
+$video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
+
 foreach ($subscriptions->get_videos() as $video) {
-    $subscriptions_html .= "<p><img src='" . $video["thumbnail"] . "' alt='" . $video["title"] . "'><br>" . $video["title"] . "</p>";
+    $video_preview_template->set_var("title", $video["title"]);
+    $video_preview_template->set_var("thumbnail", $video["thumbnail"]);
+    $video_preview_template->set_var("channel", $video["channel"]);
+    $subscriptions_html .= $video_preview_template->render();
 }
 
 $template = new Template("../templates/subscriptions.html");
