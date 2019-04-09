@@ -1,5 +1,7 @@
 <?php
-include "../../init.php";
+$key_file = fopen("../../key.txt", "r");
+$key = str_replace(["\n", "\r"], "", fgets($key_file));
+fclose($key_file);
 
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE'];
 $event = $_SERVER['HTTP_X_GITHUB_EVENT'];
@@ -20,3 +22,4 @@ if ($payload_hash !== $hash) {
     die();
 }
 exec("cd .. && git checkout . && git pull");
+echo "Success!";
