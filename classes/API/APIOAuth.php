@@ -14,11 +14,12 @@ class APIOAuth {
             "access_type" => "online",
             "response_type" => "code"
         ));
-        header("Location: " . $url);
+        header("Location: $url");
         die();
     }
 
-    public static function get_from_code(string $client_id, string $client_secret, string $code, string $redirect_uri) {
+    public static function redirect_code(string $client_id, string $client_secret, string $code, string $redirect_uri)
+    {
         $params = array(
             "client_id" => $client_id,
             "client_secret" => $client_secret,
@@ -34,7 +35,8 @@ class APIOAuth {
         curl_close($curl);
         $json = json_decode($data);
         setcookie("token", $json->access_token, time() + $json->expires_in, "/");
-        return new APIOAuth($json->access_token);
+        header("Location: $redirect_uri");
+        die();
     }
 
     public function __construct(string $access_token){

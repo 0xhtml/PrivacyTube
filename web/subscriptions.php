@@ -5,7 +5,7 @@ if (isset($_COOKIE["token"])) {
     $userAPI = new APIOAuth($_COOKIE["token"]);
 } else {
     if (isset($_GET["code"])) {
-        $userAPI = APIOAuth::get_from_code($client_id, $client_secret, $_GET["code"], "https://cloud.fritz.box/subscriptions");
+        APIOAuth::redirect_code($client_id, $client_secret, $_GET["code"], "https://cloud.fritz.box/subscriptions");
     } else {
         APIOAuth::redirect($client_id, "https://cloud.fritz.box/subscriptions");
     }
