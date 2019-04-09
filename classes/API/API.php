@@ -16,7 +16,7 @@ class API {
         $params["key"] = $this->key;
         $url = self::URL . $url . "?" . http_build_query($params);
 
-        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? AND date > CURRENT_TIMESTAMP - 60 * 60 ORDER BY date LIMIT 1");
+        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) ORDER BY date LIMIT 1");
         $statement->bind_param("s", $url);
         if ($statement->execute()) {
             $result = $statement->get_result();
