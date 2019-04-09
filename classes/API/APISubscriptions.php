@@ -26,7 +26,7 @@ class APISubscriptions {
             return array();
         }
         foreach ($data->items as $channel) {
-            $videos = $this->API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
+            $videos = $this->API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 1));
             if (isset($videos->items)) {
                 $i = 0;
                 foreach ($videos->items as $video) {
