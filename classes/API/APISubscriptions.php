@@ -30,10 +30,10 @@ class APISubscriptions {
             if (isset($videos->items)) {
                 $i = 0;
                 foreach ($videos->items as $video) {
-                    if (isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->maxres, $video->snippet->thumbnails->maxres->url, $video->snippet->channelTitle)) {
+                    if (isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle)) {
                         $result[strtotime($video->snippet->publishedAt)] = array(
                             "title" => $video->snippet->title,
-                            "thumbnail" => $video->snippet->thumbnails->maxres->url,
+                            "thumbnail" => $video->snippet->thumbnails->default->url,
                             "channel" => $video->snippet->channelTitle
                         );
                     } else {
