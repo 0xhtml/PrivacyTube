@@ -59,8 +59,6 @@ nav > ul > li > a:hover {
 main {
     max-width: 1000px;
     margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
 }
 
 main > section {
@@ -69,14 +67,6 @@ main > section {
 
 #video > video {
     width: 100%;
-}
-
-#recommendations {
-    width: calc(100% / 4 - 1em);
-}
-
-#videoInfo {
-    width: calc(100% / 4 * 3 - 1em);
 }
 
 #videoTitle {
