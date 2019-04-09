@@ -1,12 +1,15 @@
 <?php
-class APIChannel {
+
+class APIChannel
+{
 
     public $error = false;
 
     private $content;
     private $API;
 
-    public function __construct(API $API, string $id) {
+    public function __construct(API $API, string $id)
+    {
         $this->API = $API;
         $this->content = $this->API->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
         if (count($this->content->items) == 0) {
@@ -15,15 +18,18 @@ class APIChannel {
         }
     }
 
-    public function get_image() {
+    public function get_image()
+    {
         return $this->content->items[0]->snippet->thumbnails->high->url;
     }
 
-    public function get_title() {
+    public function get_title()
+    {
         return $this->content->items[0]->snippet->title;
     }
 
-    public function get_subscribers() {
+    public function get_subscribers()
+    {
         return $this->content->items[0]->statistics->subscriberCount;
     }
 

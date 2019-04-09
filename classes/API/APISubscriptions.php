@@ -1,10 +1,13 @@
 <?php
-class APISubscriptions {
+
+class APISubscriptions
+{
 
     private $content;
     private $API;
 
-    public function __construct(APIOAuth $privateAPI, API $API) {
+    public function __construct(APIOAuth $privateAPI, API $API)
+    {
         $this->API = $API;
         $this->content = $privateAPI->get("/subscriptions", array("mine" => "true", "part" => "snippet", "maxResults" => 50));
         if (!isset($this->content->items) or count($this->content->items) == 0) {
@@ -13,7 +16,8 @@ class APISubscriptions {
         }
     }
 
-    public function get_videos() {
+    public function get_videos()
+    {
         $result = array();
         $channels = array();
         foreach ($this->content->items as $subscription) {

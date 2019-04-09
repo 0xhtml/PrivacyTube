@@ -12,7 +12,7 @@ if (!file_exists("../dl/" . $_GET["v"] . ".mp4")) {
 $file_size = (string)(filesize("../dl/" . $_GET["v"] . ".mp4"));
 header('Content-Type: video/mp4');
 header('Accept-Ranges: bytes');
-header('Content-Length: '.$file_size);
+header('Content-Length: ' . $file_size);
 header("Content-Disposition: inline;");
 header("Content-Range: bytes .$file_size");
 header("Content-Transfer-Encoding: binary\n");

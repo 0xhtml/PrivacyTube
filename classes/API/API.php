@@ -1,5 +1,7 @@
 <?php
-class API {
+
+class API
+{
 
     private const URL = "https://www.googleapis.com/youtube/v3";
     private $key;

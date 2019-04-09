@@ -1,10 +1,13 @@
 <?php
-class Template {
+
+class Template
+{
 
     private $html;
     private $vars = array();
 
-    public function __construct(string $filename) {
+    public function __construct(string $filename)
+    {
         if (!file_exists($filename)) {
             die("Error creating template: File does not exist!");
         }
@@ -16,7 +19,8 @@ class Template {
         fclose($file);
     }
 
-    public function set_var(string $name, string $content) {
+    public function set_var(string $name, string $content)
+    {
         if (!preg_match("/^[a-zA-Z]*$/", $name)) {
             return false;
         }
@@ -24,10 +28,11 @@ class Template {
         return true;
     }
 
-    public function render() {
+    public function render()
+    {
         $rendered = $this->html;
         foreach ($this->vars as $name => $content) {
-            $rendered = str_replace("{{" . $name .  "}}", $content, $rendered);
+            $rendered = str_replace("{{" . $name . "}}", $content, $rendered);
         }
         $rendered = preg_replace("/{{[a-zA-Z]*}}/", "", $rendered);
         return $rendered;
