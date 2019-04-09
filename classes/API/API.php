@@ -24,9 +24,9 @@ class API {
         }
 
         $params["key"] = $this->key;
-        $url = self::URL . $url . "?" . http_build_query($params);
+        $full_url = self::URL . $url . "?" . http_build_query($params);
 
-        $curl = curl_init($url);
+        $curl = curl_init($full_url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $data = curl_exec($curl);
         curl_close($curl);
