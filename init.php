@@ -9,7 +9,7 @@ require_once "classes/API/APIVideo.php";
 
 function debug(string $text)
 {
-    echo "<script>console.log('$text')</script>";
+    echo "<script>console.log('" . str_replace("'", "\\'", $text) . "')</script>";
 }
 
 $key_file = fopen("../key.txt", "r");
