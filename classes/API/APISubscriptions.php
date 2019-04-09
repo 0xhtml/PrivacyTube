@@ -30,11 +30,12 @@ class APISubscriptions {
             if (isset($videos->items)) {
                 $i = 0;
                 foreach ($videos->items as $video) {
-                    if (isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle)) {
+                    if (isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
                         $result[strtotime($video->snippet->publishedAt)] = array(
                             "title" => $video->snippet->title,
                             "thumbnail" => $video->snippet->thumbnails->default->url,
-                            "channel" => $video->snippet->channelTitle
+                            "channel" => $video->snippet->channelTitle,
+                            "id" => $video->snippet->resourceId->videoId
                         );
                     } else {
                         debug("Could not load video $i of $channel->id");
