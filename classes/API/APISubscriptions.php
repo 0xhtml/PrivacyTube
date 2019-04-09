@@ -26,7 +26,7 @@ class APISubscriptions {
             return array();
         }
         foreach ($data->items as $channel) {
-            $videos = $this->API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 1));
+            $videos = $this->API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
             if (isset($videos->items)) {
                 $i = 0;
                 foreach ($videos->items as $video) {
@@ -46,7 +46,9 @@ class APISubscriptions {
             }
         }
         ksort($result);
-        return array_reverse($result);
+        $result = array_reverse($result);
+        $result = array_slice($result, 0, 50);
+        return $result;
     }
 
 }
