@@ -7,6 +7,11 @@ require_once "classes/API/APIChannel.php";
 require_once "classes/API/APIOAuth.php";
 require_once "classes/API/APIVideo.php";
 
+function debug(string $text)
+{
+    echo "<script>console.log('$text')</script>";
+}
+
 $key_file = fopen("../key.txt", "r");
 $key = str_replace(["\n", "\r"], "", fgets($key_file));
 $client_id = str_replace(["\n", "\r"], "", fgets($key_file));

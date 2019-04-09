@@ -12,13 +12,9 @@ if (isset($_COOKIE["token"])) {
 }
 
 $subscriptions = new APISubscriptions($userAPI, $API);
-if ($subscriptions->error) {
-    $subscriptions_html = "<p>Error</p>";
-} else {
-    $subscriptions_html = "";
-    foreach ($subscriptions->get_videos() as $video) {
-        $subscriptions_html .= "<p>" . $video["channel"] . " " . $video["title"] . "</p>";
-    }
+$subscriptions_html = "";
+foreach ($subscriptions->get_videos() as $video) {
+    $subscriptions_html .= "<p>" . $video["channel"] . " " . $video["title"] . "</p>";
 }
 
 $template = new Template("../templates/subscriptions.html");
