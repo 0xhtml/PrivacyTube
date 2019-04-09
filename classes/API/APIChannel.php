@@ -8,7 +8,7 @@ class APIChannel {
 
     public function __construct(API $API, string $id) {
         $this->API = $API;
-        $this->content = $this->API->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"), true);
+        $this->content = $this->API->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
         if (count($this->content->items) == 0) {
             $this->error = true;
             return;

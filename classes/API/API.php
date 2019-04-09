@@ -11,12 +11,12 @@ class API {
         $this->mysqli = $mysqli;
     }
 
-    public function get(string $url, array $params, bool $save = false)
+    public function get(string $url, array $params, bool $save = true)
     {
         $params["key"] = $this->key;
         $url = self::URL . $url . "?" . http_build_query($params);
 
-        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? ORDER BY date LIMIT 1");
+        $statement = $this->mysqli->prepare("SELECT * FROM cache WHERE url = ? AND date > CURRENT_TIMESTAMP - 60 * 60 ORDER BY date LIMIT 1");
         $statement->bind_param("s", $url);
         if ($statement->execute()) {
             $result = $statement->get_result();
