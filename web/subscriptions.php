@@ -14,7 +14,7 @@ if (isset($_COOKIE["token"])) {
 $subscriptions = new APISubscriptions($userAPI, $API);
 $subscriptions_html = "";
 foreach ($subscriptions->get_videos() as $video) {
-    $subscriptions_html .= "<p>" . $video["channel"] . " " . $video["title"] . "</p>";
+    $subscriptions_html .= "<p><img src='" . $video["thumbnail"] . "' alt='" . $video["title"] . "'><br>" . $video["title"] . "</p>";
 }
 
 $template = new Template("../templates/subscriptions.html");
