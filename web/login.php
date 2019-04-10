@@ -6,7 +6,6 @@ if (isset($_POST["username"], $_POST["password"])) {
 }
 
 $template = new Template("../templates/login.html");
-$template->set_var("subscriptions", $subscriptions_html);
 
 $header_template = new Template("../templates/header.html");
 
