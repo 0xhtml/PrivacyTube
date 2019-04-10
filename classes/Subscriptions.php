@@ -1,6 +1,6 @@
 <?php
 
-class UserSubscriptions
+class Subscriptions
 {
     private $user;
     private $mySQL;

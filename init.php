@@ -2,13 +2,12 @@
 require_once "classes/API.php";
 require_once "classes/Channel.php";
 require_once "classes/MySQL.php";
+require_once "classes/Subscriptions.php";
 require_once "classes/Template.php";
+require_once "classes/Subscriptions.php";
 require_once "classes/Video.php";
 
-require_once "classes/User/User.php";
-require_once "classes/User/UserSubscriptions.php";
-
-if (!file_exists("../key.txt")) {
+if (!file_exists(" ../key . txt")) {
     die("Can't find key file");
 }
 

@@ -3,7 +3,7 @@ include_once "../init.php";
 
 $user = new User();
 
-$subscriptions = new UserSubscriptions($user, $mySQL, $API);
+$subscriptions = new Subscriptions($user, $mySQL, $API);
 
 $video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
