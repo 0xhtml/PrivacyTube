@@ -27,7 +27,7 @@ class APIChannel
         }
 
         $this->name = $data->items[0]->snippet->title;
-        $this->image = $data->items[0]->snippet->thumbnails->default->url;
+        $this->image = "./dl?url=" . urlencode($data->items[0]->snippet->thumbnails->default->url);
         $this->subscribers = $data->items[0]->statistics->subscriberCount;
     }
 
