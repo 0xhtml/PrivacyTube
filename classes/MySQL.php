@@ -18,6 +18,10 @@ class MySQL
         if (!$statement->execute()) {
             die("Can't execute SQL \"$sql\": $statement->error");
         }
-        return $statement->get_result();
+        $result = $statement->get_result();
+        if (!$result) {
+            return null;
+        }
+        return $result;
     }
 }
