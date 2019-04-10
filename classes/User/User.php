@@ -16,6 +16,7 @@ class User
 
     public static function login(mysqli $mysqli, string $username, string $password)
     {
+        $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
         $statement = $mysqli->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
