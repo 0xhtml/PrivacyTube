@@ -62,6 +62,8 @@ class UserSubscriptions
     public function get_channels()
     {
         $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ?");
+        $user = $this->user->get_user();
+        $statement->bind_param("s", $user);
         if (!$statement->execute()) {
             die("Can't load subscribed channels: $statement->error");
         }
