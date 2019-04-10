@@ -15,6 +15,7 @@ if (isset($_GET["v"]) and strlen($_GET["v"]) == 11) {
     $curl = curl_init($_GET["url"]);
     curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($curl, $header) {
         header($header);
+        return strlen($header);
     });
     curl_exec($curl);
     curl_close($curl);
