@@ -15,6 +15,7 @@ if (isset($_POST["subscribe"])) {
 }
 
 $template = new Template("../templates/channel.html");
+$template->set_var("id", $channel->get_id());
 $template->set_var("name", $channel->get_name());
 $template->set_var("subscribers", number_format($channel->get_subscribers()));
 $template->set_var("image", $channel->get_image());
