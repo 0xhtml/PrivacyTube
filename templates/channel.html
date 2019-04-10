@@ -7,5 +7,10 @@
             <h1>{{name}}</h1>
             <p>{{subscribers}} Subscribers</p>
         </div>
+        <div id="channelSubscribe">
+            <form action="./channel?c={{channelId}}" method="post">
+                <p><input name="subscribe" type="submit" value="Subscribe"></p>
+            </form>
+        </div>
     </section>
 </main>

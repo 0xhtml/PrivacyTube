@@ -19,7 +19,7 @@ $template->set_var("videoLikes", number_format($video->get_likes()));
 $template->set_var("videoDislikes", number_format($video->get_dislikes()));
 $template->set_var("videoDate", date("d. M Y H:s", $video->get_date()));
 
-$template->set_var("channelId", $video->get_channel_id());
+$template->set_var("channelId", $channel->get_id());
 $template->set_var("channelName", $channel->get_name());
 $template->set_var("channelImage", $channel->get_image());
 $template->set_var("channelSubscribers", number_format($channel->get_subscribers()));
