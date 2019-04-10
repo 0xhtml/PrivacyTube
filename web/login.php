@@ -4,7 +4,7 @@ include_once "../init.php";
 $template = new Template("../templates/login.html");
 
 if (isset($_POST["username"], $_POST["password"])) {
-    if (!User::login($mysqli, $_POST["username"], $_POST["password"])) {
+    if (!User::login($mySQL, $_POST["username"], $_POST["password"])) {
         $template->set_var("message", "Invalid username or password");
     }
 }

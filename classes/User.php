@@ -13,17 +13,12 @@ class User
         }
     }
 
-    public static function login(mysqli $mysqli, string $username, string $password)
+    public static function login(MySQL $mySQL, string $username, string $password)
     {
         $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
-        $statement = $mysqli->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-        $statement->bind_param("ss", $username, $password);
-        if (!$statement->execute()) {
-            die("Can't load user: $statement->error");
-        }
-        $result = $statement->get_result();
+        $result = $mySQL->execute("SELECT * FROM users WHERE username = ? AND password = ?", "ss", $username, $password);
         if ($result->num_rows !== 1) {
             return false;
         }
