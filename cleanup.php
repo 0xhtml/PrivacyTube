@@ -6,7 +6,7 @@ fclose($key_file);
 $mysqli = mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube");
 $statement = $mysqli->prepare("DELETE FROM cache WHERE date < (CURRENT_TIMESTAMP - INTERVAL 2 HOUR - INTERVAL 5 MINUTE)");
 if ($statement->execute()) {
-    echo "Success!";
+    echo "Success!\nDeleted $statement->affected_rows cache entries\n";
 } else {
-    echo "Error: $statement->error";
+    echo "Error: $statement->error\n";
 }
