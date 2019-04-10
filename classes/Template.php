@@ -2,19 +2,15 @@
 
 class Template
 {
-
     private $html;
     private $vars = array();
 
     public function __construct(string $filename)
     {
         if (!file_exists($filename)) {
-            die("Error creating template: File does not exist!");
+            die("Can't create template: File $filename not found");
         }
         $file = fopen($filename, "r");
-        if ($file === false) {
-            die("Error creating template: Unable to open file!");
-        }
         $this->html = fread($file, filesize($filename));
         fclose($file);
     }
@@ -37,5 +33,4 @@ class Template
         $rendered = preg_replace("/{{[a-zA-Z]*}}/", "", $rendered);
         return $rendered;
     }
-
 }

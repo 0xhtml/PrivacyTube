@@ -24,7 +24,7 @@ class API
                 return json_decode($result->fetch_object()->data);
             }
         } else {
-            debug("Loading from cache failed: $statement->error");
+            die("Can't load from MySQL: $statement->error");
         }
 
         $params["key"] = $this->key;
@@ -39,7 +39,7 @@ class API
             $statement = $this->mysqli->prepare("INSERT INTO cache(url, params, data) VALUES (?, ?, ?)");
             $statement->bind_param("sss", $url, $params_json, $data);
             if (!$statement->execute()) {
-                debug("Saving to cache failed: $statement->error");
+                die("Can't save to MySQL: $statement->error");
             }
         }
 

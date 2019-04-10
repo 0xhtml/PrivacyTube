@@ -2,20 +2,27 @@
 require_once "classes/Template.php";
 
 require_once "classes/API/API.php";
-require_once "classes/API/APISubscriptions.php";
 require_once "classes/API/APIChannel.php";
-require_once "classes/API/APIOAuth.php";
 require_once "classes/API/APIVideo.php";
 
-function debug(string $text)
-{
-    echo "<script>console.log('" . str_replace("'", "\\'", $text) . "')</script>";
+require_once "classes/User/User.php";
+require_once "classes/User/UserSubscriptions.php";
+
+if (!file_exists("../key.txt")) {
+    die("Can't find key file");
 }
 
 $key_file = fopen("../key.txt", "r");
 $key = str_replace(["\n", "\r"], "", fgets($key_file));
-$client_id = str_replace(["\n", "\r"], "", fgets($key_file));
-$client_secret = str_replace(["\n", "\r"], "", fgets($key_file));
 $mysql_pass = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
-$API = new API($key, mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube"));
+
+$mysqli = mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube");
+if ($mysqli->connect_errno) {
+    die("Can't connect to MySQL: $mysqli->connect_error");
+}
+
+$API = new API($key, $mysqli);
+
+unset($key_file);
+unset($key);

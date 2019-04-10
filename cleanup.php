@@ -1,8 +1,6 @@
 <?php
 $key_file = fopen("key.txt", "r");
 $key = str_replace(["\n", "\r"], "", fgets($key_file));
-$client_id = str_replace(["\n", "\r"], "", fgets($key_file));
-$client_secret = str_replace(["\n", "\r"], "", fgets($key_file));
 $mysql_pass = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
 $mysqli = mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube");
