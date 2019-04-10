@@ -21,12 +21,25 @@ if (isset($_POST["subscribe"])) {
     }
 }
 
+$video_preview_template = new Template("../templates/videoPreview.html");
+$videos_html = "";
+
+foreach ($channel->getVideos() as $video) {
+    $video_preview_template->set_var("title", $video["title"]);
+    $video_preview_template->set_var("thumbnail", $video["thumbnail"]);
+    $video_preview_template->set_var("channel", $video["channel"]);
+    $video_preview_template->set_var("channelId", $video["channel_id"]);
+    $video_preview_template->set_var("id", $video["id"]);
+    $subscriptions_html .= $video_preview_template->render();
+}
+
 $template = new Template("../templates/channel.html");
 $template->set_var("id", $channel->getId());
 $template->set_var("name", $channel->getName());
 $template->set_var("subscribers", number_format($channel->getSubscribers()));
 $template->set_var("privateSubscribers", number_format($channel->getPrivateSubscribers()));
 $template->set_var("image", $channel->getImage());
+$template->set_var("videos", $videos_html);
 if (isset($user)) {
     if ($channel->is_subscribed($user)) {
         $template->set_var("action", "unsubscribe");

@@ -15,7 +15,7 @@ class API
 
     public function getChannel(string $id): Channel
     {
-        $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet"));
+        $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -25,17 +25,22 @@ class API
             $data->items[0]->snippet->thumbnails->default,
             $data->items[0]->snippet->thumbnails->default->url,
             $data->items[0]->statistics,
-            $data->items[0]->statistics->subscriberCount
+            $data->items[0]->statistics->subscriberCount,
+            $data->items[0]->contentDetails,
+            $data->items[0]->contentDetails->relatedPlaylists,
+            $data->items[0]->contentDetails->relatedPlaylists->uploads
         )) {
             die("Can't load channel $id");
         }
 
         return new Channel(
+            $this,
             $this->mySQL,
             $id,
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->thumbnails->default->url,
-            $data->items[0]->statistics->subscriberCount
+            $data->items[0]->statistics->subscriberCount,
+            $data->items[0]->contentDetails->relatedPlaylists->uploads
         );
     }
 

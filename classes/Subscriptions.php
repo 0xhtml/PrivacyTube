@@ -13,11 +13,11 @@ class Subscriptions
         $this->API = $API;
     }
 
-    public function get_videos()
+    public function getVideos()
     {
         $result = array();
 
-        $channels = $this->get_channels();
+        $channels = $this->getChannels();
         $channels = join(",", $channels);
 
         $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => 50));
@@ -59,7 +59,7 @@ class Subscriptions
         return $result;
     }
 
-    public function get_channels()
+    public function getChannels()
     {
         $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ?", "s", $this->user->getUser());
         $channels = array();

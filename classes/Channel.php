@@ -2,20 +2,25 @@
 
 class Channel
 {
+    private $API;
+    private $mySQL;
+
     private $id;
     private $name;
     private $image;
     private $subscribers;
+    private $uploadsId;
 
-    private $mySQL;
-
-    public function __construct(MySQL $mySQL, string $id, string $name, string $image, int $subscribers)
+    public function __construct(API $API, MySQL $mySQL, string $id, string $name, string $image, int $subscribers, string $uploadsId)
     {
+        $this->API = $API;
         $this->mySQL = $mySQL;
+
         $this->id = $id;
         $this->name = $name;
         $this->image = $image;
         $this->subscribers = $subscribers;
+        $this->uploadsId = $uploadsId;
     }
 
     public function getId(): string
@@ -68,5 +73,34 @@ class Channel
     {
         $user = $user->getUser();
         $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $channel);
+    }
+
+    public function getVideos()
+    {
+        $result = array();
+
+        $videos = $this->API->get("/playlistItems", array("playlistId" => $this->uploadsId, "part" => "snippet", "maxResults" => 50));
+        if (!isset($videos->items)) {
+            die("Can't load videos of channel");
+        }
+
+        foreach ($videos->items as $video) {
+            if (!isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
+                die("Can't load video of channel");
+            }
+
+            $result[strtotime($video->snippet->publishedAt)] = array(
+                "title" => $video->snippet->title,
+                "thumbnail" => "./dl?url=" . urlencode($video->snippet->thumbnails->default->url),
+                "channel" => $video->snippet->channelTitle,
+                "channel_id" => $video->snippet->channelId,
+                "id" => $video->snippet->resourceId->videoId
+            );
+        }
+
+        ksort($result);
+        $result = array_reverse($result);
+        $result = array_slice($result, 0, 50);
+        return $result;
     }
 }

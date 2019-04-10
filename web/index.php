@@ -8,7 +8,7 @@ $subscriptions = new Subscriptions($user, $mySQL, $API);
 $video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
 
-foreach ($subscriptions->get_videos() as $video) {
+foreach ($subscriptions->getVideos() as $video) {
     $video_preview_template->set_var("title", $video["title"]);
     $video_preview_template->set_var("thumbnail", $video["thumbnail"]);
     $video_preview_template->set_var("channel", $video["channel"]);

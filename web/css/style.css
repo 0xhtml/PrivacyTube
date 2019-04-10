@@ -135,9 +135,3 @@ main > section {
         padding: 3.5em .5em .5em .5em;
     }
 }
-
-@media all and (max-width: 950px) {
-    #recommendations, #videoInfo {
-        width: calc(100% - 1em);
-    }
-}
