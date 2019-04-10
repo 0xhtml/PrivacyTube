@@ -1,3 +1,0 @@
-[submodule "vendor/picnic"]
-	path = vendor/picnic
-	url = https://github.com/franciscop/picnic.git
