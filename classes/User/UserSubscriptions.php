@@ -78,8 +78,18 @@ class UserSubscriptions
 
     public function subscribe(string $channel)
     {
-        $statement = $this->mysqli->prepare("INSERT INTO subscriptions(user, channel) VALUES (?, ?)");
+        $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ? AND channel = ?");
         $user = $this->user->get_user();
+        $statement->bind_param("ss", $user, $channel);
+        if (!$statement->execute()) {
+            die("Can't subscribe to channel: $statement->error");
+        }
+        $result = $statement->get_result();
+        if ($result->num_rows !== 0) {
+            return;
+        }
+
+        $statement = $this->mysqli->prepare("INSERT INTO subscriptions(user, channel) VALUES (?, ?)");
         $statement->bind_param("ss", $user, $channel);
         if (!$statement->execute()) {
             die("Can't subscribe to channel: $statement->error");
