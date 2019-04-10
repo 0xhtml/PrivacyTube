@@ -78,14 +78,7 @@ class UserSubscriptions
 
     public function subscribe(string $channel)
     {
-        $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ? AND channel = ?");
-        $user = $this->user->get_user();
-        $statement->bind_param("ss", $user, $channel);
-        if (!$statement->execute()) {
-            die("Can't subscribe to channel: $statement->error");
-        }
-        $result = $statement->get_result();
-        if ($result->num_rows !== 0) {
+        if ($this->is_subscribed_to($channel)) {
             return;
         }
 
@@ -96,4 +89,28 @@ class UserSubscriptions
         }
     }
 
+    public function unsubscribe(string $channel)
+    {
+        $statement = $this->mysqli->prepare("DELETE FROM subscriptions WHERE user = ? AND channel = ?");
+        $statement->bind_param("ss", $user, $channel);
+        if (!$statement->execute()) {
+            die("Can't unsubscribe from channel: $statement->error");
+        }
+    }
+
+    public function is_subscribed_to(string $channel)
+    {
+        $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ? AND channel = ?");
+        $user = $this->user->get_user();
+        $statement->bind_param("ss", $user, $channel);
+        if (!$statement->execute()) {
+            die("Can't check subscription of channel: $statement->error");
+        }
+        $result = $statement->get_result();
+        if ($result->num_rows === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
