@@ -18,7 +18,7 @@ if (isset($_GET["v"]) and strlen($_GET["v"]) == 11) {
         return strlen($header);
     });
     curl_exec($curl);
-    curl_close($curl);
     http_response_code(curl_getinfo($curl, CURLINFO_HTTP_CODE));
+    curl_close($curl);
 }
 die();
