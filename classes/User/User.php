@@ -32,7 +32,8 @@ class User
             session_start();
         }
         $_SESSION["user"] = $username;
-        return new self();
+        header("Location: .");
+        die();
     }
 
     public function get_user()
