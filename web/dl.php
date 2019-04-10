@@ -4,8 +4,8 @@ if (!is_dir("../dl")) {
 }
 
 if (isset($_GET["v"]) and strlen($_GET["v"]) == 11) {
+    set_time_limit(0);
     if (!file_exists("../dl/" . $_GET["v"] . ".mp4")) {
-        set_time_limit(0);
         exec("youtube-dl --format mp4 -o \"../dl/" . $_GET["v"] . ".mp4\" \"" . $_GET["v"] . "\"");
     }
     $file_size = (string)(filesize("../dl/" . $_GET["v"] . ".mp4"));
