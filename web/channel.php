@@ -30,7 +30,7 @@ foreach ($channel->getVideos() as $video) {
     $video_preview_template->set_var("channel", $video["channel"]);
     $video_preview_template->set_var("channelId", $video["channel_id"]);
     $video_preview_template->set_var("id", $video["id"]);
-    $subscriptions_html .= $video_preview_template->render();
+    $videos_html .= $video_preview_template->render();
 }
 
 $template = new Template("../templates/channel.html");
