@@ -7,7 +7,7 @@ require_once "classes/Template.php";
 require_once "classes/Subscriptions.php";
 require_once "classes/Video.php";
 
-if (!file_exists(" ../key . txt")) {
+if (!file_exists("../key.txt")) {
     die("Can't find key file");
 }
 
