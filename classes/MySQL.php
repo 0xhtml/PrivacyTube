@@ -9,7 +9,7 @@ class MySQL
         $this->mysqli = $mysqli;
     }
 
-    public function execute(string $sql, string $parameter_types = null, ...$parameters): mysqli_result
+    public function execute(string $sql, string $parameter_types = null, ...$parameters)
     {
         $statement = $this->mysqli->prepare($sql);
         if ($parameter_types != null) {
@@ -19,9 +19,6 @@ class MySQL
             die("Can't execute SQL \"$sql\": $statement->error");
         }
         $result = $statement->get_result();
-        if ($result instanceof mysqli_result) {
-            return $result;
-        }
-        return null;
+        return $result;
     }
 }
