@@ -19,9 +19,9 @@ class MySQL
             die("Can't execute SQL \"$sql\": $statement->error");
         }
         $result = $statement->get_result();
-        if (!$result) {
-            return null;
+        if ($result instanceof mysqli_result) {
+            return $result;
         }
-        return $result;
+        return null;
     }
 }
