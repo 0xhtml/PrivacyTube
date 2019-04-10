@@ -2,15 +2,14 @@
 
 class UserSubscriptions
 {
-
     private $user;
-    private $mysqli;
+    private $mySQL;
     private $API;
 
-    public function __construct(User $user, mysqli $mysqli, API $API)
+    public function __construct(User $user, MySQL $mySQL, API $API)
     {
         $this->user = $user;
-        $this->mysqli = $mysqli;
+        $this->mySQL = $mySQL;
         $this->API = $API;
     }
 
@@ -62,57 +61,11 @@ class UserSubscriptions
 
     public function get_channels()
     {
-        $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ?");
-        $user = $this->user->get_user();
-        $statement->bind_param("s", $user);
-        if (!$statement->execute()) {
-            die("Can't load subscribed channels: $statement->error");
-        }
-        $result = $statement->get_result();
+        $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ?", "s", $this->user->getUser());
         $channels = array();
         while ($row = $result->fetch_object()) {
             $channels[] = $row->channel;
         }
         return $channels;
-    }
-
-    public function subscribe(string $channel)
-    {
-        if ($this->is_subscribed_to($channel)) {
-            return;
-        }
-
-        $statement = $this->mysqli->prepare("INSERT INTO subscriptions(user, channel) VALUES (?, ?)");
-        $user = $this->user->get_user();
-        $statement->bind_param("ss", $user, $channel);
-        if (!$statement->execute()) {
-            die("Can't subscribe to channel: $statement->error");
-        }
-    }
-
-    public function unsubscribe(string $channel)
-    {
-        $statement = $this->mysqli->prepare("DELETE FROM subscriptions WHERE user = ? AND channel = ?");
-        $user = $this->user->get_user();
-        $statement->bind_param("ss", $user, $channel);
-        if (!$statement->execute()) {
-            die("Can't unsubscribe from channel: $statement->error");
-        }
-    }
-
-    public function is_subscribed_to(string $channel)
-    {
-        $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ? AND channel = ?");
-        $user = $this->user->get_user();
-        $statement->bind_param("ss", $user, $channel);
-        if (!$statement->execute()) {
-            die("Can't check subscription of channel: $statement->error");
-        }
-        $result = $statement->get_result();
-        if ($result->num_rows === 0) {
-            return false;
-        } else {
-            return true;
-        }
     }
 }

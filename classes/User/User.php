@@ -2,7 +2,6 @@
 
 class User
 {
-
     public function __construct()
     {
         if (session_status() == PHP_SESSION_NONE) {
@@ -37,9 +36,8 @@ class User
         die();
     }
 
-    public function get_user()
+    public function getUser()
     {
         return $_SESSION["user"];
     }
-
 }

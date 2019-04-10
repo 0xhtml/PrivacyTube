@@ -1,9 +1,9 @@
 <?php
+require_once "classes/API.php";
+require_once "classes/Channel.php";
+require_once "classes/MySQL.php";
 require_once "classes/Template.php";
-
-require_once "classes/API/API.php";
-require_once "classes/API/APIChannel.php";
-require_once "classes/API/APIVideo.php";
+require_once "classes/Video.php";
 
 require_once "classes/User/User.php";
 require_once "classes/User/UserSubscriptions.php";
@@ -22,7 +22,9 @@ if ($mysqli->connect_errno) {
     die("Can't connect to MySQL: $mysqli->connect_error");
 }
 
-$API = new API($key, $mysqli);
+$mySQL = new MySQL($mysqli);
+$API = new API($key, $mySQL);
 
 unset($key_file);
 unset($key);
+unset($mysqli);

@@ -1,0 +1,94 @@
+<?php
+
+class API
+{
+
+    private const URL = "https://www.googleapis.com/youtube/v3";
+    private $key;
+    private $mySQL;
+
+    public function __construct(string $key, MySQL $mySQL)
+    {
+        $this->key = $key;
+        $this->mySQL = $mySQL;
+    }
+
+    public function getChannel(string $id): Channel
+    {
+        $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet"));
+        if (!isset(
+            $data->items,
+            $data->items[0],
+            $data->items[0]->snippet,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->thumbnails,
+            $data->items[0]->snippet->thumbnails->default,
+            $data->items[0]->snippet->thumbnails->default->url,
+            $data->items[0]->statistics,
+            $data->items[0]->statistics->subscriberCount
+        )) {
+            die("Can't load channel $id");
+        }
+
+        return new Channel(
+            $this->mySQL,
+            $id,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->thumbnails->default->url,
+            $data->items[0]->statistics->subscriberCount
+        );
+    }
+
+    public function getVideo(string $id): Video
+    {
+        $data = $this->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
+        if (!isset(
+            $data->items,
+            $data->items[0],
+            $data->items[0]->snippet,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->description,
+            $data->items[0]->snippet->channelId,
+            $data->items[0]->snippet->publishedAt,
+            $data->items[0]->statistics,
+            $data->items[0]->statistics->viewCount,
+            $data->items[0]->statistics->likeCount,
+            $data->items[0]->statistics->dislikeCount
+        )) {
+            die("Can't load video $id");
+        }
+
+        return new Video($id,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->description,
+            $data->items[0]->snippet->channelId,
+            strtotime($data->items[0]->snippet->publishedAt),
+            $data->items[0]->statistics->viewCount,
+            $data->items[0]->statistics->likeCount,
+            $data->items[0]->statistics->dislikeCount
+        );
+    }
+
+    public function get(string $url, array $params, bool $save = true)
+    {
+        $params_json = json_encode($params);
+        $result = $this->mySQL->execute("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 HOUR) LIMIT 1", "ss", $url, $params_json);
+        if ($result->num_rows === 1) {
+            return json_decode($result->fetch_object()->data);
+        }
+
+        $params["key"] = $this->key;
+        $full_url = self::URL . $url . "?" . http_build_query($params);
+
+        $curl = curl_init($full_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($curl);
+        curl_close($curl);
+
+        if ($save) {
+            $this->mySQL->execute("INSERT INTO cache(url, params, data) VALUES (?, ?, ?)", "sss", $url, $params_json, $data);
+        }
+
+        return json_decode($data);
+    }
+}

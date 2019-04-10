@@ -6,30 +6,30 @@ if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
     die();
 }
 
-$video = new APIVideo($API, $_GET["v"]);
+$video = $API->getVideo($_GET["v"]);
 
-$channel = new APIChannel($API, $video->get_channel_id());
+$channel = $API->getChannel($video->getChannelId());
 
 $template = new Template("../templates/watch.html");
-$template->set_var("videoID", $video->get_id());
-$template->set_var("videoTitle", $video->get_title());
-$template->set_var("videoDescription", nl2br($video->get_description()));
-$template->set_var("videoViews", number_format($video->get_views()));
-$template->set_var("videoLikes", number_format($video->get_likes()));
-$template->set_var("videoDislikes", number_format($video->get_dislikes()));
-$template->set_var("videoDate", date("d. M Y H:s", $video->get_date()));
+$template->set_var("videoID", $video->getId());
+$template->set_var("videoTitle", $video->getTitle());
+$template->set_var("videoDescription", nl2br($video->getDescription()));
+$template->set_var("videoViews", number_format($video->getViews()));
+$template->set_var("videoLikes", number_format($video->getLikes()));
+$template->set_var("videoDislikes", number_format($video->getDislikes()));
+$template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
 
-$template->set_var("channelId", $channel->get_id());
-$template->set_var("channelName", $channel->get_name());
-$template->set_var("channelImage", $channel->get_image());
-$template->set_var("channelSubscribers", number_format($channel->get_subscribers()));
+$template->set_var("channelId", $channel->getId());
+$template->set_var("channelName", $channel->getName());
+$template->set_var("channelImage", $channel->getImage());
+$template->set_var("channelSubscribers", number_format($channel->getSubscribers()));
 
 $header_template = new Template("../templates/header.html");
 
 $nav_template = new Template("../templates/nav.html");
 
 $page_template = new Template("../templates/page.html");
-$page_template->set_var("title", $video->get_title() . " - PrivacyTube");
+$page_template->set_var("title", $video->getTitle() . " - PrivacyTube");
 $page_template->set_var("header", $header_template->render());
 $page_template->set_var("nav", $nav_template->render());
 $page_template->set_var("main", $template->render());
