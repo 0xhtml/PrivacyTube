@@ -3,7 +3,7 @@
 class APIChannel
 {
     private $image;
-    private $title;
+    private $name;
     private $subscribers;
 
     public function __construct(API $API, string $id)
@@ -23,14 +23,14 @@ class APIChannel
             die("Can't load channel $id");
         }
 
-        $this->title = $data->items[0]->snippet->title;
+        $this->name = $data->items[0]->snippet->title;
         $this->image = $data->items[0]->snippet->thumbnails->default->url;
         $this->subscribers = $data->items[0]->statistics->subscriberCount;
     }
 
-    public function get_title()
+    public function get_name()
     {
-        return $this->title;
+        return $this->name;
     }
 
     public function get_image()

@@ -84,16 +84,16 @@ main > section {
     align-items: center;
 }
 
-#videoChannelImage {
+#channelImage {
     height: 5em;
 }
 
-#videoChannelImage > img {
+#channelImage img {
     height: 5em;
     width: 5em;
 }
 
-#videoChannelTitle {
+#videoChannelName {
     padding: 0 .5em;
     margin-right: auto;
 }
@@ -104,6 +104,16 @@ main > section {
 }
 
 .videoPreviewTitle {
+    flex-grow: 1;
+    padding: 0 .5em;
+}
+
+#channel {
+    display: flex;
+    align-items: center;
+}
+
+#channelName {
     flex-grow: 1;
     padding: 0 .5em;
 }

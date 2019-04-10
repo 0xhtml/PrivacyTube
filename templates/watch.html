@@ -13,11 +13,11 @@
         </div>
         <hr>
         <div id="videoStatistics">
-            <div id="videoChannelImage">
-                <img alt="Channel image of {{channelTitle}}" src="{{channelImage}}">
+            <div id="channelImage">
+                <a href="./channel?c={{channelId}}"><img alt="Channel image of {{channelName}}" src="{{channelImage}}"></a>
             </div>
-            <div id="videoChannelTitle">
-                <p>{{channelTitle}}<br>{{channelSubscribers}} Subscribers</p>
+            <div id="videoChannelName">
+                <p><a href="./channel?c={{channelId}}">{{channelName}}</a><br>{{channelSubscribers}} Subscribers</p>
             </div>
             <div>
                 <p>{{videoLikes}} Likes {{videoDislikes}} Dislikes<br>Uploaded on {{videoDate}}</p>

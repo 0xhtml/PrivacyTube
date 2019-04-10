@@ -8,17 +8,7 @@ if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
 
 $video = new APIVideo($API, $_GET["v"]);
 
-if ($video->error) {
-    header("Location: .");
-    die();
-}
-
 $channel = new APIChannel($API, $video->get_channel_id());
-
-if ($channel->error) {
-    header("Location: .");
-    die();
-}
 
 $template = new Template("../templates/watch.html");
 $template->set_var("videoID", $video->get_id());
@@ -28,7 +18,9 @@ $template->set_var("videoViews", number_format($video->get_views()));
 $template->set_var("videoLikes", number_format($video->get_likes()));
 $template->set_var("videoDislikes", number_format($video->get_dislikes()));
 $template->set_var("videoDate", date("d. M Y H:s", $video->get_date()));
-$template->set_var("channelTitle", $channel->get_title());
+
+$template->set_var("channelId", $video->get_channel_id());
+$template->set_var("channelName", $channel->get_name());
 $template->set_var("channelImage", $channel->get_image());
 $template->set_var("channelSubscribers", number_format($channel->get_subscribers()));
 

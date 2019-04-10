@@ -12,6 +12,7 @@ foreach ($subscriptions->get_videos() as $video) {
     $video_preview_template->set_var("title", $video["title"]);
     $video_preview_template->set_var("thumbnail", $video["thumbnail"]);
     $video_preview_template->set_var("channel", $video["channel"]);
+    $video_preview_template->set_var("channelId", $video["channel_id"]);
     $video_preview_template->set_var("id", $video["id"]);
     $subscriptions_html .= $video_preview_template->render();
 }
