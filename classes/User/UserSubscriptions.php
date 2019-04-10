@@ -93,6 +93,7 @@ class UserSubscriptions
     public function unsubscribe(string $channel)
     {
         $statement = $this->mysqli->prepare("DELETE FROM subscriptions WHERE user = ? AND channel = ?");
+        $user = $this->user->get_user();
         $statement->bind_param("ss", $user, $channel);
         if (!$statement->execute()) {
             die("Can't unsubscribe from channel: $statement->error");
