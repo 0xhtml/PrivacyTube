@@ -63,7 +63,7 @@ class UserSubscriptions
     {
         $statement = $this->mysqli->prepare("SELECT * FROM subscriptions WHERE user = ?");
         if (!$statement->execute()) {
-            die("Can't load subscribed channel form MySQL");
+            die("Can't load subscribed channels: $statement->error");
         }
         $result = $statement->get_result();
         $channels = array();
