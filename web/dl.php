@@ -12,8 +12,10 @@ if (isset($_GET["v"]) and strlen($_GET["v"]) == 11) {
     header("Content-Type: video/mp4");
     readfile("../dl/" . $_GET["v"] . ".mp4");
 } elseif (isset($_GET["url"])) {
-    header("Content-Type: image/jpg");
     $curl = curl_init($_GET["url"]);
+    curl_setopt($curl, CURLOPT_HEADERFUNCTION, function ($curl, $header) {
+        header($header);
+    });
     curl_exec($curl);
     curl_close($curl);
 }
