@@ -83,6 +83,7 @@ class UserSubscriptions
         }
 
         $statement = $this->mysqli->prepare("INSERT INTO subscriptions(user, channel) VALUES (?, ?)");
+        $user = $this->user->get_user();
         $statement->bind_param("ss", $user, $channel);
         if (!$statement->execute()) {
             die("Can't subscribe to channel: $statement->error");
