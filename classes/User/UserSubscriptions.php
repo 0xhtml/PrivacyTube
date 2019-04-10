@@ -46,7 +46,7 @@ class UserSubscriptions
 
                 $result[strtotime($video->snippet->publishedAt)] = array(
                     "title" => $video->snippet->title,
-                    "thumbnail" => $video->snippet->thumbnails->default->url,
+                    "thumbnail" => "./dl?url=" . urlencode($video->snippet->thumbnails->default->url),
                     "channel" => $video->snippet->channelTitle,
                     "channel_id" => $video->snippet->channelId,
                     "id" => $video->snippet->resourceId->videoId
