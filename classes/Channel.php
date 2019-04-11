@@ -74,21 +74,31 @@ class Channel
         $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $channel);
     }
 
-    public function getVideos(): array
+    public function getVideos(int $count): array
     {
         $result = array();
 
-        $videos = $this->API->get("/playlistItems", array("playlistId" => $this->uploadsId, "part" => "snippet", "maxResults" => 50));
+        $videos = $this->API->get("/playlistItems", array("playlistId" => $this->uploadsId, "part" => "snippet", "maxResults" => $count));
         if (!isset($videos->items)) {
             die("Can't load videos of channel");
         }
 
         foreach ($videos->items as $video) {
-            if (!isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->description, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
+            if (!isset(
+                $video->snippet,
+                $video->snippet->publishedAt,
+                $video->snippet->title,
+                $video->snippet->description,
+                $video->snippet->thumbnails,
+                $video->snippet->thumbnails->medium,
+                $video->snippet->thumbnails->medium->url,
+                $video->snippet->resourceId,
+                $video->snippet->resourceId->videoId
+            )) {
                 die("Can't load video of channel");
             }
 
-            $result[strtotime($video->snippet->publishedAt)] = new Video(
+            $result[] = new Video(
                 $video->snippet->resourceId->videoId,
                 $video->snippet->title,
                 $video->snippet->description,
@@ -97,13 +107,10 @@ class Channel
                 0,
                 0,
                 0,
-                "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url)
+                "./dl.php?url=" . urlencode($video->snippet->thumbnails->medium->url)
             );
         }
 
-        ksort($result);
-        $result = array_reverse($result);
-        $result = array_slice($result, 0, 50);
         return $result;
     }
 }

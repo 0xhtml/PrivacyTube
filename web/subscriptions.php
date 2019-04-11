@@ -8,7 +8,7 @@ $subscriptions = new Subscriptions($user, $mySQL, $API);
 $video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
 
-foreach ($subscriptions->getVideos(5) as $video) {
+foreach ($subscriptions->getVideos(25) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
@@ -17,7 +17,7 @@ foreach ($subscriptions->getVideos(5) as $video) {
     $subscriptions_html .= $video_preview_template->render();
 }
 
-$template = new Template("../templates/index.html");
+$template = new Template("../templates/subscriptions.html");
 $template->set_var("subscriptions", $subscriptions_html);
 
 $header_template = new Template("../templates/header.html");
@@ -25,7 +25,7 @@ $header_template = new Template("../templates/header.html");
 $nav_template = new Template("../templates/nav.html");
 
 $page_template = new Template("../templates/page.html");
-$page_template->set_var("title", "PrivacyTube");
+$page_template->set_var("title", "Subscriptions - PrivacyTube");
 $page_template->set_var("header", $header_template->render());
 $page_template->set_var("nav", $nav_template->render());
 $page_template->set_var("main", $template->render());

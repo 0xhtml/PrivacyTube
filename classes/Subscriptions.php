@@ -13,7 +13,7 @@ class Subscriptions
         $this->API = $API;
     }
 
-    public function getVideos(): array
+    public function getVideos(int $count): array
     {
         $result = array();
 
@@ -47,8 +47,8 @@ class Subscriptions
                     $video->snippet->channelId,
                     $video->snippet->channelTitle,
                     $video->snippet->thumbnails,
-                    $video->snippet->thumbnails->default,
-                    $video->snippet->thumbnails->default->url,
+                    $video->snippet->thumbnails->medium,
+                    $video->snippet->thumbnails->medium->url,
                     $video->snippet->resourceId,
                     $video->snippet->resourceId->videoId
                 )) {
@@ -64,14 +64,14 @@ class Subscriptions
                     0,
                     0,
                     0,
-                    "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url)
+                    "./dl.php?url=" . urlencode($video->snippet->thumbnails->medium->url)
                 );
             }
         }
 
         ksort($result);
         $result = array_reverse($result);
-        $result = array_slice($result, 0, 50);
+        $result = array_slice($result, 0, $count);
         return $result;
     }
 
