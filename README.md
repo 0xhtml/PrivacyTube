@@ -6,7 +6,7 @@ It has it's own account system with that you can subscribe to channels. PrivacyT
 
 ## Installation
 1. Install `php-curl` and `youtube-dl`.
-2. Setup databases (More information comming soon)
+2. Setup database (More information comming soon)
 3. Set the webservers root directory to `web`.
 4. Crete a file called `key.txt` containing the Google API key in the first line and the MySQL passwaord in the second line. Example:
 ```
