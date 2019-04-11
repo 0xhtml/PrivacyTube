@@ -13,7 +13,7 @@ class Subscriptions
         $this->API = $API;
     }
 
-    public function getVideos()
+    public function getVideos(): array
     {
         $result = array();
 
@@ -39,16 +39,32 @@ class Subscriptions
             }
 
             foreach ($videos->items as $video) {
-                if (!isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
+                if (!isset(
+                    $video->snippet,
+                    $video->snippet->publishedAt,
+                    $video->snippet->title,
+                    $video->snippet->description,
+                    $video->snippet->channelId,
+                    $video->snippet->channelTitle,
+                    $video->snippet->thumbnails,
+                    $video->snippet->thumbnails->default,
+                    $video->snippet->thumbnails->default->url,
+                    $video->snippet->resourceId,
+                    $video->snippet->resourceId->videoId
+                )) {
                     die("Can't load video of subscribed channel $channel->id");
                 }
 
-                $result[strtotime($video->snippet->publishedAt)] = array(
-                    "title" => $video->snippet->title,
-                    "thumbnail" => "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url),
-                    "channel" => $video->snippet->channelTitle,
-                    "channel_id" => $video->snippet->channelId,
-                    "id" => $video->snippet->resourceId->videoId
+                $result[strtotime($video->snippet->publishedAt)] = new Video(
+                    $video->snippet->resourceId->videoId,
+                    $video->snippet->title,
+                    $video->snippet->description,
+                    new Channel($this->API, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),
+                    strtotime($video->snippet->publishedAt),
+                    0,
+                    0,
+                    0,
+                    "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url)
                 );
             }
         }

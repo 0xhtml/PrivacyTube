@@ -8,7 +8,7 @@ if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
 
 $video = $API->getVideo($_GET["v"]);
 
-$channel = $API->getChannel($video->getChannelId());
+$channel = $API->getChannel($video->getChannel()->getId());
 
 $template = new Template("../templates/watch.html");
 $template->set_var("videoID", $video->getId());

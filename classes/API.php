@@ -66,11 +66,12 @@ class API
         return new Video($id,
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
-            $data->items[0]->snippet->channelId,
+            new Channel($this, $this->mySQL, $data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),
             strtotime($data->items[0]->snippet->publishedAt),
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,
-            $data->items[0]->statistics->dislikeCount
+            $data->items[0]->statistics->dislikeCount,
+            $data->items[0]->snippet->thumbnails->default->url
         );
     }
 

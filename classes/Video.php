@@ -5,22 +5,24 @@ class Video
     private $id;
     private $title;
     private $description;
-    private $channelId;
+    private $channel;
     private $date;
     private $views;
     private $likes;
     private $dislikes;
+    private $thumbnail;
 
-    public function __construct(string $id, string $title, string $description, string $channelId, int $date, int $views, int $likes, int $dislikes)
+    public function __construct(string $id, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
     {
         $this->id = $id;
         $this->title = $title;
         $this->description = $description;
-        $this->channelId = $channelId;
+        $this->channel = $channel;
         $this->date = $date;
         $this->views = $views;
         $this->likes = $likes;
         $this->dislikes = $dislikes;
+        $this->thumbnail = $thumbnail;
     }
 
     public function getId(): string
@@ -38,9 +40,9 @@ class Video
         return $this->description;
     }
 
-    public function getChannelId(): string
+    public function getChannel(): Channel
     {
-        return $this->channelId;
+        return $this->channel;
     }
 
     public function getDate(): string
@@ -61,5 +63,10 @@ class Video
     public function getDislikes(): int
     {
         return $this->dislikes;
+    }
+
+    public function getThumbnail(): string
+    {
+        return $this->thumbnail;
     }
 }

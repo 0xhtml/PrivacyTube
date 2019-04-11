@@ -58,15 +58,14 @@ class Channel
         $this->mySQL->execute("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "ss", $user, $channel);
     }
 
-    public function is_subscribed(User $user)
+    public function is_subscribed(User $user): bool
     {
         $user = $user->getUser();
         $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $this->id);
         if ($result->num_rows === 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     public function unsubscribe(User $user, string $channel)
@@ -75,7 +74,7 @@ class Channel
         $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $channel);
     }
 
-    public function getVideos()
+    public function getVideos(): array
     {
         $result = array();
 
@@ -85,16 +84,20 @@ class Channel
         }
 
         foreach ($videos->items as $video) {
-            if (!isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->channelTitle, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
+            if (!isset($video->snippet, $video->snippet->publishedAt, $video->snippet->title, $video->snippet->description, $video->snippet->thumbnails, $video->snippet->thumbnails->default, $video->snippet->thumbnails->default->url, $video->snippet->resourceId, $video->snippet->resourceId->videoId)) {
                 die("Can't load video of channel");
             }
 
-            $result[strtotime($video->snippet->publishedAt)] = array(
-                "title" => $video->snippet->title,
-                "thumbnail" => "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url),
-                "channel" => $video->snippet->channelTitle,
-                "channel_id" => $video->snippet->channelId,
-                "id" => $video->snippet->resourceId->videoId
+            $result[strtotime($video->snippet->publishedAt)] = new Video(
+                $video->snippet->resourceId->videoId,
+                $video->snippet->title,
+                $video->snippet->description,
+                $this,
+                strtotime($video->snippet->publishedAt),
+                0,
+                0,
+                0,
+                "./dl.php?url=" . urlencode($video->snippet->thumbnails->default->url)
             );
         }
 

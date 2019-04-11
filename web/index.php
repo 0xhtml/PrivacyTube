@@ -9,11 +9,11 @@ $video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
 
 foreach ($subscriptions->getVideos() as $video) {
-    $video_preview_template->set_var("title", $video["title"]);
-    $video_preview_template->set_var("thumbnail", $video["thumbnail"]);
-    $video_preview_template->set_var("channel", $video["channel"]);
-    $video_preview_template->set_var("channelId", $video["channel_id"]);
-    $video_preview_template->set_var("id", $video["id"]);
+    $video_preview_template->set_var("title", $video->getTitle());
+    $video_preview_template->set_var("thumbnail", $video->getThumbnail());
+    $video_preview_template->set_var("channel", $video->getChannel()->getName());
+    $video_preview_template->set_var("channelId", $video->getChannel()->getId());
+    $video_preview_template->set_var("id", $video->getId());
     $subscriptions_html .= $video_preview_template->render();
 }
 
