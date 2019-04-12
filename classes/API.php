@@ -7,12 +7,22 @@ class API
     private $key;
     private $mySQL;
 
+    /**
+     * YouTube API constructor
+     * @param string $key Google API key
+     * @param MySQL $mySQL
+     */
     public function __construct(string $key, MySQL $mySQL)
     {
         $this->key = $key;
         $this->mySQL = $mySQL;
     }
 
+    /**
+     * Get a channel from YouTube
+     * @param string $id Channel id
+     * @return Channel
+     */
     public function getChannel(string $id): Channel
     {
         $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
@@ -44,6 +54,11 @@ class API
         );
     }
 
+    /**
+     * Get a video from YouTube
+     * @param string $id Video id
+     * @return Video
+     */
     public function getVideo(string $id): Video
     {
         $data = $this->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
@@ -75,6 +90,13 @@ class API
         );
     }
 
+    /**
+     * Execute a request to the YouTube API and return the json decoded response
+     * @param string $url URL
+     * @param array $params Parameters
+     * @param bool $save If set to true, the response gets saved to the MySQL database.
+     * @return mixed Json decoded response
+     */
     public function get(string $url, array $params, bool $save = true)
     {
         $params_json = json_encode($params);

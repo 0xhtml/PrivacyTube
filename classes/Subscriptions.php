@@ -6,6 +6,12 @@ class Subscriptions
     private $mySQL;
     private $API;
 
+    /**
+     * Subscriptions constructor
+     * @param User $user
+     * @param MySQL $mySQL
+     * @param API $API
+     */
     public function __construct(User $user, MySQL $mySQL, API $API)
     {
         $this->user = $user;
@@ -13,6 +19,11 @@ class Subscriptions
         $this->API = $API;
     }
 
+    /**
+     * Get the videos the users subscribed channels uploaded ordered from new to old
+     * @param int $count Number of videos to get
+     * @return array
+     */
     public function getVideos(int $count): array
     {
         $result = array();
@@ -75,6 +86,10 @@ class Subscriptions
         return $result;
     }
 
+    /**
+     * Get the channels the user is subscribed to
+     * @return array
+     */
     public function getChannels()
     {
         $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ?", "s", $this->user->getUser());
