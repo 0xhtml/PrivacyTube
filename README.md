@@ -23,6 +23,5 @@ You can help making PrivacyTube better! Erveryone can create a pull request and 
 
 ### TODO
 If you wanna help but you don't know what to implement, then here is the perfect list for you:
-- Register page
 - Change password page
 - A way to enable caching of videos and images loaded via the `dl.php` srcipt
