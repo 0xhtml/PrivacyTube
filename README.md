@@ -25,4 +25,3 @@ If you wanna help but you don't know what to implement, then here is the perfect
 - Information about the MySQL setup
 - A MySQL setup script
 - A way to enable caching of videos and images loaded via the `dl.php` srcipt
-- Documentation of the whole code (If someone would start on this I would create a branch and help myself documenting the whole thing)
