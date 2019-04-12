@@ -145,6 +145,8 @@ class Channel
             }
 
             $result[] = new Video(
+                $this->API,
+                $this->mySQL,
                 $video->snippet->resourceId->videoId,
                 $video->snippet->title,
                 $video->snippet->description,

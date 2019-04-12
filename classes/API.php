@@ -78,7 +78,10 @@ class API
             die("Can't load video $id");
         }
 
-        return new Video($id,
+        return new Video(
+            $this,
+            $this->mySQL,
+            $id,
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
             new Channel($this, $this->mySQL, $data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),

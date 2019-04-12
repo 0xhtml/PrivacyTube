@@ -140,6 +140,12 @@ main > section {
     width: 100%;
 }
 
+#videoInfo > p {
+    max-height: 38px;
+    line-height: 19px;
+    overflow: hidden;
+}
+
 #videoTitle {
     display: flex;
     align-items: baseline;

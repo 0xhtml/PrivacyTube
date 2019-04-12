@@ -2,6 +2,8 @@
 
 class Video
 {
+    private $API;
+    private $mySQL;
     private $id;
     private $title;
     private $description;
@@ -14,6 +16,8 @@ class Video
 
     /**
      * Video constructor
+     * @param API $API
+     * @param MySQL $mySQL
      * @param string $id Video id
      * @param string $title Video title
      * @param string $description Video description
@@ -24,8 +28,10 @@ class Video
      * @param int $dislikes Dislikes of the video
      * @param string $thumbnail Video thumbnail url
      */
-    public function __construct(string $id, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
+    public function __construct(API $API, MySQL $mySQL, string $id, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
     {
+        $this->API = $API;
+        $this->mySQL = $mySQL;
         $this->id = $id;
         $this->title = $title;
         $this->description = $description;
@@ -35,6 +41,55 @@ class Video
         $this->likes = $likes;
         $this->dislikes = $dislikes;
         $this->thumbnail = $thumbnail;
+    }
+
+    /**
+     * Get related videos to the current video
+     * @param int $count Number of videos to get
+     * @return array
+     */
+    public function getRelatedVideos(int $count): array
+    {
+        $result = array();
+
+        $videos = $this->API->get("/search", array("relatedToVideoId" => $this->id, "part" => "snippet", "type" => "video", "maxResults" => $count));
+        if (!isset($videos->items)) {
+            die("Can't load related videos");
+        }
+
+        foreach ($videos->items as $video) {
+            if (!isset(
+                $video->snippet,
+                $video->snippet->publishedAt,
+                $video->snippet->title,
+                $video->snippet->description,
+                $video->snippet->channelId,
+                $video->snippet->channelTitle,
+                $video->snippet->thumbnails,
+                $video->snippet->thumbnails->medium,
+                $video->snippet->thumbnails->medium->url,
+                $video->id,
+                $video->id->videoId
+            )) {
+                die("Can't load related video");
+            }
+
+            $result[] = new Video(
+                $this->API,
+                $this->mySQL,
+                $video->id->videoId,
+                $video->snippet->title,
+                $video->snippet->description,
+                new Channel($this->API, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),
+                strtotime($video->snippet->publishedAt),
+                0,
+                0,
+                0,
+                "./dl.php?url=" . urlencode($video->snippet->thumbnails->medium->url)
+            );
+        }
+
+        return $result;
     }
 
     /**

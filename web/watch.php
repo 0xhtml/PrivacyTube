@@ -10,6 +10,18 @@ $video = $API->getVideo($_GET["v"]);
 
 $channel = $API->getChannel($video->getChannel()->getId());
 
+$video_preview_template = new Template("../templates/videoPreview.html");
+$related_html = "";
+
+foreach ($video->getRelatedVideos(5) as $relatedVideo) {
+    $video_preview_template->set_var("title", $relatedVideo->getTitle());
+    $video_preview_template->set_var("thumbnail", $relatedVideo->getThumbnail());
+    $video_preview_template->set_var("channel", $relatedVideo->getChannel()->getName());
+    $video_preview_template->set_var("channelId", $relatedVideo->getChannel()->getId());
+    $video_preview_template->set_var("id", $relatedVideo->getId());
+    $related_html .= $video_preview_template->render();
+}
+
 $template = new Template("../templates/watch.html");
 $template->set_var("videoID", $video->getId());
 $template->set_var("videoTitle", $video->getTitle());
@@ -23,6 +35,8 @@ $template->set_var("channelId", $channel->getId());
 $template->set_var("channelName", $channel->getName());
 $template->set_var("channelImage", $channel->getImage());
 $template->set_var("channelSubscribers", number_format($channel->getSubscribers()));
+
+$template->set_var("related", $related_html);
 
 $header_template = new Template("../templates/header.html");
 

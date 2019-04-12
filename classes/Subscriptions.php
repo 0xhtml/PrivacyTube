@@ -31,7 +31,7 @@ class Subscriptions
         $channels = $this->getChannels();
         $channels = join(",", $channels);
 
-        $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => 50));
+        $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => $count));
         if (!isset($data->items)) {
             die("Can't load subscribed channels of user");
         }
@@ -67,6 +67,8 @@ class Subscriptions
                 }
 
                 $result[strtotime($video->snippet->publishedAt)] = new Video(
+                    $this->API,
+                    $this->mySQL,
                     $video->snippet->resourceId->videoId,
                     $video->snippet->title,
                     $video->snippet->description,
