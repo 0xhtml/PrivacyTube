@@ -16,7 +16,7 @@ $key = str_replace(["\n", "\r"], "", fgets($key_file));
 $mysql_pass = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
 
-$mysqli = mysqli_connect("cloud", "PrivacyTube", $mysql_pass, "PrivacyTube");
+$mysqli = mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube");
 if ($mysqli->connect_errno !== 0) {
     die("Can't connect to MySQL: $mysqli->connect_error");
 }
