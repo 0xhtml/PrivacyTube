@@ -119,7 +119,7 @@ main > section {
 }
 
 .videos > div > a.title {
-    height: 38px;
+    max-height: 38px;
     line-height: 19px;
     overflow: hidden;
 }
