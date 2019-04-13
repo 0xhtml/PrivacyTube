@@ -109,10 +109,10 @@ class Channel
      * @param User $user
      * @param string $channel
      */
-    public function unsubscribe(User $user, string $channel)
+    public function unsubscribe(User $user)
     {
         $user = $user->getUser();
-        $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $channel);
+        $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $this->id);
     }
 
     /**

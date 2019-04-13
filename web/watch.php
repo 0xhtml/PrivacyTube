@@ -1,6 +1,8 @@
 <?php
 include_once "../init.php";
 
+$user = new User();
+
 if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
     header("Location: .");
     die();

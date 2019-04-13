@@ -1,6 +1,8 @@
 <?php
 include_once "../init.php";
 
+$user = new User();
+
 if (!isset($_GET["q"])) {
     header("Location: .");
     die();

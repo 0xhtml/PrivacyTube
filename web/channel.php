@@ -1,6 +1,8 @@
 <?php
 include_once "../init.php";
 
+$user = new User();
+
 if (!isset($_GET["c"]) or strlen($_GET["c"]) != 24) {
     header("Location: .");
     die();
@@ -10,10 +12,10 @@ $channel = $API->getChannel($_GET["c"]);
 
 if (isset($_POST["subscribe"])) {
     $user = new User();
-    $channel->subscribe($user, $channel->getId());
+    $channel->subscribe($user);
 } elseif (isset($_POST["unsubscribe"])) {
     $user = new User();
-    $channel->unsubscribe($user, $channel->getId());
+    $channel->unsubscribe($user);
 } elseif (session_status() == PHP_SESSION_NONE and isset($_COOKIE["PHPSESSID"])) {
     session_start();
     if (isset($_SESSION["user"])) {
