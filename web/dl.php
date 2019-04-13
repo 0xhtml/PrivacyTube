@@ -1,8 +1,4 @@
 <?php
-require_once "../init.php";
-
-$user = new User();
-
 if (!is_dir("dl")) {
     mkdir("dl");
 }
