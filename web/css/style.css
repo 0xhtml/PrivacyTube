@@ -132,6 +132,10 @@ main > section {
     width: 100%;
 }
 
+#video {
+    padding: .5em .5em 0 .5em;
+}
+
 #video > video {
     width: 100%;
 }
