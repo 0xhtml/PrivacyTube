@@ -209,13 +209,13 @@ main > section {
     header > form {
         display: none;
     }
-
-    #video {
-        padding: 0;
-    }
 }
 
 @media all and (max-width: 70em) {
+    #video {
+        padding: 0;
+    }
+
     .videos > div {
         width: calc(25% - .5em);
     }
