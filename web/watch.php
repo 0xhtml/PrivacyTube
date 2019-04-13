@@ -13,7 +13,7 @@ $channel = $API->getChannel($video->getChannel()->getId());
 $video_preview_template = new Template("../templates/videoPreview.html");
 $related_html = "";
 
-foreach ($video->getRelatedVideos(5) as $relatedVideo) {
+foreach ($video->getRelatedVideos(10) as $relatedVideo) {
     $video_preview_template->set_var("title", $relatedVideo->getTitle());
     $video_preview_template->set_var("thumbnail", $relatedVideo->getThumbnail());
     $video_preview_template->set_var("channel", $relatedVideo->getChannel()->getName());

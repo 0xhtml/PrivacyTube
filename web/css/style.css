@@ -104,12 +104,12 @@ main > section {
 .videos {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    margin: 0 -.25em;
 }
 
 .videos > div {
     width: calc(20% - .5em);
-    margin-bottom: .5em;
+    margin: 0 .25em .5em .25em;
 }
 
 .videos > div > a {
@@ -130,10 +130,6 @@ main > section {
 
 .videos > div > a > img {
     width: 100%;
-}
-
-#video {
-    padding: 0;
 }
 
 #video > video {
@@ -208,5 +204,33 @@ main > section {
 
     header > form {
         display: none;
+    }
+
+    #video {
+        padding: 0;
+    }
+}
+
+@media all and (max-width: 70em) {
+    .videos > div {
+        width: calc(25% - .5em);
+    }
+}
+
+@media all and (max-width: 55.2em) {
+    .videos > div {
+        width: calc(33.33333333% - .5em);
+    }
+}
+
+@media all and (max-width: 41.4em) {
+    .videos > div {
+        width: calc(50% - .5em);
+    }
+}
+
+@media all and (max-width: 27.6em) {
+    .videos > div {
+        width: 100%;
     }
 }
