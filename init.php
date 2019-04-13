@@ -2,6 +2,7 @@
 require_once "classes/API.php";
 require_once "classes/Channel.php";
 require_once "classes/MySQL.php";
+require_once "classes/Search.php";
 require_once "classes/Subscriptions.php";
 require_once "classes/Template.php";
 require_once "classes/User.php";
