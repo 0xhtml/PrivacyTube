@@ -13,12 +13,13 @@ if (!file_exists("../key.txt")) {
 
 $key_file = fopen("../key.txt", "r");
 $key = str_replace(["\n", "\r"], "", fgets($key_file));
+$mysql_host = str_replace(["\n", "\r"], "", fgets($key_file));
 $mysql_pass = str_replace(["\n", "\r"], "", fgets($key_file));
 fclose($key_file);
 
-$mysqli = mysqli_connect("localhost", "PrivacyTube", $mysql_pass, "PrivacyTube");
-if ($mysqli->connect_errno !== 0) {
-    die("Can't connect to MySQL: $mysqli->connect_error");
+$mysqli = mysqli_connect($mysql_host, "PrivacyTube", $mysql_pass, "PrivacyTube");
+if (!$mysqli) {
+    die("Can't connect to MySQL: " . mysqli_connect_error());
 }
 
 $mySQL = new MySQL($mysqli);
