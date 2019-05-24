@@ -1,4 +1,6 @@
 # PrivacyTube
+![GitHub issues](https://img.shields.io/github/issues/0xhtml/PrivacyTube.svg?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/0xhtml/PrivacyTube.svg?style=for-the-badge)
+
 PrivacyTube is a privacy oriented YouTube frontend. PrivacyTube uses the Google API to get content from YouTube.
 
 It has it's own account system with that you can subscribe to channels. PrivacyTube uses MySQL for databases and
