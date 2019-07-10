@@ -8,16 +8,11 @@ It has it's own account system with that you can subscribe to channels. PrivacyT
 
 ## Installation
 1. Install `php-curl` and `youtube-dl` (and of course a MySQL-server, a webserver and PHP).
-2. Create a file called `key.txt` containing the Google API key in the first line, the MySQL host in the second line and the MySQL password in the third line.
-    ```
-    AIzht7kdcWb3MyBud8oHHEPiDEDQbfaS8hLQDs
-    localhost
-    super_secret_password
-    ```
-3. Setup database:
-    1. Create a user called `PrivacyTube` with the password from the key file.
-    2. Create a database called `PrivacyTube`.
-    3. Run the setup script: `php setup.php`.
+2. Setup database:
+    1. Create a database.
+    2. Run the setup script: `php setup.php`.
+    3. Put your MySQL-host, -user, password and -database into the `config.json`.
+3. Get an API-Key from Google and put it into the `config.json` aswell.
 4. Set the webservers root directory to `web`.
 5. You're ready!
 
