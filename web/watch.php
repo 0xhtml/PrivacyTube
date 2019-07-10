@@ -1,6 +1,15 @@
 <?php
-include_once "../init.php";
+require_once "../classes/API.php";
+require_once "../classes/Channel.php";
+require_once "../classes/Config.php";
+require_once "../classes/MySQL.php";
+require_once "../classes/Template.php";
+require_once "../classes/User.php";
+require_once "../classes/Video.php";
 
+$config = new Config();
+$mySQL = new MySQL($config);
+$API = new API($config, $mySQL);
 $user = new User();
 
 if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {

@@ -1,6 +1,14 @@
 <?php
-include_once "../init.php";
+require_once "../classes/API.php";
+require_once "../classes/Config.php";
+require_once "../classes/MySQL.php";
+require_once "../classes/Subscriptions.php";
+require_once "../classes/Template.php";
+require_once "../classes/User.php";
 
+$config = new Config();
+$mySQL = new MySQL($config);
+$API = new API($config, $mySQL);
 $user = new User();
 
 $subscriptions = new Subscriptions($user, $mySQL, $API);

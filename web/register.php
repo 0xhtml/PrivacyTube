@@ -1,5 +1,8 @@
 <?php
-include_once "../init.php";
+require_once "../classes/Config.php";
+require_once "../classes/MySQL.php";
+require_once "../classes/User.php";
+require_once "../classes/Template.php";
 
 User::checkLogin();
 
@@ -12,8 +15,12 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
     } elseif ($_POST["password"] !== $_POST["password2"]) {
         $template->set_var("message", "Password conformation invalid.");
         $template->set_var("username", $_POST["username"]);
-    } elseif (!User::register($mySQL, $_POST["username"], $_POST["password"])) {
-        $template->set_var("message", "Username already taken.");
+    } else {
+        $config = new Config();
+        $mySQL = new MySQL($config);
+        if ((!User::register($mySQL, $_POST["username"], $_POST["password"]))) {
+            $template->set_var("message", "Username already taken.");
+        }
     }
 }
 

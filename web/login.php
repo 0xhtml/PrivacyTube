@@ -1,11 +1,16 @@
 <?php
-include_once "../init.php";
+require_once "../classes/Config.php";
+require_once "../classes/MySQL.php";
+require_once "../classes/Template.php";
+require_once "../classes/User.php";
 
 User::checkLogin();
 
 $template = new Template("../templates/login.html");
 
 if (isset($_POST["username"], $_POST["password"])) {
+    $config = new Config();
+    $mySQL = new MySQL($config);
     if (!User::login($mySQL, $_POST["username"], $_POST["password"])) {
         $template->set_var("message", "Invalid username or password");
         $template->set_var("username", $_POST["username"]);

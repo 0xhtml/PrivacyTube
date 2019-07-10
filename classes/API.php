@@ -2,19 +2,18 @@
 
 class API
 {
-
     private const URL = "https://www.googleapis.com/youtube/v3";
-    private $key;
+    private $config;
     private $mySQL;
 
     /**
      * YouTube API constructor
-     * @param string $key Google API key
+     * @param Config $config
      * @param MySQL $mySQL
      */
-    public function __construct(string $key, MySQL $mySQL)
+    public function __construct(Config $config, MySQL $mySQL)
     {
-        $this->key = $key;
+        $this->config = $config;
         $this->mySQL = $mySQL;
     }
 
@@ -108,7 +107,7 @@ class API
             return json_decode($result->fetch_object()->data);
         }
 
-        $params["key"] = $this->key;
+        $params["key"] = $this->config->getAPIKey();
         $full_url = self::URL . $url . "?" . http_build_query($params);
 
         $curl = curl_init($full_url);

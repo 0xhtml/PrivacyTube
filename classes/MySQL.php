@@ -6,11 +6,14 @@ class MySQL
 
     /**
      * MySQL constructor
-     * @param mysqli $mysqli
+     * @param Config $config
      */
-    public function __construct(mysqli $mysqli)
+    public function __construct(Config $config)
     {
-        $this->mysqli = $mysqli;
+        $this->mysqli = mysqli_connect($config->getMySQLHost(), $config->getMySQLUser(), $config->getMySQLPass(), $config->getMySQLDB());
+        if (!$this->mysqli) {
+            die("Can't connect to MySQL: " . mysqli_connect_error());
+        }
     }
 
     /**
@@ -22,7 +25,9 @@ class MySQL
      */
     public function execute(string $sql, string $parameter_types = null, ...$parameters)
     {
-        $statement = $this->mysqli->prepare($sql);
+        if (!($statement = $this->mysqli->prepare($sql))) {
+            die("Can't execute SQL \"$sql\": " . $this->mysqli->error);
+        }
         if ($parameter_types != null) {
             $statement->bind_param($parameter_types, ...$parameters);
         }

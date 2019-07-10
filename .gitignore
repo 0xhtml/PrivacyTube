@@ -1,3 +1,2 @@
 web/dl/*
-key.txt
-.idea/
+config.json
