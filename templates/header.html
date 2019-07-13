@@ -1,10 +1,11 @@
 <header>
-    <a href="#" onclick="document.body.className = (document.body.className === 'hide-nav') ? '' : 'hide-nav';return false;">
-        <i class="material-icons">menu</i>
-    </a>
     <a href=".">PrivacyTube</a>
     <form action="./search.php" method="get">
         <input name="q" placeholder="Search" type="search" value="{{search}}">
-        <button type="submit"><i class="material-icons">search</i></button>
     </form>
+    <nav>
+        <a href=".">Home</a>
+        <a href="./subscriptions.php">Subscriptions</a>
+        <a href="./logout.php">Logout</a>
+    </nav>
 </header>
