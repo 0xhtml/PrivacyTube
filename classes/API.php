@@ -47,7 +47,7 @@ class API
             $this->mySQL,
             $id,
             $data->items[0]->snippet->title,
-            "./dl.php?url=" . urlencode($data->items[0]->snippet->thumbnails->default->url),
+            $data->items[0]->snippet->thumbnails->default->url,
             $data->items[0]->statistics->subscriberCount,
             $data->items[0]->contentDetails->relatedPlaylists->uploads
         );
@@ -83,7 +83,7 @@ class API
             $id,
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
-            new Channel($this, $this->mySQL, $data->items[0]->snippet->channelId, "./dl.php?url=" . urlencode($data->items[0]->snippet->channelTitle), "", 0, ""),
+            new Channel($this, $this->mySQL, $data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),
             strtotime($data->items[0]->snippet->publishedAt),
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,

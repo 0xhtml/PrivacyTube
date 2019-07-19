@@ -155,7 +155,7 @@ class Channel
                 0,
                 0,
                 0,
-                "./dl.php?url=" . urlencode($video->snippet->thumbnails->medium->url)
+                $video->snippet->thumbnails->medium->url
             );
         }
 
