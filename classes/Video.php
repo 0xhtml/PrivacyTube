@@ -5,6 +5,7 @@ class Video
     private $API;
     private $mySQL;
     private $id;
+    private $url;
     private $title;
     private $description;
     private $channel;
@@ -14,11 +15,28 @@ class Video
     private $dislikes;
     private $thumbnail;
 
+    public static function idToURL(string $id)
+    {
+        $response = file_get_contents("https://www.youtube.com/get_video_info?ps=maxres&video_id=" . urlencode($id));
+        parse_str($response, $data);
+        if (isset($data["url_encoded_fmt_stream_map"])) {
+            parse_str($data["url_encoded_fmt_stream_map"], $urldata);
+            if (isset($urldata["url"])) {
+                return $urldata["url"];
+            } else {
+                die("Can't load video URL of $id");
+            }
+        } else {
+            die("Can't load video URL of $id");
+        }
+    }
+
     /**
      * Video constructor
      * @param API $API
      * @param MySQL $mySQL
      * @param string $id Video id
+     * @param string $url Video URL
      * @param string $title Video title
      * @param string $description Video description
      * @param Channel $channel Channel who uploaded the video
@@ -28,11 +46,12 @@ class Video
      * @param int $dislikes Dislikes of the video
      * @param string $thumbnail Video thumbnail url
      */
-    public function __construct(API $API, MySQL $mySQL, string $id, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
+    public function __construct(API $API, MySQL $mySQL, string $id, string $url, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
     {
         $this->API = $API;
         $this->mySQL = $mySQL;
         $this->id = $id;
+        $this->url = $url;
         $this->title = $title;
         $this->description = $description;
         $this->channel = $channel;
@@ -78,6 +97,7 @@ class Video
                 $this->API,
                 $this->mySQL,
                 $video->id->videoId,
+                "",
                 $video->snippet->title,
                 $video->snippet->description,
                 new Channel($this->API, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),
@@ -99,6 +119,15 @@ class Video
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * Get the video URL
+     * @return string
+     */
+    public function getURL(): string
+    {
+        return $this->url;
     }
 
     /**

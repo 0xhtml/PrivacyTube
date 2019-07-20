@@ -81,6 +81,7 @@ class API
             $this,
             $this->mySQL,
             $id,
+            Video::idToURL($id),
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
             new Channel($this, $this->mySQL, $data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),

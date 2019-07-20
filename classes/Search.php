@@ -54,6 +54,7 @@ class Search
                 $this->API,
                 $this->mySQL,
                 $video->id->videoId,
+                "",
                 $video->snippet->title,
                 $video->snippet->description,
                 new Channel($this->API, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),

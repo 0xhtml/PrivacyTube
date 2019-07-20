@@ -148,6 +148,7 @@ class Channel
                 $this->API,
                 $this->mySQL,
                 $video->snippet->resourceId->videoId,
+                "",
                 $video->snippet->title,
                 $video->snippet->description,
                 $this,

@@ -35,6 +35,7 @@ foreach ($video->getRelatedVideos(10) as $relatedVideo) {
 
 $template = new Template("../templates/watch.html");
 $template->set_var("videoID", $video->getId());
+$template->set_var("videoURL", $video->getURL());
 $template->set_var("videoTitle", $video->getTitle());
 $template->set_var("videoDescription", nl2br($video->getDescription()));
 $template->set_var("videoViews", number_format($video->getViews()));
