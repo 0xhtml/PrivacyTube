@@ -28,7 +28,7 @@ if (isset($_POST["subscribe"])) {
 $video_preview_template = new Template("../templates/videoPreview.html");
 $videos_html = "";
 
-foreach ($channel->getVideos(10) as $video) {
+foreach ($channel->getVideos(25) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
