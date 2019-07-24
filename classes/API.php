@@ -103,7 +103,7 @@ class API
     public function get(string $url, array $params, bool $save = true)
     {
         $params_json = json_encode($params);
-        $result = $this->mySQL->execute("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 HOUR) LIMIT 1", "ss", $url, $params_json);
+        $result = $this->mySQL->execute("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) LIMIT 1", "ss", $url, $params_json);
         if ($result->num_rows === 1) {
             return json_decode($result->fetch_object()->data);
         }
