@@ -1,6 +1,15 @@
 <main>
     <section id="video">
         <video autoplay controls src="{{videoURL}}"></video>
+        <script>
+            var video = document.getElementsByTagName("video")[0];
+            video.currentTime = {{progress}};
+            video.addEventListener("timeupdate", () => {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", "save-video-progress.php?v={{videoID}}&p=" + video.currentTime);
+                xhttp.send();
+            });
+        </script>
     </section>
     <section id="videoInfo">
         <div>
