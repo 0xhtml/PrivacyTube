@@ -3,6 +3,7 @@
 class API
 {
     private const URL = "https://www.googleapis.com/youtube/v3";
+    public const REGIONS = array("DZ", "AR", "AU", "AT", "AZ", "BH", "BY", "BE", "BO", "BA", "BR", "BG", "CA", "CL", "CO", "CR", "HR", "CY", "CZ", "DK", "DO", "EC", "EG", "SV", "EE", "FI", "FR", "GE", "DE", "GH", "GR", "GT", "HN", "HK", "HU", "IS", "IN", "ID", "IQ", "IE", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KW", "LV", "LB", "LY", "LI", "LT", "LU", "MY", "MT", "MX", "ME", "MA", "NP", "NL", "NZ", "NI", "NG", "MK", "NO", "OM", "PK", "PA", "PY", "PE", "PH", "PL", "PT", "PR", "QA", "RO", "RU", "SA", "SN", "RS", "SG", "SK", "SI", "ZA", "KR", "ES", "LK", "SE", "CH", "TW", "TZ", "TH", "TN", "TR", "UG", "UA", "AE", "GB", "US", "UY", "VN", "YE", "ZW");
     private $config;
     private $mySQL;
 
@@ -69,6 +70,9 @@ class API
             $data->items[0]->snippet->description,
             $data->items[0]->snippet->channelId,
             $data->items[0]->snippet->publishedAt,
+            $data->items[0]->snippet->thumbnails,
+            $data->items[0]->snippet->thumbnails->medium,
+            $data->items[0]->snippet->thumbnails->medium->url,
             $data->items[0]->statistics,
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,
@@ -89,8 +93,60 @@ class API
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,
             $data->items[0]->statistics->dislikeCount,
-            $data->items[0]->snippet->thumbnails->default->url
+            $data->items[0]->snippet->thumbnails->medium->url
         );
+    }
+
+    /**
+     * Get the YouTube Trends
+     * @param string $region The region for the trends (e.g. us)
+     * @param int $count The number of videos to get
+     * @return array
+     */
+    public function getTrends(string $region, int $count): array
+    {
+        $result = array();
+
+        $data = $this->get("/videos", array("chart" => "mostPopular", "regionCode" => $region, "maxResults" => $count, "part" => "statistics,snippet"));
+        if (!isset($data->items)) {
+            die("Can't load trends of $region");
+        }
+
+        foreach ($data->items as $video) {
+            if (!isset(
+                $video->snippet,
+                $video->snippet->title,
+                $video->snippet->description,
+                $video->snippet->channelId,
+                $video->snippet->publishedAt,
+                $video->snippet->thumbnails,
+                $video->snippet->thumbnails->medium,
+                $video->snippet->thumbnails->medium->url,
+                $video->statistics,
+                $video->statistics->viewCount,
+                $video->statistics->likeCount,
+                $video->statistics->dislikeCount
+            )) {
+                die("Can't load video of trends $region");
+            }
+
+            $result[] = new Video(
+                $this,
+                $this->mySQL,
+                $video->id,
+                "",
+                $video->snippet->title,
+                $video->snippet->description,
+                new Channel($this, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),
+                strtotime($video->snippet->publishedAt),
+                $video->statistics->viewCount,
+                $video->statistics->likeCount,
+                $video->statistics->dislikeCount,
+                $video->snippet->thumbnails->medium->url
+            );
+        }
+
+        return $result;
     }
 
     /**
