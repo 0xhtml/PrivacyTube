@@ -70,15 +70,6 @@ class Channel
     }
 
     /**
-     * Get the number of PrivacyTube subscribers to the channel
-     * @return int
-     */
-    public function getPrivateSubscribers(): int
-    {
-        return $this->mySQL->execute("SELECT * FROM subscriptions WHERE channel = ?", "s", $this->id)->num_rows;
-    }
-
-    /**
      * Subscribe a user to this channel
      * @param User $user
      */
