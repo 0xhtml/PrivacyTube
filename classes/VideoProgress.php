@@ -1,7 +1,6 @@
 <?php
 class VideoProgress
 {
-
     private $mySQL;
     private $progress;
     private $user;
@@ -31,5 +30,4 @@ class VideoProgress
         $this->progress = $progress;
         $this->mySQL->execute("UPDATE video_progress SET progress=? WHERE video=? AND user=?", "dss", $this->progress, $this->video->getId(), $this->user->getUser());
     }
-
 }

@@ -68,5 +68,4 @@ class Search
 
         return $result;
     }
-
 }
