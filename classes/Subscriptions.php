@@ -31,17 +31,19 @@ class Subscriptions
         $channels = $this->getChannels();
         $channels = join(",", $channels);
 
-        $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails", "maxResults" => $count));
+        $data = $this->API->get("/channels", array("id" => $channels, "part" => "contentDetails"));
         if (!isset($data->items)) {
             die("Can't load subscribed channels of user");
         }
 
         foreach ($data->items as $channel) {
-            if (!isset($channel->id)) {
-                die("Can't load subscribed channel");
-            }
-            if (!isset($channel->contentDetails, $channel->contentDetails->relatedPlaylists, $channel->contentDetails->relatedPlaylists->uploads)) {
-                die("Can't load upload playlist id of subscribed channel $channel->id");
+            if (!isset(
+                $channel->id,
+                $channel->contentDetails,
+                $channel->contentDetails->relatedPlaylists,
+                $channel->contentDetails->relatedPlaylists->uploads
+            )) {
+                die("Can't load subscribed channels uploads");
             }
 
             $videos = $this->API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
