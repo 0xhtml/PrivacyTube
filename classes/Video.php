@@ -2,6 +2,7 @@
 require_once "API.php";
 require_once "Channel.php";
 require_once "MySQL.php";
+require_once "User.php";
 require_once "VideoSrc.php";
 
 class Video
@@ -91,6 +92,70 @@ class Video
             );
         }
 
+        return $result;
+    }
+
+    public static function fromUser(User $user, API $API, MySQL $mySQL, int $max = 50): array
+    {
+        $result = array();
+
+        $subscriptions = $user->getSubscriptions($mySQL);
+        $subscriptions = join(",", $subscriptions);
+
+        $data = $API->get("/channels", array("id" => $subscriptions, "part" => "contentDetails"));
+        if (!isset($data->items)) {
+            die("Can't load subscribed channels of user");
+        }
+
+        foreach ($data->items as $channel) {
+            if (!isset(
+                $channel->id,
+                $channel->contentDetails,
+                $channel->contentDetails->relatedPlaylists,
+                $channel->contentDetails->relatedPlaylists->uploads
+            )) {
+                die("Can't load subscribed channels uploads");
+            }
+
+            $videos = $API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
+            if (!isset($videos->items)) {
+                die("Can't load videos of subscribed channel $channel->id");
+            }
+
+            foreach ($videos->items as $video) {
+                if (!isset(
+                    $video->snippet,
+                    $video->snippet->publishedAt,
+                    $video->snippet->title,
+                    $video->snippet->description,
+                    $video->snippet->channelId,
+                    $video->snippet->channelTitle,
+                    $video->snippet->thumbnails,
+                    $video->snippet->thumbnails->medium,
+                    $video->snippet->thumbnails->medium->url,
+                    $video->snippet->resourceId,
+                    $video->snippet->resourceId->videoId
+                )) {
+                    die("Can't load video of subscribed channel $channel->id");
+                }
+
+                $result[strtotime($video->snippet->publishedAt)] = new Video(
+                    $video->snippet->resourceId->videoId,
+                    null,
+                    $video->snippet->title,
+                    $video->snippet->description,
+                    new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
+                    strtotime($video->snippet->publishedAt),
+                    null,
+                    null,
+                    null,
+                    $video->snippet->thumbnails->medium->url
+                );
+            }
+        }
+
+        krsort($result);
+        $result = array_slice($result, 0, $max);
         return $result;
     }
 

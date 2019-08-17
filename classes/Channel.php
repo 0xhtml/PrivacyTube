@@ -38,7 +38,7 @@ class Channel
         );
     }
 
-    public function __construct(string $id, string $name, string $image, int $subscribers, string $uploadsId)
+    public function __construct(string $id, string $name, ?string $image, ?int $subscribers, ?string $uploadsId)
     {
         $this->id = $id;
         $this->name = $name;

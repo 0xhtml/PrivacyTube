@@ -76,6 +76,16 @@ class User
         return $result->num_rows === 1;
     }
 
+    public function getSubscriptions(MySQL $mySQL): array
+    {
+        $subscriptions = array();
+        $result = $mySQL->execute("SELECT * FROM subscriptions WHERE user = ?", "s", $this->username);
+        while ($row = $result->fetch_object()) {
+            $subscriptions[] = $row->channel;
+        }
+        return $subscriptions;
+    }
+
     public function getLoggedin(): bool
     {
         return $this->loggedin;
