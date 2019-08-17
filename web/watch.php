@@ -18,8 +18,6 @@ $API = new API($config, $mySQL);
 $video = Video::fromId($_GET["v"], $API);
 //$videoProgress = new VideoProgress($mySQL, $video, $user);
 
-//$channel = $API->getChannel($video->getChannel()->getId());
-
 /*$video_preview_template = new Template("../templates/videoPreview.html");
 $related_html = "";
 
@@ -44,11 +42,10 @@ $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
 
 $template->set_var("channelId", $video->getChannel()->getId());
 $template->set_var("channelName", $video->getChannel()->getName());
+$template->set_var("channelImage", $video->getChannel()->getImage());
+$template->set_var("channelSubscribers", number_format($video->getChannel()->getSubscribers()));
 
 //$template->set_var("progress", $videoProgress->getProgress());
-//$template->set_var("channelName", $channel->getName());
-//$template->set_var("channelImage", $channel->getImage());
-//$template->set_var("channelSubscribers", number_format($channel->getSubscribers()));
 
 //$template->set_var("related", $related_html);
 

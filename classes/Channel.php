@@ -1,4 +1,5 @@
 <?php
+require_once "API.php";
 
 class Channel
 {
@@ -7,6 +8,35 @@ class Channel
     private $image;
     private $subscribers;
     private $uploadsId;
+
+    public static function fromId(string $id, API $API)
+    {
+        $data = $API->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
+        if (!isset(
+            $data->items,
+            $data->items[0],
+            $data->items[0]->snippet,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->thumbnails,
+            $data->items[0]->snippet->thumbnails->default,
+            $data->items[0]->snippet->thumbnails->default->url,
+            $data->items[0]->statistics,
+            $data->items[0]->statistics->subscriberCount,
+            $data->items[0]->contentDetails,
+            $data->items[0]->contentDetails->relatedPlaylists,
+            $data->items[0]->contentDetails->relatedPlaylists->uploads
+        )) {
+            die("Can't load Channel from id ($id)");
+        }
+
+        return new Channel(
+            $id,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->thumbnails->default->url,
+            $data->items[0]->statistics->subscriberCount,
+            $data->items[0]->contentDetails->relatedPlaylists->uploads
+        );
+    }
 
     public function __construct(string $id, string $name, string $image, int $subscribers, string $uploadsId)
     {
@@ -37,69 +67,8 @@ class Channel
         return $this->subscribers;
     }
 
-    /*public function subscribe(User $user)
+    public function getUploadsId(): string
     {
-        if ($this->is_subscribed($user)) {
-            return;
-        }
-        $this->mySQL->execute("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "ss", $user->getUser(), $this->id);
+        return $this->uploadsId;
     }
-
-    public function is_subscribed(User $user): bool
-    {
-        $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user->getUser(), $this->id);
-        if ($result->num_rows === 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public function unsubscribe(User $user)
-    {
-        $user = $user->getUser();
-        $this->mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $user, $this->id);
-    }
-
-    public function getVideos(int $count): array
-    {
-        $result = array();
-
-        $videos = $this->API->get("/playlistItems", array("playlistId" => $this->uploadsId, "part" => "snippet", "maxResults" => $count));
-        if (!isset($videos->items)) {
-            die("Can't load videos of channel");
-        }
-
-        foreach ($videos->items as $video) {
-            if (!isset(
-                $video->snippet,
-                $video->snippet->publishedAt,
-                $video->snippet->title,
-                $video->snippet->description,
-                $video->snippet->thumbnails,
-                $video->snippet->thumbnails->medium,
-                $video->snippet->thumbnails->medium->url,
-                $video->snippet->resourceId,
-                $video->snippet->resourceId->videoId
-            )) {
-                die("Can't load video of channel");
-            }
-
-            $result[] = new Video(
-                $this->API,
-                $this->mySQL,
-                $video->snippet->resourceId->videoId,
-                "",
-                $video->snippet->title,
-                $video->snippet->description,
-                $this,
-                strtotime($video->snippet->publishedAt),
-                0,
-                0,
-                0,
-                $video->snippet->thumbnails->medium->url
-            );
-        }
-
-        return $result;
-    }*/
 }

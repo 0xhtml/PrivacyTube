@@ -44,7 +44,7 @@ class Video
             VideoSrc::fromId($id),
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
-            new Channel($data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),
+            Channel::fromId($data->items[0]->snippet->channelId, $API),
             strtotime($data->items[0]->snippet->publishedAt),
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,
@@ -53,7 +53,48 @@ class Video
         );
     }
 
-    public function __construct(string $id, VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
+    public static function fromChannel(Channel $channel, API $API, int $max = 50): array
+    {
+        $result = array();
+
+        $data = $API->get("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => $max));
+        if (!isset($data->items)) {
+            die("Can't load Video from Channel (" . $channel->getId() . ")");
+        }
+
+        foreach ($data->items as $video) {
+            if (!isset(
+                $video->snippet,
+                $video->snippet->publishedAt,
+                $video->snippet->title,
+                $video->snippet->description,
+                $video->snippet->thumbnails,
+                $video->snippet->thumbnails->medium,
+                $video->snippet->thumbnails->medium->url,
+                $video->snippet->resourceId,
+                $video->snippet->resourceId->videoId
+            )) {
+                die("Can't load Video from Channel (" . $channel->getId() . ")");
+            }
+
+            $result[] = new Video(
+                $video->snippet->resourceId->videoId,
+                null,
+                $video->snippet->title,
+                $video->snippet->description,
+                $channel,
+                strtotime($video->snippet->publishedAt),
+                null,
+                null,
+                null,
+                $video->snippet->thumbnails->medium->url
+            );
+        }
+
+        return $result;
+    }
+
+    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, ?int $views, ?int $likes, ?int $dislikes, string $thumbnail)
     {
         $this->id = $id;
         $this->videoSrc = $videoSrc;

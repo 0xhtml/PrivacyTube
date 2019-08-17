@@ -13,7 +13,7 @@ class API
         $this->mySQL = $mySQL;
     }
 
-    public function getChannel(string $id): Channel
+    /*public function getChannel(string $id): Channel
     {
         $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
         if (!isset(
@@ -126,7 +126,7 @@ class API
         }
 
         return $result;
-    }
+    }*/
 
     public function get(string $url, array $params, bool $save = true)
     {
