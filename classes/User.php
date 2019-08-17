@@ -65,15 +65,15 @@ class User
         $mySQL->execute("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "ss", $this->username, $channel->getId());
     }
 
-    public function unsubsribe(Channel $channel)
+    public function unsubsribe(Channel $channel, MySQL $mySQL)
     {
         $mySQL->execute("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
     }
 
-    public function isSubscribed(Channel $channel): bool
+    public function isSubscribed(Channel $channel, MySQL $mySQL): bool
     {
-        $result = $this->mySQL->execute("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
-        return $result->num_rows === 0;
+        $result = $mySQL->execute("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
+        return $result->num_rows === 1;
     }
 
     public function getLoggedin(): bool
