@@ -4,8 +4,6 @@ require_once "../classes/MySQL.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
 
-User::checkLogin();
-
 $template = new Template("../templates/login.html");
 
 if (isset($_POST["username"], $_POST["password"])) {
