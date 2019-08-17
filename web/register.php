@@ -4,8 +4,6 @@ require_once "../classes/MySQL.php";
 require_once "../classes/User.php";
 require_once "../classes/Template.php";
 
-User::checkLogin();
-
 $template = new Template("../templates/register.html");
 
 if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
@@ -18,7 +16,7 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
     } else {
         $config = new Config();
         $mySQL = new MySQL($config);
-        if ((!User::register($mySQL, $_POST["username"], $_POST["password"]))) {
+        if (!User::register($mySQL, $_POST["username"], $_POST["password"])) {
             $template->set_var("message", "Username already taken.");
         }
     }
