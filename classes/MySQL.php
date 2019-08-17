@@ -4,10 +4,6 @@ class MySQL
 {
     private $mysqli;
 
-    /**
-     * MySQL constructor
-     * @param Config $config
-     */
     public function __construct(Config $config)
     {
         $this->mysqli = mysqli_connect($config->getMySQLHost(), $config->getMySQLUser(), $config->getMySQLPass(), $config->getMySQLDB());
@@ -16,13 +12,6 @@ class MySQL
         }
     }
 
-    /**
-     * Execute a SQL in the database
-     * @param string $sql SQL
-     * @param string|null $parameter_types Parameter types used by bind_params
-     * @param mixed ...$parameters Parameters
-     * @return false|mysqli_result
-     */
     public function execute(string $sql, string $parameter_types = null, ...$parameters)
     {
         if (!($statement = $this->mysqli->prepare($sql))) {

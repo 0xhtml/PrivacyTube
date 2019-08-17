@@ -7,22 +7,12 @@ class API
     private $config;
     private $mySQL;
 
-    /**
-     * YouTube API constructor
-     * @param Config $config
-     * @param MySQL $mySQL
-     */
     public function __construct(Config $config, MySQL $mySQL)
     {
         $this->config = $config;
         $this->mySQL = $mySQL;
     }
 
-    /**
-     * Get a channel from YouTube
-     * @param string $id Channel id
-     * @return Channel
-     */
     public function getChannel(string $id): Channel
     {
         $data = $this->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
@@ -54,11 +44,6 @@ class API
         );
     }
 
-    /**
-     * Get a video from YouTube
-     * @param string $id Video id
-     * @return Video
-     */
     public function getVideo(string $id): Video
     {
         $data = $this->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
@@ -97,12 +82,6 @@ class API
         );
     }
 
-    /**
-     * Get the YouTube Trends
-     * @param string $region The region for the trends (e.g. us)
-     * @param int $count The number of videos to get
-     * @return array
-     */
     public function getTrends(string $region, int $count): array
     {
         $result = array();
@@ -149,13 +128,6 @@ class API
         return $result;
     }
 
-    /**
-     * Execute a request to the YouTube API and return the json decoded response
-     * @param string $url URL
-     * @param array $params Parameters
-     * @param bool $save If set to true, the response gets saved to the MySQL database.
-     * @return mixed Json decoded response
-     */
     public function get(string $url, array $params, bool $save = true)
     {
         $params_json = json_encode($params);

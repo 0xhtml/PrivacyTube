@@ -6,12 +6,6 @@ class Search
     private $mySQL;
     private $q;
 
-    /**
-     * Search constructor
-     * @param API $API
-     * @param MySQL $mySQL
-     * @param string $q Search term
-     */
     public function __construct(API $API, MySQL $mySQL, string $q)
     {
         $this->API = $API;
@@ -19,11 +13,6 @@ class Search
         $this->q = $q;
     }
 
-    /**
-     * Get the search results
-     * @param int $count Number of videos to get
-     * @return array
-     */
     public function getResults(int $count)
     {
         $result = array();
