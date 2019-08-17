@@ -15,13 +15,9 @@ class Template
         fclose($file);
     }
 
-    public function set_var(string $name, string $content): bool
+    public function set_var(string $name, string $content)
     {
-        if (!preg_match("/^[a-zA-Z]*$/", $name)) {
-            return false;
-        }
         $this->vars[$name] = $content;
-        return true;
     }
 
     public function render(): string

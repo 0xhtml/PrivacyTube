@@ -2,20 +2,14 @@
 
 class Channel
 {
-    private $API;
-    private $mySQL;
-
     private $id;
     private $name;
     private $image;
     private $subscribers;
     private $uploadsId;
 
-    public function __construct(API $API, MySQL $mySQL, string $id, string $name, string $image, int $subscribers, string $uploadsId)
+    public function __construct(string $id, string $name, string $image, int $subscribers, string $uploadsId)
     {
-        $this->API = $API;
-        $this->mySQL = $mySQL;
-
         $this->id = $id;
         $this->name = $name;
         $this->image = $image;
@@ -43,7 +37,7 @@ class Channel
         return $this->subscribers;
     }
 
-    public function subscribe(User $user)
+    /*public function subscribe(User $user)
     {
         if ($this->is_subscribed($user)) {
             return;
@@ -107,5 +101,5 @@ class Channel
         }
 
         return $result;
-    }
+    }*/
 }

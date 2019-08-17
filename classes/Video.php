@@ -1,11 +1,13 @@
 <?php
+require_once "API.php";
+require_once "Channel.php";
+require_once "MySQL.php";
+require_once "VideoSrc.php";
 
 class Video
 {
-    private $API;
-    private $mySQL;
     private $id;
-    private $url;
+    private $videoSrc;
     private $title;
     private $description;
     private $channel;
@@ -15,28 +17,46 @@ class Video
     private $dislikes;
     private $thumbnail;
 
-    public static function idToURL(string $id)
+    public static function fromId(string $id, API $API): Video
     {
-        $response = file_get_contents("https://www.youtube.com/get_video_info?ps=maxres&video_id=" . urlencode($id));
-        parse_str($response, $data);
-        if (isset($data["url_encoded_fmt_stream_map"])) {
-            parse_str($data["url_encoded_fmt_stream_map"], $urldata);
-            if (isset($urldata["url"])) {
-                return $urldata["url"];
-            } else {
-                die("Can't load video URL of $id");
-            }
-        } else {
-            die("Can't load video URL of $id");
+        $data = $API->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
+        if (!isset(
+            $data->items,
+            $data->items[0],
+            $data->items[0]->snippet,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->description,
+            $data->items[0]->snippet->channelId,
+            $data->items[0]->snippet->publishedAt,
+            $data->items[0]->snippet->thumbnails,
+            $data->items[0]->snippet->thumbnails->medium,
+            $data->items[0]->snippet->thumbnails->medium->url,
+            $data->items[0]->statistics,
+            $data->items[0]->statistics->viewCount,
+            $data->items[0]->statistics->likeCount,
+            $data->items[0]->statistics->dislikeCount
+        )) {
+            die("Can't load Video from id ($id)");
         }
+
+        return new Video(
+            $id,
+            VideoSrc::fromId($id),
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->description,
+            new Channel($data->items[0]->snippet->channelId, $data->items[0]->snippet->channelTitle, "", 0, ""),
+            strtotime($data->items[0]->snippet->publishedAt),
+            $data->items[0]->statistics->viewCount,
+            $data->items[0]->statistics->likeCount,
+            $data->items[0]->statistics->dislikeCount,
+            $data->items[0]->snippet->thumbnails->medium->url
+        );
     }
 
-    public function __construct(API $API, MySQL $mySQL, string $id, string $url, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
+    public function __construct(string $id, VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, int $views, int $likes, int $dislikes, string $thumbnail)
     {
-        $this->API = $API;
-        $this->mySQL = $mySQL;
         $this->id = $id;
-        $this->url = $url;
+        $this->videoSrc = $videoSrc;
         $this->title = $title;
         $this->description = $description;
         $this->channel = $channel;
@@ -47,7 +67,7 @@ class Video
         $this->thumbnail = $thumbnail;
     }
 
-    public function getRelatedVideos(int $count): array
+    /*public function getRelatedVideos(int $count): array
     {
         $result = array();
 
@@ -90,16 +110,16 @@ class Video
         }
 
         return $result;
-    }
+    }*/
 
     public function getId(): string
     {
         return $this->id;
     }
 
-    public function getURL(): string
+    public function getVideoSrc(): VideoSrc
     {
-        return $this->url;
+        return $this->videoSrc;
     }
 
     public function getTitle(): string
