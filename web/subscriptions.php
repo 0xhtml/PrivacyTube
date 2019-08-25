@@ -23,6 +23,13 @@ $template = new Template("../templates/subscriptions.html");
 $template->set_var("subscriptions", $subscriptions_html);
 
 $header_template = new Template("../templates/header.html");
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Subscriptions - PrivacyTube");

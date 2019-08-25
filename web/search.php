@@ -1,9 +1,11 @@
 <?php
 require_once "../classes/System.php";
 require_once "../classes/Template.php";
+require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
 $system = new System();
+$user = new User();
 
 if (!isset($_GET["q"])) {
     header("Location: .");
@@ -28,6 +30,13 @@ $template->set_var("results", $results_html);
 
 $header_template = new Template("../templates/header.html");
 $header_template->set_var("search", htmlspecialchars($_GET["q"]));
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");

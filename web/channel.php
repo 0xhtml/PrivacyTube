@@ -11,6 +11,7 @@ require_once "../classes/Video.php";
 require_once "../classes/User.php";
 
 $system = new System();
+$user = new User();
 
 $channel = Channel::fromId($_GET["c"], $system);
 
@@ -41,7 +42,6 @@ $template->set_var("subscribers", number_format($channel->getSubscribers()));
 $template->set_var("image", $channel->getImage());
 $template->set_var("videos", $videos_html);
 
-$user = new User();
 if ($user->getLoggedin() and $user->isSubscribed($channel, $system)) {
     $template->set_var("action", "unsubscribe");
     $template->set_var("actionValue", "Unsubscribe");
@@ -51,6 +51,13 @@ if ($user->getLoggedin() and $user->isSubscribed($channel, $system)) {
 }
 
 $header_template = new Template("../templates/header.html");
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $channel->getName() . " - PrivacyTube");

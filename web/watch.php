@@ -1,6 +1,7 @@
 <?php
 require_once "../classes/System.php";
 require_once "../classes/Template.php";
+require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
 if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
@@ -9,6 +10,7 @@ if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
 }
 
 $system = new System();
+$user = new User();
 
 $video = Video::fromId($_GET["v"], $system);
 
@@ -42,6 +44,13 @@ $template->set_var("channelSubscribers", number_format($video->getChannel()->get
 //$template->set_var("related", $related_html);
 
 $header_template = new Template("../templates/header.html");
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $video->getTitle() . " - PrivacyTube");

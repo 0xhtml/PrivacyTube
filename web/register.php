@@ -1,7 +1,10 @@
 <?php
 require_once "../classes/System.php";
-require_once "../classes/User.php";
 require_once "../classes/Template.php";
+require_once "../classes/User.php";
+
+$system = new System();
+$user = new User();
 
 $template = new Template("../templates/register.html");
 
@@ -13,7 +16,6 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
         $template->set_var("message", "Password conformation invalid.");
         $template->set_var("username", $_POST["username"]);
     } else {
-        $system = new System();
         if (!User::register($_POST["username"], $_POST["password"], $system)) {
             $template->set_var("message", "Username already taken.");
         }
@@ -21,6 +23,13 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
 }
 
 $header_template = new Template("../templates/header.html");
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Register - PrivacyTube");

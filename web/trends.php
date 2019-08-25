@@ -1,9 +1,11 @@
 <?php
 require_once "../classes/System.php";
 require_once "../classes/Template.php";
+require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
 $system = new System();
+$user = new User();
 
 $video_preview_template = new Template("../templates/videoPreview.html");
 $trends_html = "";
@@ -23,6 +25,13 @@ $template = new Template("../templates/trends.html");
 $template->set_var("trends", $trends_html);
 
 $header_template = new Template("../templates/header.html");
+if ($user->getLoggedin()) {
+    $header_template->set_var("login", "logout");
+    $header_template->set_var("loginl", "Logout");
+} else {
+    $header_template->set_var("login", "login");
+    $header_template->set_var("loginl", "Login");
+}
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Trends - PrivacyTube");
