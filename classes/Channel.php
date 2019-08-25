@@ -1,5 +1,5 @@
 <?php
-require_once "API.php";
+require_once "System.php";
 
 class Channel
 {
@@ -9,9 +9,9 @@ class Channel
     private $subscribers;
     private $uploadsId;
 
-    public static function fromId(string $id, API $API)
+    public static function fromId(string $id, System $system)
     {
-        $data = $API->get("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
+        $data = $system->api("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
         if (!isset(
             $data->items,
             $data->items[0],

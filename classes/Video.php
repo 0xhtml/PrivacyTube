@@ -1,7 +1,6 @@
 <?php
-require_once "API.php";
 require_once "Channel.php";
-require_once "MySQL.php";
+require_once "System.php";
 require_once "User.php";
 require_once "VideoSrc.php";
 
@@ -18,9 +17,9 @@ class Video
     private $dislikes;
     private $thumbnail;
 
-    public static function fromId(string $id, API $API): Video
+    public static function fromId(string $id, System $system): Video
     {
-        $data = $API->get("/videos", array("id" => $id, "part" => "statistics,snippet"));
+        $data = $system->api("/videos", array("id" => $id, "part" => "statistics,snippet"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -45,7 +44,7 @@ class Video
             VideoSrc::fromId($id),
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
-            Channel::fromId($data->items[0]->snippet->channelId, $API),
+            Channel::fromId($data->items[0]->snippet->channelId, $system),
             strtotime($data->items[0]->snippet->publishedAt),
             $data->items[0]->statistics->viewCount,
             $data->items[0]->statistics->likeCount,
@@ -54,11 +53,11 @@ class Video
         );
     }
 
-    public static function fromChannel(Channel $channel, API $API, int $max = 50): array
+    public static function fromChannel(Channel $channel, System $system, int $max = 50): array
     {
         $result = array();
 
-        $data = $API->get("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => $max));
+        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => $max));
         if (!isset($data->items)) {
             die("Can't load Video from Channel (" . $channel->getId() . ")");
         }
@@ -95,14 +94,14 @@ class Video
         return $result;
     }
 
-    public static function fromUser(User $user, API $API, MySQL $mySQL, int $max = 50): array
+    public static function fromUser(User $user, System $system, int $max = 50): array
     {
         $result = array();
 
-        $subscriptions = $user->getSubscriptions($mySQL);
+        $subscriptions = $user->getSubscriptions($system);
         $subscriptions = join(",", $subscriptions);
 
-        $data = $API->get("/channels", array("id" => $subscriptions, "part" => "contentDetails"));
+        $data = $system->api("/channels", array("id" => $subscriptions, "part" => "contentDetails"));
         if (!isset($data->items)) {
             die("Can't load subscribed channels of user");
         }
@@ -117,7 +116,7 @@ class Video
                 die("Can't load subscribed channels uploads");
             }
 
-            $videos = $API->get("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
+            $videos = $system->api("/playlistItems", array("playlistId" => $channel->contentDetails->relatedPlaylists->uploads, "part" => "snippet", "maxResults" => 50));
             if (!isset($videos->items)) {
                 die("Can't load videos of subscribed channel $channel->id");
             }
@@ -159,11 +158,11 @@ class Video
         return $result;
     }
 
-    public static function fromRegion(API $API, string $region, int $max = 50): array
+    public static function fromRegion(string $region, System $system, int $max = 50): array
     {
         $result = array();
 
-        $data = $API->get("/videos", array("chart" => "mostPopular", "regionCode" => $region, "maxResults" => $max, "part" => "snippet"));
+        $data = $system->api("/videos", array("chart" => "mostPopular", "regionCode" => $region, "maxResults" => $max, "part" => "snippet"));
         if (!isset($data->items)) {
             die("Can't load trends of $region");
         }
@@ -199,11 +198,11 @@ class Video
         return $result;
     }
 
-    public static function fromSearch(API $API, string $q, int $max = 50)
+    public static function fromSearch(string $q, System $system, int $max = 50)
     {
         $result = array();
 
-        $videos = $API->get("/search", array("q" => $q, "part" => "snippet", "type" => "video", "maxResults" => $max), false);
+        $videos = $system->api("/search", array("q" => $q, "part" => "snippet", "type" => "video", "maxResults" => $max), false);
         if (!isset($videos->items)) {
             die("Can't load searched videos");
         }
@@ -260,7 +259,7 @@ class Video
     {
         $result = array();
 
-        $videos = $this->API->get("/search", array("relatedToVideoId" => $this->id, "part" => "snippet", "type" => "video", "maxResults" => $count));
+        $videos = $this->system->api("/search", array("relatedToVideoId" => $this->id, "part" => "snippet", "type" => "video", "maxResults" => $count));
         if (!isset($videos->items)) {
             die("Can't load related videos");
         }

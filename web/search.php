@@ -1,13 +1,9 @@
 <?php
-require_once "../classes/API.php";
-require_once "../classes/Config.php";
-require_once "../classes/MySQL.php";
+require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/Video.php";
 
-$config = new Config();
-$mySQL = new MySQL($config);
-$API = new API($config, $mySQL);
+$system = new System();
 
 if (!isset($_GET["q"])) {
     header("Location: .");
@@ -17,7 +13,7 @@ if (!isset($_GET["q"])) {
 $video_preview_template = new Template("../templates/videoPreview.html");
 $results_html = "";
 
-foreach (Video::fromSearch($API, $_GET["q"]) as $video) {
+foreach (Video::fromSearch($_GET["q"], $system) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());

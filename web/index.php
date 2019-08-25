@@ -1,21 +1,16 @@
 <?php
-require_once "../classes/API.php";
-require_once "../classes/Channel.php";
-require_once "../classes/Config.php";
-require_once "../classes/MySQL.php";
+require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
-$config = new Config();
-$mySQL = new MySQL($config);
-$API = new API($config, $mySQL);
+$system = new System();
 $user = new User();
 
 $video_preview_template = new Template("../templates/videoPreview.html");
 if ($user->getLoggedin()) {
     $subscriptions_html = "<div class=\"videos\">";
-    foreach (Video::fromUser($user, $API, $mySQL, 5) as $video) {
+    foreach (Video::fromUser($user, $system, 5) as $video) {
         $video_preview_template->set_var("title", $video->getTitle());
         $video_preview_template->set_var("thumbnail", $video->getThumbnail());
         $video_preview_template->set_var("channel", $video->getChannel()->getName());
@@ -29,9 +24,9 @@ if ($user->getLoggedin()) {
 }
 
 $trends_html = "";
-$lang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-$lang = in_array($lang, $API::REGIONS) ? $lang : "US";
-foreach (Video::fromRegion($API, $lang, 5) as $video) {
+$region = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+$region = in_array($region, System::API_REGIONS) ? $region : "US";
+foreach (Video::fromRegion($region, $system, 5) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());

@@ -1,22 +1,16 @@
 <?php
-require_once "../classes/API.php";
-require_once "../classes/Config.php";
-require_once "../classes/MySQL.php";
+require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/Video.php";
-//require_once "../classes/VideoProgress.php";
 
 if (!isset($_GET["v"]) or strlen($_GET["v"]) != 11) {
     header("Location: .");
     die();
 }
 
-$config = new Config();
-$mySQL = new MySQL($config);
-$API = new API($config, $mySQL);
+$system = new System();
 
-$video = Video::fromId($_GET["v"], $API);
-//$videoProgress = new VideoProgress($mySQL, $video, $user);
+$video = Video::fromId($_GET["v"], $system);
 
 /*$video_preview_template = new Template("../templates/videoPreview.html");
 $related_html = "";
@@ -44,8 +38,6 @@ $template->set_var("channelId", $video->getChannel()->getId());
 $template->set_var("channelName", $video->getChannel()->getName());
 $template->set_var("channelImage", $video->getChannel()->getImage());
 $template->set_var("channelSubscribers", number_format($video->getChannel()->getSubscribers()));
-
-//$template->set_var("progress", $videoProgress->getProgress());
 
 //$template->set_var("related", $related_html);
 
