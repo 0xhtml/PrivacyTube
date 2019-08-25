@@ -1,36 +1,32 @@
 <?php
-require_once "../classes/API.php";
-require_once "../classes/Channel.php";
-require_once "../classes/Config.php";
-require_once "../classes/MySQL.php";
-require_once "../classes/Subscriptions.php";
+require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
-$config = new Config();
-$mySQL = new MySQL($config);
-$API = new API($config, $mySQL);
+$system = new System();
 $user = new User();
 
-$subscriptions = new Subscriptions($user, $mySQL, $API);
-
 $video_preview_template = new Template("../templates/videoPreview.html");
-$subscriptions_html = "";
-
-foreach ($subscriptions->getVideos(5) as $video) {
-    $video_preview_template->set_var("title", $video->getTitle());
-    $video_preview_template->set_var("thumbnail", $video->getThumbnail());
-    $video_preview_template->set_var("channel", $video->getChannel()->getName());
-    $video_preview_template->set_var("channelId", $video->getChannel()->getId());
-    $video_preview_template->set_var("id", $video->getId());
-    $subscriptions_html .= $video_preview_template->render();
+if ($user->getLoggedin()) {
+    $subscriptions_html = "<div class=\"videos\">";
+    foreach (Video::fromUser($user, $system, 5) as $video) {
+        $video_preview_template->set_var("title", $video->getTitle());
+        $video_preview_template->set_var("thumbnail", $video->getThumbnail());
+        $video_preview_template->set_var("channel", $video->getChannel()->getName());
+        $video_preview_template->set_var("channelId", $video->getChannel()->getId());
+        $video_preview_template->set_var("id", $video->getId());
+        $subscriptions_html .= $video_preview_template->render();
+    }
+    $subscriptions_html .= "</div>";
+} else {
+    $subscriptions_html = "<p><a href=\"login.php\">Login</a> to subscribe to channels.</p>";
 }
 
 $trends_html = "";
-$lang = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-$lang = in_array($lang, $API::REGIONS) ? $lang : "US";
-foreach ($API->getTrends($lang, 5) as $video) {
+$region = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+$region = in_array($region, System::API_REGIONS) ? $region : "US";
+foreach (Video::fromRegion($region, $system, 5) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());

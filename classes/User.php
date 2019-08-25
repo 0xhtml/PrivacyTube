@@ -1,34 +1,17 @@
 <?php
+require_once "System.php";
 
 class User
 {
-    /**
-     * User constructor: Check if the user is logged in if not redirect the user to the login page
-     */
-    public function __construct()
-    {
-        if (session_status() == PHP_SESSION_NONE and isset($_COOKIE["PHPSESSID"])) {
-            session_start();
-        }
-        if (!isset($_SESSION["user"])) {
-            header("Location: ./login.php");
-            die();
-        }
-    }
+    private $loggedin;
+    private $username;
 
-    /**
-     * Login a user and redirect the user to the start page. If the username or password is wrong return false.
-     * @param MySQL $mySQL
-     * @param string $username
-     * @param string $password
-     * @return bool
-     */
-    public static function login(MySQL $mySQL, string $username, string $password): bool
+    public static function login(string $username, string $password, System $system): bool
     {
         $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
-        $result = $mySQL->execute("SELECT * FROM users WHERE username = ? AND password = ?", "ss", $username, $password);
+        $result = $system->mysql("SELECT * FROM users WHERE username = ? AND password = ?", "ss", $username, $password);
         if ($result->num_rows !== 1) {
             return false;
         }
@@ -41,24 +24,17 @@ class User
         die();
     }
 
-    /**
-     * Register a new user, log the new user in and redirect to the start page. If the username already exists return false.
-     * @param MySQL $mySQL
-     * @param string $username
-     * @param string $password
-     * @return bool
-     */
-    public static function register(MySQL $mySQL, string $username, string $password): bool
+    public static function register(string $username, string $password, System $system): bool
     {
         $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
-        $result = $mySQL->execute("SELECT * FROM users WHERE username = ?", "s", $username);
+        $result = $system->mysql("SELECT * FROM users WHERE username = ?", "s", $username);
         if ($result->num_rows !== 0) {
             return false;
         }
 
-        $mySQL->execute("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
+        $system->mysql("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
 
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -68,18 +44,37 @@ class User
         die();
     }
 
-    /**
-     * Check if user is already logged in and if so then redirect the user to the start page.
-     */
-    public static function checkLogin()
+    public function __construct(bool $redirect = false)
     {
         if (session_status() == PHP_SESSION_NONE and isset($_COOKIE["PHPSESSID"])) {
             session_start();
         }
         if (isset($_SESSION["user"])) {
-            header("Location: .");
-            die();
+            $this->loggedin = true;
+            $this->username = $_SESSION["user"];
+        } else {
+            $this->loggedin = false;
+            if ($redirect) {
+                header("Location: ./login.php");
+                die();
+            }
         }
+    }
+
+    public function subscribe(Channel $channel, System $system)
+    {
+        $system->mysql("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "ss", $this->username, $channel->getId());
+    }
+
+    public function unsubscribe(Channel $channel, System $system)
+    {
+        $system->mysql("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
+    }
+
+    public function isSubscribed(Channel $channel, System $system): bool
+    {
+        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
+        return $result->num_rows === 1;
     }
 
     public function logout()
@@ -87,12 +82,23 @@ class User
         session_destroy();
     }
 
-    /**
-     * Get the current logged in users username as a sha256 string
-     * @return mixed
-     */
-    public function getUser()
+    public function getSubscriptions(System $system): array
     {
-        return $_SESSION["user"];
+        $subscriptions = array();
+        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ?", "s", $this->username);
+        while ($row = $result->fetch_object()) {
+            $subscriptions[] = $row->channel;
+        }
+        return $subscriptions;
+    }
+
+    public function getLoggedin(): bool
+    {
+        return $this->loggedin;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 }

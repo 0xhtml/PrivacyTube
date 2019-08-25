@@ -1,29 +1,19 @@
 <?php
-require_once "../classes/API.php";
-require_once "../classes/Channel.php";
-require_once "../classes/Config.php";
-require_once "../classes/MySQL.php";
-require_once "../classes/Search.php";
+require_once "../classes/System.php";
 require_once "../classes/Template.php";
-require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
-$config = new Config();
-$mySQL = new MySQL($config);
-$API = new API($config, $mySQL);
-$user = new User();
+$system = new System();
 
 if (!isset($_GET["q"])) {
     header("Location: .");
     die();
 }
 
-$search = new Search($API, $mySQL, $_GET["q"]);
-
 $video_preview_template = new Template("../templates/videoPreview.html");
 $results_html = "";
 
-foreach ($search->getResults(25) as $video) {
+foreach (Video::fromSearch($_GET["q"], $system) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
@@ -33,11 +23,11 @@ foreach ($search->getResults(25) as $video) {
 }
 
 $template = new Template("../templates/search.html");
-$template->set_var("search", $_GET["q"]);
+$template->set_var("search", htmlspecialchars($_GET["q"]));
 $template->set_var("results", $results_html);
 
 $header_template = new Template("../templates/header.html");
-$header_template->set_var("search", $_GET["q"]);
+$header_template->set_var("search", htmlspecialchars($_GET["q"]));
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");
