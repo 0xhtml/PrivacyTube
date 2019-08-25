@@ -159,6 +159,46 @@ class Video
         return $result;
     }
 
+    public static function fromRegion(API $API, string $region, int $max = 50): array
+    {
+        $result = array();
+
+        $data = $API->get("/videos", array("chart" => "mostPopular", "regionCode" => $region, "maxResults" => $max, "part" => "snippet"));
+        if (!isset($data->items)) {
+            die("Can't load trends of $region");
+        }
+
+        foreach ($data->items as $video) {
+            if (!isset(
+                $video->snippet,
+                $video->snippet->title,
+                $video->snippet->description,
+                $video->snippet->channelId,
+                $video->snippet->publishedAt,
+                $video->snippet->thumbnails,
+                $video->snippet->thumbnails->medium,
+                $video->snippet->thumbnails->medium->url
+            )) {
+                die("Can't load video of trends $region");
+            }
+
+            $result[] = new self(
+                $video->id,
+                null,
+                $video->snippet->title,
+                $video->snippet->description,
+                new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
+                strtotime($video->snippet->publishedAt),
+                null,
+                null,
+                null,
+                $video->snippet->thumbnails->medium->url
+            );
+        }
+
+        return $result;
+    }
+
     public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, ?int $views, ?int $likes, ?int $dislikes, string $thumbnail)
     {
         $this->id = $id;
