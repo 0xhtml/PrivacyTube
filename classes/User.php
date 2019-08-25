@@ -76,6 +76,11 @@ class User
         return $result->num_rows === 1;
     }
 
+    public function logout()
+    {
+        session_destroy();
+    }
+
     public function getSubscriptions(MySQL $mySQL): array
     {
         $subscriptions = array();
