@@ -1,9 +1,7 @@
 <?php
 require_once "../classes/API.php";
-require_once "../classes/Channel.php";
 require_once "../classes/Config.php";
 require_once "../classes/MySQL.php";
-require_once "../classes/Subscriptions.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
 require_once "../classes/Video.php";
@@ -11,14 +9,12 @@ require_once "../classes/Video.php";
 $config = new Config();
 $mySQL = new MySQL($config);
 $API = new API($config, $mySQL);
-$user = new User();
-
-$subscriptions = new Subscriptions($user, $mySQL, $API);
+$user = new User(true);
 
 $video_preview_template = new Template("../templates/videoPreview.html");
 $subscriptions_html = "";
 
-foreach ($subscriptions->getVideos(25) as $video) {
+foreach (Video::fromUser($user, $API, $mySQL) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
