@@ -33,7 +33,7 @@ class Template
                 $rendered = substr($rendered, 0, $start) . substr($rendered, $end);
             }
         }
-        $rendered = preg_replace("/{{[a-zA-Z]*}}/", "", $rendered);
+        $rendered = preg_replace("/{{[a-zA-Z\/]*}}/", "", $rendered);
         return $rendered;
     }
 }
