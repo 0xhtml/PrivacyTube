@@ -19,6 +19,23 @@ class Video
 
     public static function fromId(string $id, System $system): Video
     {
+        $result = $system->mysql("SELECT * FROM videos WHERE vid = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 DAY)", "s", $id);
+        if ($result->num_rows === 1) {
+            $data = $result->fetch_object();
+            return new Video(
+                $id,
+                VideoSrc::fromId($id),
+                $data->title,
+                $data->description,
+                Channel::fromId($data->channel, $system),
+                $data->vdate,
+                $data->views,
+                $data->likes,
+                $data->dislikes,
+                $data->thumbnail
+            );
+        }
+
         $data = $system->api("/videos", array("id" => $id, "part" => "statistics,snippet"));
         if (!isset(
             $data->items,
@@ -38,6 +55,20 @@ class Video
         )) {
             die("Can't load Video from id ($id)");
         }
+
+        $system->mysql(
+            "INSERT INTO videos(vid, title, description, channel, vdate, views, likes, dislikes, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "sssssiiis",
+            $id,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->description,
+            $data->items[0]->snippet->channelId,
+            date("Y-m-d H:i:s", strtotime($data->items[0]->snippet->publishedAt)),
+            $data->items[0]->statistics->viewCount,
+            $data->items[0]->statistics->likeCount,
+            $data->items[0]->statistics->dislikeCount,
+            $data->items[0]->snippet->thumbnails->medium->url
+        );
 
         return new Video(
             $id,
