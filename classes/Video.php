@@ -36,7 +36,7 @@ class Video
             );
         }
 
-        $data = $system->api("/videos", array("id" => $id, "part" => "statistics,snippet"));
+        $data = $system->api("/videos", array("id" => $id, "part" => "statistics,snippet"), false);
         if (!isset(
             $data->items,
             $data->items[0],
