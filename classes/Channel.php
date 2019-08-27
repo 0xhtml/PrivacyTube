@@ -11,7 +11,19 @@ class Channel
 
     public static function fromId(string $id, System $system)
     {
-        $data = $system->api("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"));
+        $result = $system->mysql("SELECT * FROM channels WHERE cid = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 DAY)", "s", $id);
+        if ($result->num_rows === 1) {
+            $data = $result->fetch_object();
+            return new Channel(
+                $id,
+                $data->name,
+                $data->image,
+                $data->subscribers,
+                $data->uploadsId
+            );
+        }
+
+        $data = $system->api("/channels", array("id" => $id, "part" => "statistics,snippet,contentDetails"), false);
         if (!isset(
             $data->items,
             $data->items[0],
@@ -28,6 +40,16 @@ class Channel
         )) {
             die("Can't load Channel from id ($id)");
         }
+
+        $system->mysql(
+            "INSERT INTO channels(cid, name, image, subscribers, uploadsId) VALUES (?, ?, ?, ?, ?)",
+            "sssis",
+            $id,
+            $data->items[0]->snippet->title,
+            $data->items[0]->snippet->thumbnails->default->url,
+            $data->items[0]->statistics->subscriberCount,
+            $data->items[0]->contentDetails->relatedPlaylists->uploads
+        );
 
         return new Channel(
             $id,
