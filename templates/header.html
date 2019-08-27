@@ -1,12 +1,14 @@
 <header>
     <a href=".">PrivacyTube</a>
+    {{donotdisturb}}
     <form action="./search.php" method="get">
         <input name="q" placeholder="Search" type="search" value="{{search}}">
     </form>
+    {{/donotdisturb}}
     <nav>
         <a href=".">Home</a>
         <a href="./subscriptions.php">Subscriptions</a>
-        <a href="./trends.php">Trends</a>
+        {{donotdisturb}}<a href="./trends.php">Trends</a>{{/donotdisturb}}
         <a href="./{{login}}.php">{{loginl}}</a>
     </nav>
 </header>

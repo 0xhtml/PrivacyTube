@@ -7,7 +7,7 @@ require_once "../classes/Video.php";
 $system = new System();
 $user = new User();
 
-if (!isset($_GET["q"])) {
+if (!isset($_GET["q"]) or $user->getDonotdisturbBool()) {
     header("Location: .");
     die();
 }
@@ -40,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");
-$page_template->set_var("header", $header_template->render());
+$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
 $page_template->set_var("main", $template->render());
 
 echo $page_template->render();

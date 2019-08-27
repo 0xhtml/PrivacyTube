@@ -5,6 +5,7 @@ class User
 {
     private $loggedin;
     private $username;
+    private $donotdisturb;
 
     public static function login(string $username, string $password, System $system): bool
     {
@@ -20,6 +21,7 @@ class User
             session_start();
         }
         $_SESSION["user"] = $username;
+        $_SESSION["donotdisturb"] = $result->fetch_object()->donotdisturb;
         header("Location: .");
         die();
     }
@@ -34,12 +36,13 @@ class User
             return false;
         }
 
-        $system->mysql("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
+        $system->mysql("INSERT INTO users(username, password, donotdisturb) VALUES (?, ?, 0)", "ss", $username, $password);
 
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         $_SESSION["user"] = $username;
+        $_SESSION["donotdisturb"] = 0;
         header("Location: .");
         die();
     }
@@ -52,6 +55,7 @@ class User
         if (isset($_SESSION["user"])) {
             $this->loggedin = true;
             $this->username = $_SESSION["user"];
+            $this->donotdisturb = $_SESSION["donotdisturb"];
         } else {
             $this->loggedin = false;
             if ($redirect) {
@@ -100,5 +104,15 @@ class User
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    public function getDonotdisturb(): int
+    {
+        return $this->donotdisturb;
+    }
+
+    public function getDonotdisturbBool(): bool
+    {
+        return ($this->loggedin and $this->donotdisturb === 1);
     }
 }

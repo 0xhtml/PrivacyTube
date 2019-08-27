@@ -7,6 +7,11 @@ require_once "../classes/Video.php";
 $system = new System();
 $user = new User();
 
+if ($user->getDonotdisturbBool()) {
+    header("Location: .");
+    die();
+}
+
 $video_preview_template = new Template("../templates/videoPreview.html");
 $trends_html = "";
 
@@ -35,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Trends - PrivacyTube");
-$page_template->set_var("header", $header_template->render());
+$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
 $page_template->set_var("main", $template->render());
 
 echo $page_template->render();

@@ -20,11 +20,18 @@ class Template
         $this->vars[$name] = $content;
     }
 
-    public function render(): string
+    public function render(bool $donotdisturb = false): string
     {
         $rendered = $this->html;
         foreach ($this->vars as $name => $content) {
             $rendered = str_replace("{{" . $name . "}}", $content, $rendered);
+        }
+        if ($donotdisturb) {
+            while (strpos($rendered, "{{donotdisturb}}") !== false and strpos($rendered, "{{/donotdisturb}}") !== false) {
+                $start = strpos($rendered, "{{donotdisturb}}");
+                $end = strpos(substr($rendered, $start), "{{/donotdisturb}}") + $start + 17;
+                $rendered = substr($rendered, 0, $start) . substr($rendered, $end);
+            }
         }
         $rendered = preg_replace("/{{[a-zA-Z]*}}/", "", $rendered);
         return $rendered;
