@@ -28,7 +28,7 @@ class Video
                 $data->title,
                 $data->description,
                 Channel::fromId($data->channel, $system),
-                $data->vdate,
+                strtotime($data->vdate),
                 $data->views,
                 $data->likes,
                 $data->dislikes,
