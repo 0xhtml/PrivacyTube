@@ -184,49 +184,6 @@ class Video
         return $result;
     }
 
-    public static function fromSearch(string $q, System $system, int $max = 50)
-    {
-        $result = array();
-
-        $videos = $system->api("/search", array("q" => $q, "part" => "snippet", "type" => "video", "maxResults" => $max), false);
-        if (!isset($videos->items)) {
-            die("Can't load searched videos");
-        }
-
-        foreach ($videos->items as $video) {
-            if (!isset(
-                $video->snippet,
-                $video->snippet->publishedAt,
-                $video->snippet->title,
-                $video->snippet->description,
-                $video->snippet->channelId,
-                $video->snippet->channelTitle,
-                $video->snippet->thumbnails,
-                $video->snippet->thumbnails->medium,
-                $video->snippet->thumbnails->medium->url,
-                $video->id,
-                $video->id->videoId
-            )) {
-                die("Can't load searched video");
-            }
-
-            $result[] = new self(
-                $video->id->videoId,
-                null,
-                $video->snippet->title,
-                $video->snippet->description,
-                new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
-                strtotime($video->snippet->publishedAt),
-                null,
-                null,
-                null,
-                $video->snippet->thumbnails->medium->url
-            );
-        }
-
-        return $result;
-    }
-
     public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, ?int $views, ?int $likes, ?int $dislikes, string $thumbnail)
     {
         $this->id = $id;
@@ -240,51 +197,6 @@ class Video
         $this->dislikes = $dislikes;
         $this->thumbnail = $thumbnail;
     }
-
-    /*public function getRelatedVideos(int $count): array
-    {
-        $result = array();
-
-        $videos = $this->system->api("/search", array("relatedToVideoId" => $this->id, "part" => "snippet", "type" => "video", "maxResults" => $count));
-        if (!isset($videos->items)) {
-            die("Can't load related videos");
-        }
-
-        foreach ($videos->items as $video) {
-            if (!isset(
-                $video->snippet,
-                $video->snippet->publishedAt,
-                $video->snippet->title,
-                $video->snippet->description,
-                $video->snippet->channelId,
-                $video->snippet->channelTitle,
-                $video->snippet->thumbnails,
-                $video->snippet->thumbnails->medium,
-                $video->snippet->thumbnails->medium->url,
-                $video->id,
-                $video->id->videoId
-            )) {
-                die("Can't load related video");
-            }
-
-            $result[] = new Video(
-                $this->API,
-                $this->mySQL,
-                $video->id->videoId,
-                "",
-                $video->snippet->title,
-                $video->snippet->description,
-                new Channel($this->API, $this->mySQL, $video->snippet->channelId, $video->snippet->channelTitle, "", 0, ""),
-                strtotime($video->snippet->publishedAt),
-                0,
-                0,
-                0,
-                $video->snippet->thumbnails->medium->url
-            );
-        }
-
-        return $result;
-    }*/
 
     public function getId(): string
     {

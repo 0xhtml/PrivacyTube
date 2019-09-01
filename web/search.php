@@ -1,8 +1,8 @@
 <?php
+require_once "../classes/Search.php";
 require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
-require_once "../classes/Video.php";
 
 $system = new System();
 $user = new User();
@@ -15,7 +15,7 @@ if (!isset($_GET["q"]) or $user->getDonotdisturbBool()) {
 $video_preview_template = new Template("../templates/videoPreview.html");
 $results_html = "";
 
-foreach (Video::fromSearch($_GET["q"], $system) as $video) {
+foreach (Search::fromQuery($_GET["q"], $system) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
