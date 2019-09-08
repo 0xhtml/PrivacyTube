@@ -12,14 +12,11 @@ class Video
     private $description;
     private $channel;
     private $date;
-    private $views;
-    private $likes;
-    private $dislikes;
     private $thumbnail;
 
     public static function fromId(string $id, System $system): Video
     {
-        $result = $system->mysql("SELECT * FROM videos WHERE vid = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 2 DAY)", "s", $id);
+        $result = $system->mysql("SELECT * FROM videos WHERE id = ?", "s", $id);
         if ($result->num_rows === 1) {
             $data = $result->fetch_object();
             return new Video(
@@ -28,15 +25,12 @@ class Video
                 $data->title,
                 $data->description,
                 Channel::fromId($data->channel, $system),
-                strtotime($data->vdate),
-                $data->views,
-                $data->likes,
-                $data->dislikes,
+                strtotime($data->date),
                 $data->thumbnail
             );
         }
 
-        $data = $system->api("/videos", array("id" => $id, "part" => "statistics,snippet"), false);
+        $data = $system->api("/videos", array("id" => $id, "part" => "snippet"), false);
         if (!isset(
             $data->items,
             $data->items[0],
@@ -47,26 +41,19 @@ class Video
             $data->items[0]->snippet->publishedAt,
             $data->items[0]->snippet->thumbnails,
             $data->items[0]->snippet->thumbnails->medium,
-            $data->items[0]->snippet->thumbnails->medium->url,
-            $data->items[0]->statistics,
-            $data->items[0]->statistics->viewCount,
-            $data->items[0]->statistics->likeCount,
-            $data->items[0]->statistics->dislikeCount
+            $data->items[0]->snippet->thumbnails->medium->url
         )) {
             die("Can't load Video from id ($id)");
         }
 
         $system->mysql(
-            "INSERT INTO videos(vid, title, description, channel, vdate, views, likes, dislikes, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            "sssssiiis",
+            "INSERT INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (0, ?, ?, ?, ?, ?, ?)",
+            "ssssss",
             $id,
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
             $data->items[0]->snippet->channelId,
             date("Y-m-d H:i:s", strtotime($data->items[0]->snippet->publishedAt)),
-            $data->items[0]->statistics->viewCount,
-            $data->items[0]->statistics->likeCount,
-            $data->items[0]->statistics->dislikeCount,
             $data->items[0]->snippet->thumbnails->medium->url
         );
 
@@ -77,18 +64,31 @@ class Video
             $data->items[0]->snippet->description,
             Channel::fromId($data->items[0]->snippet->channelId, $system),
             strtotime($data->items[0]->snippet->publishedAt),
-            $data->items[0]->statistics->viewCount,
-            $data->items[0]->statistics->likeCount,
-            $data->items[0]->statistics->dislikeCount,
             $data->items[0]->snippet->thumbnails->medium->url
         );
     }
 
     public static function fromChannel(Channel $channel, System $system, int $max = 50): array
     {
-        $result = array();
+        $videos = array();
+        
+        $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date LIMIT ?", "si", $channel->getId(), $max);
+        if ($result->num_rows !== 0) {
+            while($data = $result->fetch_object()) {
+                $videos[] = new Video(
+                    $data->id,
+                    null,
+                    $data->title,
+                    $data->description,
+                    $channel,
+                    strtotime($data->date),
+                    $data->thumbnail
+                );
+            }
+            return $videos;
+        }
 
-        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => $max));
+        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50));
         if (!isset($data->items)) {
             die("Can't load Video from Channel (" . $channel->getId() . ")");
         }
@@ -108,21 +108,30 @@ class Video
                 die("Can't load Video from Channel (" . $channel->getId() . ")");
             }
 
-            $result[] = new Video(
+            $system->mysql(
+                "INSERT INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (1, ?, ?, ?, ?, ?, ?)",
+                "ssssss",
+                $video->snippet->resourceId->videoId,
+                $video->snippet->title,
+                $video->snippet->description,
+                $channel->getId(),
+                date("Y-m-d H:i:s", strtotime($video->snippet->publishedAt)),
+                $video->snippet->thumbnails->medium->url
+            );
+
+            $videos[] = new Video(
                 $video->snippet->resourceId->videoId,
                 null,
                 $video->snippet->title,
                 $video->snippet->description,
                 $channel,
                 strtotime($video->snippet->publishedAt),
-                null,
-                null,
-                null,
                 $video->snippet->thumbnails->medium->url
             );
         }
 
-        return $result;
+        $videos = array_slice($videos, 0, $max);
+        return $videos;
     }
 
     public static function fromUser(User $user, System $system, int $max = 50): array
@@ -174,9 +183,6 @@ class Video
                 $video->snippet->description,
                 new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
                 strtotime($video->snippet->publishedAt),
-                null,
-                null,
-                null,
                 $video->snippet->thumbnails->medium->url
             );
         }
@@ -184,7 +190,7 @@ class Video
         return $result;
     }
 
-    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, ?int $views, ?int $likes, ?int $dislikes, string $thumbnail)
+    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, string $thumbnail)
     {
         $this->id = $id;
         $this->videoSrc = $videoSrc;
@@ -192,9 +198,6 @@ class Video
         $this->description = $description;
         $this->channel = $channel;
         $this->date = $date;
-        $this->views = $views;
-        $this->likes = $likes;
-        $this->dislikes = $dislikes;
         $this->thumbnail = $thumbnail;
     }
 
@@ -226,21 +229,6 @@ class Video
     public function getDate(): string
     {
         return $this->date;
-    }
-
-    public function getViews(): int
-    {
-        return $this->views;
-    }
-
-    public function getLikes(): int
-    {
-        return $this->likes;
-    }
-
-    public function getDislikes(): int
-    {
-        return $this->dislikes;
     }
 
     public function getThumbnail(): string

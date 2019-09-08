@@ -3,15 +3,11 @@
         <video autoplay controls src="{{videoSrc}}"></video>
     </section>
     <section id="videoInfo">
-        <div>
-            <h1>{{videoTitle}}</h1>
-            <p>{{videoViews}} Views</p>
-        </div>
+        <h1>{{videoTitle}}</h1>
         <hr>
         <div>
             <a href="./channel.php?c={{channelId}}"><img alt="Channel image of {{channelName}}" src="{{channelImage}}"></a>
             <p><a href="./channel.php?c={{channelId}}">{{channelName}}</a><br>{{channelSubscribers}} Subscribers</p>
-            <p>{{videoLikes}} Likes {{videoDislikes}} Dislikes<br>Uploaded on {{videoDate}}</p>
         </div>
         <hr>
         <p>{{videoDescription}}</p>

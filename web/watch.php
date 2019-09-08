@@ -33,9 +33,6 @@ $template->set_var("videoId", $video->getId());
 $template->set_var("videoSrc", $video->getVideoSrc()->getSrc());
 $template->set_var("videoTitle", $video->getTitle());
 $template->set_var("videoDescription", nl2br($video->getDescription()));
-$template->set_var("videoViews", number_format($video->getViews()));
-$template->set_var("videoLikes", number_format($video->getLikes()));
-$template->set_var("videoDislikes", number_format($video->getDislikes()));
 $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
 
 $template->set_var("channelId", $video->getChannel()->getId());

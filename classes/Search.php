@@ -38,9 +38,6 @@ class Search
                 $video->snippet->description,
                 new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
                 strtotime($video->snippet->publishedAt),
-                null,
-                null,
-                null,
                 $video->snippet->thumbnails->medium->url
             );
         }
@@ -81,9 +78,6 @@ class Search
                 $video->snippet->description,
                 new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
                 strtotime($video->snippet->publishedAt),
-                null,
-                null,
-                null,
                 $video->snippet->thumbnails->medium->url
             );
         }
