@@ -72,7 +72,7 @@ class Video
     {
         $videos = array();
         
-        $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date LIMIT ?", "si", $channel->getId(), $max);
+        $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
         if ($result->num_rows !== 0) {
             while($data = $result->fetch_object()) {
                 $videos[] = new Video(
