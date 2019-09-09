@@ -88,7 +88,7 @@ class Video
             return $videos;
         }
 
-        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50));
+        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50), false);
         if (!isset($data->items)) {
             die("Can't load Video from Channel (" . $channel->getId() . ")");
         }
