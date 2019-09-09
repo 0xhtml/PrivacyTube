@@ -38,7 +38,6 @@ $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
 $template->set_var("channelId", $video->getChannel()->getId());
 $template->set_var("channelName", $video->getChannel()->getName());
 $template->set_var("channelImage", $video->getChannel()->getImage());
-$template->set_var("channelSubscribers", number_format($video->getChannel()->getSubscribers()));
 
 $template->set_var("related", $related_html);
 
