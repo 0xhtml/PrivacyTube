@@ -38,7 +38,6 @@ foreach (Video::fromChannel($channel, $system) as $video) {
 $template = new Template("../templates/channel.html");
 $template->set_var("id", $channel->getId());
 $template->set_var("name", $channel->getName());
-$template->set_var("subscribers", number_format($channel->getSubscribers()));
 $template->set_var("image", $channel->getImage());
 $template->set_var("videos", $videos_html);
 

@@ -36,7 +36,7 @@ class Search
                 null,
                 $video->snippet->title,
                 $video->snippet->description,
-                new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null, null),
+                new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null),
                 strtotime($video->snippet->publishedAt),
                 $video->snippet->thumbnails->medium->url
             );
