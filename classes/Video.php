@@ -68,24 +68,26 @@ class Video
         );
     }
 
-    public static function fromChannel(Channel $channel, System $system, int $max = 50): array
+    public static function fromChannel(Channel $channel, System $system, int $max = 50, bool $cache = true): array
     {
         $videos = array();
         
-        $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
-        if ($result->num_rows !== 0) {
-            while($data = $result->fetch_object()) {
-                $videos[] = new Video(
-                    $data->id,
-                    null,
-                    $data->title,
-                    $data->description,
-                    $channel,
-                    strtotime($data->date),
-                    $data->thumbnail
-                );
+        if ($cache) {
+            $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
+            if ($result->num_rows !== 0) {
+                while ($data = $result->fetch_object()) {
+                    $videos[] = new Video(
+                        $data->id,
+                        null,
+                        $data->title,
+                        $data->description,
+                        $channel,
+                        strtotime($data->date),
+                        $data->thumbnail
+                    );
+                }
+                return $videos;
             }
-            return $videos;
         }
 
         $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50), false);
@@ -109,7 +111,7 @@ class Video
             }
 
             $system->mysql(
-                "INSERT INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (1, ?, ?, ?, ?, ?, ?)",
+                "INSERT IGNORE INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (1, ?, ?, ?, ?, ?, ?)",
                 "ssssss",
                 $video->snippet->resourceId->videoId,
                 $video->snippet->title,
