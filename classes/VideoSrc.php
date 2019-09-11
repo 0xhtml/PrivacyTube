@@ -4,18 +4,25 @@ class VideoSrc
 {
     private $src;
 
-    public static function fromId(string $id)
+    public static function fromId(string $id): self
     {
-        $response = file_get_contents("https://www.youtube.com/get_video_info?ps=maxres&video_id=" . urlencode($id));
+        $response = file_get_contents("https://www.youtube.com/get_video_info?video_id=" . urlencode($id));
         parse_str($response, $data);
-        if (!isset($data["url_encoded_fmt_stream_map"])) {
+        if (!isset($data["player_response"])) {
             die("Can't load VideoSrc from id ($id)");
         }
-        parse_str($data["url_encoded_fmt_stream_map"], $urldata);
-        if (!isset($urldata["url"])) {
+        $playerdata = json_decode($data["player_response"]);
+        if (!isset($playerdata->streamingData) or !isset($playerdata->streamingData->formats) or !is_array($playerdata->streamingData->formats)) {
             die("Can't load VideoSrc from id ($id)");
         }
-        return new self($urldata["url"]);
+        $qualities = array("hd1080", "hd720", "medium");
+        foreach ($qualities as $quality) {
+            foreach ($playerdata->streamingData->formats as $src) {
+                if ($src->quality == $quality) {
+                    return new self($src->url);
+                }
+            }
+        }
     }
 
     public function __construct(string $src)
