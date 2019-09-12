@@ -7,7 +7,7 @@ require_once "VideoSrc.php";
 class Video
 {
     private $id;
-    private $videoSrc;
+    private $videoSrcs;
     private $title;
     private $description;
     private $channel;
@@ -192,10 +192,10 @@ class Video
         return $result;
     }
 
-    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, string $thumbnail)
+    public function __construct(string $id, ?array $videoSrcs, string $title, string $description, Channel $channel, int $date, string $thumbnail)
     {
         $this->id = $id;
-        $this->videoSrc = $videoSrc;
+        $this->videoSrcs = $videoSrcs;
         $this->title = $title;
         $this->description = $description;
         $this->channel = $channel;
@@ -208,9 +208,9 @@ class Video
         return $this->id;
     }
 
-    public function getVideoSrc(): VideoSrc
+    public function getVideoSrcs(): array
     {
-        return $this->videoSrc;
+        return $this->videoSrcs;
     }
 
     public function getTitle(): string

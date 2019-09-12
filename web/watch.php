@@ -28,9 +28,16 @@ if (!$user->getDonotdisturbBool()) {
     }
 }
 
+$src_html = "";
+$src_template = new Template("../templates/videoSrc.html");
+foreach ($video->getVideoSrcs() as $src) {
+    $src_template->set_var("url", $src->getUrl());
+    $src_html .= $src_template->render();
+}
+
 $template = new Template("../templates/watch.html");
 $template->set_var("videoId", $video->getId());
-$template->set_var("videoSrc", $video->getVideoSrc()->getSrc());
+$template->set_var("videoSrc", $src_html);
 $template->set_var("videoTitle", $video->getTitle());
 $template->set_var("videoDescription", nl2br($video->getDescription()));
 $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
