@@ -16,7 +16,7 @@ foreach (Video::fromUser($user, $system) as $video) {
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
     $video_preview_template->set_var("channelId", $video->getChannel()->getId());
     $video_preview_template->set_var("id", $video->getId());
-    $subscriptions_html .= $video_preview_template->render();
+    $subscriptions_html .= $video_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/subscriptions.html");
@@ -33,7 +33,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Subscriptions - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
-$page_template->set_var("main", $template->render());
+$page_template->set_var("header", $header_template->render($user, $system));
+$page_template->set_var("main", $template->render($user, $system));
 
-echo $page_template->render();
+echo $page_template->render($user, $system);

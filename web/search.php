@@ -7,7 +7,7 @@ require_once "../classes/User.php";
 $system = new System();
 $user = new User();
 
-if (!isset($_GET["q"]) or $user->getDonotdisturbBool()) {
+if (!isset($_GET["q"]) or $user->getDonotdisturb($system)) {
     header("Location: .");
     die();
 }
@@ -21,7 +21,7 @@ foreach (Search::fromQuery($_GET["q"], $system) as $video) {
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
     $video_preview_template->set_var("channelId", $video->getChannel()->getId());
     $video_preview_template->set_var("id", $video->getId());
-    $results_html .= $video_preview_template->render();
+    $results_html .= $video_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/search.html");
@@ -40,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
-$page_template->set_var("main", $template->render());
+$page_template->set_var("header", $header_template->render($user, $system));
+$page_template->set_var("main", $template->render($user, $system));
 
-echo $page_template->render();
+echo $page_template->render($user, $system);

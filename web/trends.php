@@ -7,7 +7,7 @@ require_once "../classes/Video.php";
 $system = new System();
 $user = new User();
 
-if ($user->getDonotdisturbBool()) {
+if ($user->getDonotdisturb($system)) {
     header("Location: .");
     die();
 }
@@ -23,7 +23,7 @@ foreach (Video::fromRegion($lang, $system) as $video) {
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
     $video_preview_template->set_var("channelId", $video->getChannel()->getId());
     $video_preview_template->set_var("id", $video->getId());
-    $trends_html .= $video_preview_template->render();
+    $trends_html .= $video_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/trends.html");
@@ -40,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Trends - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
-$page_template->set_var("main", $template->render());
+$page_template->set_var("header", $header_template->render($user, $system));
+$page_template->set_var("main", $template->render($user, $system));
 
-echo $page_template->render();
+echo $page_template->render($user, $system);

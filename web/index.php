@@ -16,7 +16,7 @@ if ($user->getLoggedin()) {
         $video_preview_template->set_var("channel", $video->getChannel()->getName());
         $video_preview_template->set_var("channelId", $video->getChannel()->getId());
         $video_preview_template->set_var("id", $video->getId());
-        $subscriptions_html .= $video_preview_template->render();
+        $subscriptions_html .= $video_preview_template->render($user, $system);
     }
     $subscriptions_html .= "</div>";
 } else {
@@ -24,7 +24,7 @@ if ($user->getLoggedin()) {
 }
 
 $trends_html = "";
-if (!$user->getDonotdisturbBool()) {
+if (!$user->getDonotdisturb($system)) {
     $region = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
     $region = in_array($region, System::API_REGIONS) ? $region : "US";
     foreach (Video::fromRegion($region, $system, 5) as $video) {
@@ -33,7 +33,7 @@ if (!$user->getDonotdisturbBool()) {
         $video_preview_template->set_var("channel", $video->getChannel()->getName());
         $video_preview_template->set_var("channelId", $video->getChannel()->getId());
         $video_preview_template->set_var("id", $video->getId());
-        $trends_html .= $video_preview_template->render();
+        $trends_html .= $video_preview_template->render($user, $system);
     }
 }
 
@@ -52,7 +52,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "PrivacyTube");
-$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
-$page_template->set_var("main", $template->render($user->getDonotdisturbBool()));
+$page_template->set_var("header", $header_template->render($user, $system));
+$page_template->set_var("main", $template->render($user, $system));
 
-echo $page_template->render();
+echo $page_template->render($user, $system);

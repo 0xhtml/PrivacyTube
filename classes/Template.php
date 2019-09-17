@@ -1,4 +1,6 @@
 <?php
+require_once "System.php";
+require_once "User.php";
 
 class Template
 {
@@ -20,13 +22,13 @@ class Template
         $this->vars[$name] = $content;
     }
 
-    public function render(bool $donotdisturb = false): string
+    public function render(User $user, System $system): string
     {
         $rendered = $this->html;
         foreach ($this->vars as $name => $content) {
             $rendered = str_replace("{{" . $name . "}}", $content, $rendered);
         }
-        if ($donotdisturb) {
+        if ($user->getDoNotDisturb($system)) {
             while (strpos($rendered, "{{donotdisturb}}") !== false and strpos($rendered, "{{/donotdisturb}}") !== false) {
                 $start = strpos($rendered, "{{donotdisturb}}");
                 $end = strpos(substr($rendered, $start), "{{/donotdisturb}}") + $start + 17;

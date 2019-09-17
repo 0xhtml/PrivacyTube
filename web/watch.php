@@ -16,7 +16,7 @@ $user = new User();
 $video = Video::fromId($_GET["v"], $system);
 
 $related_html = "";
-if (!$user->getDonotdisturbBool()) {
+if (!$user->getDonotdisturb($system)) {
     $video_preview_template = new Template("../templates/videoPreview.html");
     foreach (Search::fromVideo($video, $system, 10) as $relatedVideo) {
         $video_preview_template->set_var("title", $relatedVideo->getTitle());
@@ -24,7 +24,7 @@ if (!$user->getDonotdisturbBool()) {
         $video_preview_template->set_var("channel", $relatedVideo->getChannel()->getName());
         $video_preview_template->set_var("channelId", $relatedVideo->getChannel()->getId());
         $video_preview_template->set_var("id", $relatedVideo->getId());
-        $related_html .= $video_preview_template->render();
+        $related_html .= $video_preview_template->render($user, $system);
     }
 }
 
@@ -32,7 +32,7 @@ $src_html = "";
 $src_template = new Template("../templates/videoSrc.html");
 foreach ($video->getVideoSrcs() as $src) {
     $src_template->set_var("url", $src->getUrl());
-    $src_html .= $src_template->render();
+    $src_html .= $src_template->render($user, $system);
 }
 
 $template = new Template("../templates/watch.html");
@@ -59,7 +59,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $video->getTitle() . " - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user->getDonotdisturbBool()));
-$page_template->set_var("main", $template->render($user->getDonotdisturbBool()));
+$page_template->set_var("header", $header_template->render($user, $system));
+$page_template->set_var("main", $template->render($user, $system));
 
-echo $page_template->render();
+echo $page_template->render($user, $system);

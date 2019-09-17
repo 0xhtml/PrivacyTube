@@ -51,13 +51,16 @@ class System
             die("Can't execute SQL \"$sql\": $statement->error");
         }
         $result = $statement->get_result();
+        if ($result === false) {
+            return $statement;
+        }
         return $result;
     }
 
     public function api(string $url, array $params, bool $save = true)
     {
         $params_json = json_encode($params);
-        $result = $this->mysql("SELECT * FROM cache WHERE url = ? AND params = ? AND date > (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) LIMIT 1", "ss", $url, $params_json);
+        $result = $this->mysql("SELECT * FROM cache WHERE url = ? AND params = ? AND sql_date > (CURRENT_TIMESTAMP - INTERVAL 1 HOUR) LIMIT 1", "ss", $url, $params_json);
         if ($result->num_rows === 1) {
             return json_decode($result->fetch_object()->data);
         }

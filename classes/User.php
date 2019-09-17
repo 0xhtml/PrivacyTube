@@ -4,8 +4,7 @@ require_once "System.php";
 class User
 {
     private $loggedin;
-    private $username;
-    private $donotdisturb;
+    private $user;
 
     public static function login(string $username, string $password, System $system): bool
     {
@@ -20,8 +19,7 @@ class User
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $_SESSION["user"] = $username;
-        $_SESSION["donotdisturb"] = $result->fetch_object()->donotdisturb;
+        $_SESSION["user"] = $result->fetch_object()->sql_id;
         header("Location: .");
         die();
     }
@@ -36,13 +34,12 @@ class User
             return false;
         }
 
-        $system->mysql("INSERT INTO users(username, password, donotdisturb) VALUES (?, ?, 0)", "ss", $username, $password);
+        $result = $system->mysql("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
 
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $_SESSION["user"] = $username;
-        $_SESSION["donotdisturb"] = 0;
+        $_SESSION["user"] = $result->insert_id;
         header("Location: .");
         die();
     }
@@ -54,8 +51,7 @@ class User
         }
         if (isset($_SESSION["user"])) {
             $this->loggedin = true;
-            $this->username = $_SESSION["user"];
-            $this->donotdisturb = $_SESSION["donotdisturb"];
+            $this->user = $_SESSION["user"];
         } else {
             $this->loggedin = false;
             if ($redirect) {
@@ -67,17 +63,17 @@ class User
 
     public function subscribe(Channel $channel, System $system)
     {
-        $system->mysql("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "ss", $this->username, $channel->getId());
+        $system->mysql("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "is", $this->user, $channel->getId());
     }
 
     public function unsubscribe(Channel $channel, System $system)
     {
-        $system->mysql("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
+        $system->mysql("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
     }
 
     public function isSubscribed(Channel $channel, System $system): bool
     {
-        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "ss", $this->username, $channel->getId());
+        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
         return $result->num_rows === 1;
     }
 
@@ -89,11 +85,48 @@ class User
     public function getSubscriptions(System $system): array
     {
         $subscriptions = array();
-        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ?", "s", $this->username);
+        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ?", "i", $this->user);
         while ($row = $result->fetch_object()) {
             $subscriptions[] = $row->channel;
         }
         return $subscriptions;
+    }
+
+    public function getDoNotDisturb(System $system)
+    {
+        if (!$this->loggedin) {
+            return false;
+        }
+        
+        $result = $system->mysql("SELECT * FROM users WHERE sql_id = ?", "i", $this->user);
+        if ($result->num_rows === 0) {
+            // ACCOUNT WAS DELETED
+            $this->loggedin = false;
+            $this->user = null;
+            session_destroy();
+            return false;
+        }
+        
+        $result = $result->fetch_object();
+        if ($result->donotdisturb === 0) {
+            return false;
+        }
+
+        if (($result->donotdisturb_days >> (6 - intval(date("w")))) % 2 === 0) {
+            return false;
+        }
+        
+        $minute = (intval(date("H")) * 60) + intval(date("i"));
+        $from = $result->donotdisturb_time_from;
+        $to = $result->donotdisturb_time_to;
+        if ($to < $from) {
+            $to += 60 * 24;
+        }
+        if ($minute > $from and $minute < $to) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getLoggedin(): bool
@@ -101,18 +134,8 @@ class User
         return $this->loggedin;
     }
 
-    public function getUsername(): string
+    public function getUser(): string
     {
-        return $this->username;
-    }
-
-    public function getDonotdisturb(): int
-    {
-        return $this->donotdisturb;
-    }
-
-    public function getDonotdisturbBool(): bool
-    {
-        return ($this->loggedin and $this->donotdisturb === 1);
+        return $this->user;
     }
 }
