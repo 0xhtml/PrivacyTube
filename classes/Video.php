@@ -228,7 +228,7 @@ class Video
         return $this->channel;
     }
 
-    public function getDate(): string
+    public function getDate(): int
     {
         return $this->date;
     }
