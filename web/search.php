@@ -7,7 +7,7 @@ require_once "../classes/User.php";
 $system = new System();
 $user = new User();
 
-if (!isset($_GET["q"]) or $user->getDonotdisturb($system)) {
+if (!isset($_GET["q"])) {
     header("Location: .");
     die();
 }
