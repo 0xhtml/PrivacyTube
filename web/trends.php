@@ -27,7 +27,7 @@ foreach (Video::fromRegion($lang, $system) as $video) {
 }
 
 $template = new Template("../templates/trends.html");
-$template->set_var("trends", $trends_html);
+$template->set_var("trends", $trends_html, true);
 
 $header_template = new Template("../templates/header.html");
 if ($user->getLoggedin()) {
@@ -40,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Trends - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system));
-$page_template->set_var("main", $template->render($user, $system));
+$page_template->set_var("header", $header_template->render($user, $system), true);
+$page_template->set_var("main", $template->render($user, $system), true);
 
 echo $page_template->render($user, $system);

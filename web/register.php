@@ -33,7 +33,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Register - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system));
-$page_template->set_var("main", $template->render($user, $system));
+$page_template->set_var("header", $header_template->render($user, $system), true);
+$page_template->set_var("main", $template->render($user, $system), true);
 
 echo $page_template->render($user, $system);

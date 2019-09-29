@@ -25,11 +25,11 @@ foreach (Search::fromQuery($_GET["q"], $system) as $video) {
 }
 
 $template = new Template("../templates/search.html");
-$template->set_var("search", htmlspecialchars($_GET["q"]));
-$template->set_var("results", $results_html);
+$template->set_var("search", $_GET["q"]);
+$template->set_var("results", $results_html, true);
 
 $header_template = new Template("../templates/header.html");
-$header_template->set_var("search", htmlspecialchars($_GET["q"]));
+$header_template->set_var("search", $_GET["q"]);
 if ($user->getLoggedin()) {
     $header_template->set_var("login", "logout");
     $header_template->set_var("loginl", "Logout");
@@ -40,7 +40,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system));
-$page_template->set_var("main", $template->render($user, $system));
+$page_template->set_var("header", $header_template->render($user, $system), true);
+$page_template->set_var("main", $template->render($user, $system), true);
 
 echo $page_template->render($user, $system);

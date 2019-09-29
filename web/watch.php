@@ -37,16 +37,16 @@ foreach ($video->getVideoSrcs() as $src) {
 
 $template = new Template("../templates/watch.html");
 $template->set_var("videoId", $video->getId());
-$template->set_var("videoSrc", $src_html);
+$template->set_var("videoSrc", $src_html, true);
 $template->set_var("videoTitle", $video->getTitle());
-$template->set_var("videoDescription", nl2br($video->getDescription()));
+$template->set_var("videoDescription", nl2br(htmlspecialchars($video->getDescription())), true);
 $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
 
 $template->set_var("channelId", $video->getChannel()->getId());
 $template->set_var("channelName", $video->getChannel()->getName());
 $template->set_var("channelImage", $video->getChannel()->getImage());
 
-$template->set_var("related", $related_html);
+$template->set_var("related", $related_html, true);
 
 $header_template = new Template("../templates/header.html");
 if ($user->getLoggedin()) {
@@ -59,7 +59,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $video->getTitle() . " - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system));
-$page_template->set_var("main", $template->render($user, $system));
+$page_template->set_var("header", $header_template->render($user, $system), true);
+$page_template->set_var("main", $template->render($user, $system), true);
 
 echo $page_template->render($user, $system);

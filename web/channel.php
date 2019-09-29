@@ -39,7 +39,7 @@ $template = new Template("../templates/channel.html");
 $template->set_var("id", $channel->getId());
 $template->set_var("name", $channel->getName());
 $template->set_var("image", $channel->getImage());
-$template->set_var("videos", $videos_html);
+$template->set_var("videos", $videos_html, true);
 
 if ($user->getLoggedin() and $user->isSubscribed($channel, $system)) {
     $template->set_var("action", "unsubscribe");
@@ -60,7 +60,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", $channel->getName() . " - PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system));
-$page_template->set_var("main", $template->render($user, $system));
+$page_template->set_var("header", $header_template->render($user, $system), true);
+$page_template->set_var("main", $template->render($user, $system), true);
 
 echo $page_template->render($user, $system);

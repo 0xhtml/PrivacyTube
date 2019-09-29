@@ -17,9 +17,13 @@ class Template
         fclose($file);
     }
 
-    public function set_var(string $name, string $content)
+    public function set_var(string $name, string $content, bool $html = false)
     {
-        $this->vars[$name] = $content;
+        if ($html) {
+            $this->vars[$name] = $content;
+        } else {
+            $this->vars[$name] = htmlspecialchars($content);
+        }
     }
 
     public function render(User $user, System $system): string
