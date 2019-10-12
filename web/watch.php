@@ -31,7 +31,7 @@ if (!$user->getDonotdisturb($system)) {
 $src_html = "";
 $src_template = new Template("../templates/videoSrc.html");
 foreach ($video->getVideoSrcs() as $src) {
-    $src_template->set_var("url", $src->getUrl());
+    $src_template->set_var("url", $src->getUrl(), true);
     $src_html .= $src_template->render($user, $system);
 }
 
