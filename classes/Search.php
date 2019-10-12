@@ -31,6 +31,17 @@ class Search
                 die("Can't load searched video");
             }
 
+            $system->mysql(
+                "INSERT IGNORE INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (0, ?, ?, ?, ?, ?, ?)",
+                "ssssss",
+                $video->id->videoId,
+                $video->snippet->title,
+                $video->snippet->channelId,
+                $video->snippet->description,
+                date("Y-m-d H:i:s", strtotime($video->snippet->publishedAt)),
+                $video->snippet->thumbnails->medium->url
+            );
+
             $result[] = new Video(
                 $video->id->videoId,
                 null,
@@ -70,6 +81,17 @@ class Search
             )) {
                 die("Can't load related video");
             }
+
+            $system->mysql(
+                "INSERT IGNORE INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (0, ?, ?, ?, ?, ?, ?)",
+                "ssssss",
+                $video->id->videoId,
+                $video->snippet->title,
+                $video->snippet->channelId,
+                $video->snippet->description,
+                date("Y-m-d H:i:s", strtotime($video->snippet->publishedAt)),
+                $video->snippet->thumbnails->medium->url
+            );
 
             $result[] = new Video(
                 $video->id->videoId,
