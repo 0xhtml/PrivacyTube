@@ -24,17 +24,15 @@ if ($user->getLoggedin()) {
 }
 
 $trends_html = "";
-if (!$user->getDonotdisturb($system)) {
-    $region = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-    $region = in_array($region, System::API_REGIONS) ? $region : "US";
-    foreach (Video::fromRegion($region, $system, 5) as $video) {
-        $video_preview_template->set_var("title", $video->getTitle());
-        $video_preview_template->set_var("thumbnail", $video->getThumbnail());
-        $video_preview_template->set_var("channel", $video->getChannel()->getName());
-        $video_preview_template->set_var("channelId", $video->getChannel()->getId());
-        $video_preview_template->set_var("id", $video->getId());
-        $trends_html .= $video_preview_template->render($user, $system);
-    }
+$region = strtoupper(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+$region = in_array($region, System::API_REGIONS) ? $region : "US";
+foreach (Video::fromRegion($region, $system, 5) as $video) {
+    $video_preview_template->set_var("title", $video->getTitle());
+    $video_preview_template->set_var("thumbnail", $video->getThumbnail());
+    $video_preview_template->set_var("channel", $video->getChannel()->getName());
+    $video_preview_template->set_var("channelId", $video->getChannel()->getId());
+    $video_preview_template->set_var("id", $video->getId());
+    $trends_html .= $video_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/index.html");

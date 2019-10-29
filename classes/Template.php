@@ -26,18 +26,11 @@ class Template
         }
     }
 
-    public function render(User $user, System $system): string
+    public function render(): string
     {
         $rendered = $this->html;
         foreach ($this->vars as $name => $content) {
             $rendered = str_replace("{{" . $name . "}}", $content, $rendered);
-        }
-        if ($user->getDoNotDisturb($system)) {
-            while (strpos($rendered, "{{donotdisturb}}") !== false and strpos($rendered, "{{/donotdisturb}}") !== false) {
-                $start = strpos($rendered, "{{donotdisturb}}");
-                $end = strpos(substr($rendered, $start), "{{/donotdisturb}}") + $start + 17;
-                $rendered = substr($rendered, 0, $start) . substr($rendered, $end);
-            }
         }
         $rendered = preg_replace("/{{[a-zA-Z\/]*}}/", "", $rendered);
         return $rendered;

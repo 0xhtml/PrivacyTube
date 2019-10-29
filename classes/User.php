@@ -92,43 +92,6 @@ class User
         return $subscriptions;
     }
 
-    public function getDoNotDisturb(System $system)
-    {
-        if (!$this->loggedin) {
-            return false;
-        }
-        
-        $result = $system->mysql("SELECT * FROM users WHERE sql_id = ?", "i", $this->user);
-        if ($result->num_rows === 0) {
-            // ACCOUNT WAS DELETED
-            $this->loggedin = false;
-            $this->user = null;
-            session_destroy();
-            return false;
-        }
-        
-        $result = $result->fetch_object();
-        if ($result->donotdisturb === 0) {
-            return false;
-        }
-
-        if (($result->donotdisturb_days >> (6 - intval(date("w")))) % 2 === 0) {
-            return false;
-        }
-        
-        $minute = (intval(date("H")) * 60) + intval(date("i"));
-        $from = $result->donotdisturb_time_from;
-        $to = $result->donotdisturb_time_to;
-        if ($to < $from) {
-            $to += 60 * 24;
-        }
-        if ($minute > $from and $minute < $to) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function getLoggedin(): bool
     {
         return $this->loggedin;

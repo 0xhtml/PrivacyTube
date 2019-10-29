@@ -22,11 +22,7 @@ $system->mysql("CREATE TABLE IF NOT EXISTS channels(
 $system->mysql("CREATE TABLE IF NOT EXISTS users(
     sql_id int AUTO_INCREMENT PRIMARY KEY,
     username varchar(64),
-    password varchar(64),
-    donotdisturb bit(1) DEFAULT b'0',
-    donotdisturb_days bit(7) DEFAULT b'1111100',
-    donotdisturb_time_from int(4) DEFAULT 1320,
-    donotdisturb_time_to int(4) DEFAULT 420
+    password varchar(64)
 )");
 $system->mysql("CREATE TABLE IF NOT EXISTS subscriptions(
     sql_id int AUTO_INCREMENT PRIMARY KEY,

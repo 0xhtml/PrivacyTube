@@ -7,11 +7,6 @@ require_once "../classes/Video.php";
 $system = new System();
 $user = new User();
 
-if ($user->getDonotdisturb($system)) {
-    header("Location: .");
-    die();
-}
-
 $video_preview_template = new Template("../templates/videoPreview.html");
 $trends_html = "";
 

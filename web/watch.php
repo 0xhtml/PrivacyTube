@@ -16,16 +16,14 @@ $user = new User();
 $video = Video::fromId($_GET["v"], $system);
 
 $related_html = "";
-if (!$user->getDonotdisturb($system)) {
-    $video_preview_template = new Template("../templates/videoPreview.html");
-    foreach (Search::fromVideo($video, $system, 10) as $relatedVideo) {
-        $video_preview_template->set_var("title", $relatedVideo->getTitle());
-        $video_preview_template->set_var("thumbnail", $relatedVideo->getThumbnail());
-        $video_preview_template->set_var("channel", $relatedVideo->getChannel()->getName());
-        $video_preview_template->set_var("channelId", $relatedVideo->getChannel()->getId());
-        $video_preview_template->set_var("id", $relatedVideo->getId());
-        $related_html .= $video_preview_template->render($user, $system);
-    }
+$video_preview_template = new Template("../templates/videoPreview.html");
+foreach (Search::fromVideo($video, $system, 10) as $relatedVideo) {
+    $video_preview_template->set_var("title", $relatedVideo->getTitle());
+    $video_preview_template->set_var("thumbnail", $relatedVideo->getThumbnail());
+    $video_preview_template->set_var("channel", $relatedVideo->getChannel()->getName());
+    $video_preview_template->set_var("channelId", $relatedVideo->getChannel()->getId());
+    $video_preview_template->set_var("id", $relatedVideo->getId());
+    $related_html .= $video_preview_template->render($user, $system);
 }
 
 $src_html = "";
