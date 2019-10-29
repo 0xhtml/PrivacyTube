@@ -26,16 +26,9 @@ foreach (Search::fromVideo($video, $system, 10) as $relatedVideo) {
     $related_html .= $video_preview_template->render($user, $system);
 }
 
-$src_html = "";
-$src_template = new Template("../templates/videoSrc.html");
-foreach ($video->getVideoSrcs() as $src) {
-    $src_template->set_var("url", $src->getUrl(), true);
-    $src_html .= $src_template->render($user, $system);
-}
-
 $template = new Template("../templates/watch.html");
 $template->set_var("videoId", $video->getId());
-$template->set_var("videoSrc", $src_html, true);
+$template->set_var("videoSrc", $video->getVideoSrc()->getHtml(), true);
 $template->set_var("videoTitle", $video->getTitle());
 $template->set_var("videoDescription", nl2br(htmlspecialchars($video->getDescription())), true);
 $template->set_var("videoDate", date("d. M Y H:s", $video->getDate()));
