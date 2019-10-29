@@ -36,8 +36,8 @@ class Search
                 "ssssss",
                 $video->id->videoId,
                 $video->snippet->title,
-                $video->snippet->channelId,
                 $video->snippet->description,
+                $video->snippet->channelId,
                 date("Y-m-d H:i:s", strtotime($video->snippet->publishedAt)),
                 $video->snippet->thumbnails->medium->url
             );
@@ -87,8 +87,8 @@ class Search
                 "ssssss",
                 $video->id->videoId,
                 $video->snippet->title,
-                $video->snippet->channelId,
                 $video->snippet->description,
+                $video->snippet->channelId,
                 date("Y-m-d H:i:s", strtotime($video->snippet->publishedAt)),
                 $video->snippet->thumbnails->medium->url
             );
