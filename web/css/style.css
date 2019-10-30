@@ -158,8 +158,13 @@ section {
     }
 }
 
-#video video {
+#video video, #video iframe {
     width: 100%;
+    border: none;
+}
+
+#video iframe {
+    height: 29em;
 }
 
 #videoInfo h1 {

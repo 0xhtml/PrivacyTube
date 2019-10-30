@@ -44,7 +44,7 @@ class VideoSrc
         if (count($srcs) > 0) {
             return new self(false, $srcs);
         } else {
-            return new self(true, "");
+            return new self(true, $id);
         }
     }
 
@@ -57,7 +57,7 @@ class VideoSrc
     public function getHtml(): string
     {
         if ($this->frame) {
-            return "iframe";
+            return "<iframe src=\"https://www.youtube-nocookie.com/embed/$this->src\" allowfullscreen></iframe>";
         } else {
             $html = "<video autoplay controls>";
             foreach ($this->src as $value) {
