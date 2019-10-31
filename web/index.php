@@ -20,7 +20,7 @@ if ($user->getLoggedin()) {
     }
     $subscriptions_html .= "</div>";
 } else {
-    $subscriptions_html = "<p><a href=\"login.php\">Login</a> to subscribe to channels.</p>";
+    $subscriptions_html = "<p><a href=\"./login\">Login</a> to subscribe to channels.</p>";
 }
 
 $trends_html = "";
