@@ -5,6 +5,8 @@ window.addEventListener("load", () => {
 
 function setupStorage() {
     setupStorageItem("subscriptions", {});
+    setupStorageItem("uploads", {});
+    setupStorageItem("videos", {});
     setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/");
 }
 
@@ -23,48 +25,45 @@ function getItem(key) {
 }
 
 function renderSubscriptions(elem) {
-    const subscriptions = JSON.parse(localStorage.getItem("subscriptions"));
-    var videos = [];
+    const subscriptions = getItem("subscriptions");
+    const uploads = getItem("uploads");
+    const videos = getItem("videos");
+
     for (const subscription in subscriptions) {
-        if (subscriptions.hasOwnProperty(subscription)) {
-            for (var video of subscriptions[subscription].videos) {
-                video.channel = subscriptions[subscription].title;
-                videos.push(video);
+        if (!subscriptions.hasOwnProperty(subscription)) continue;
+        console.log(subscription);
+        for (const upload of uploads[subscription]) {
+            const a = document.createElement("a");
+            a.setAttribute("href", "https://www.youtube.com/watch?v=" + upload);
+            // a.innerHTML = '<img src="' + video.thumbnail + '">';
+            // a.innerHTML += '<p>' + video.title + '</p>';
+            // a.innerHTML += '<p>' + video.channel + '</p>';
+            elem.appendChild(a);
+            if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
+                break;
             }
-        }
-    }
-    for (const video of videos) {
-        const a = document.createElement("a");
-        a.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
-        a.innerHTML = '<img src="' + video.thumbnail + '">';
-        a.innerHTML += '<p>' + video.title + '</p>';
-        a.innerHTML += '<p>' + video.channel + '</p>';
-        elem.appendChild(a);
-        if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
-            break;
         }
     }
 }
 
-function parseChannel(json) {
-    var metadata = json[1].response.metadata.channelMetadataRenderer;
-    var tab = json[1].response.contents.twoColumnBrowseResultsRenderer.tabs[1];
-    var contents = tab.tabRenderer.content.sectionListRenderer.contents[0];
-    var items = contents.itemSectionRenderer.contents[0].gridRenderer.items;
-    var videos = [];
-    for (const item of items) {
-        videos.push({
-            id: item.gridVideoRenderer.videoId,
-            title: item.gridVideoRenderer.title.simpleText,
-            thumbnail: item.gridVideoRenderer.thumbnail.thumbnails[0].url
-        });
-    }
+function parseChannel(data) {
+    var metadata = data[1].response.metadata.channelMetadataRenderer;
     return {
         id: metadata.externalId,
         title: metadata.title,
         thumbnail: metadata.avatar.thumbnails[0].url,
-        videos: videos
     };
+}
+
+function parseUploads(data) {
+    var tab = data[1].response.contents.twoColumnBrowseResultsRenderer.tabs[1];
+    var contents = tab.tabRenderer.content.sectionListRenderer.contents[0];
+    var items = contents.itemSectionRenderer.contents[0].gridRenderer.items;
+    var videos = [];
+    for (const item of items) {
+        videos.push(item.gridVideoRenderer.videoId);
+    }
+    return videos;
 }
 
 function subscribe(channel) {
@@ -84,6 +83,11 @@ function subscribe(channel) {
             const channel = parseChannel(data);
             subscriptions[channel.id] = channel;
             setItem("subscriptions", subscriptions);
+
+            var uploads = getItem("uploads");
+            const channeluploads = parseUploads(data);
+            uploads[channel.id] = channeluploads;
+            setItem("uploads", uploads);
         }
     )
 }
