@@ -35,9 +35,9 @@ function renderSubscriptions(elem) {
         for (const upload of uploads[subscription]) {
             const a = document.createElement("a");
             a.setAttribute("href", "https://www.youtube.com/watch?v=" + upload);
-            // a.innerHTML = '<img src="' + video.thumbnail + '">';
-            // a.innerHTML += '<p>' + video.title + '</p>';
-            // a.innerHTML += '<p>' + video.channel + '</p>';
+            a.innerHTML = '<img src="' + videos[upload].thumbnail + '">';
+            a.innerHTML += '<p>' + videos[upload].title + '</p>';
+            a.innerHTML += '<p>' + subscriptions[subscription].title + '</p>';
             elem.appendChild(a);
             if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
                 break;
@@ -66,6 +66,18 @@ function parseUploads(data) {
     return videos;
 }
 
+function parseVideo(data) {
+    var details = data[3].playerResponse.microformat.playerMicroformatRenderer;
+    return {
+        title: details.title.simpleText,
+        channel: details.externalChannelId,
+        channelname: details.ownerChannelName,
+        thumbnail: details.thumbnail.thumbnails[0].url,
+        description: details.description.simpleText,
+        date: details.publishDate
+    }
+}
+
 function subscribe(channel) {
     fetch(
         getItem("proxie") + "https://youtube.com/channel/" + channel + "/videos?pbj=1",
@@ -88,6 +100,29 @@ function subscribe(channel) {
             const channeluploads = parseUploads(data);
             uploads[channel.id] = channeluploads;
             setItem("uploads", uploads);
+
+            channeluploads.forEach(loadVideo);
         }
-    )
+    );
+}
+
+function loadVideo(id) {
+    fetch(
+        getItem("proxie") + "https://youtube.com/watch?v=" + id + "&pbj=1",
+        {
+            headers: {
+                "X-YouTube-Client-Name": "1",
+                "X-YouTube-Client-Version": "2.20190926.06.01"
+            }
+        }
+    ).then(
+        res => { return res.json() }
+    ).then(
+        data => {
+            var videos = getItem("videos");
+            const video = parseVideo(data);
+            videos[id] = video;
+            setItem("videos", videos);
+        }
+    );
 }
