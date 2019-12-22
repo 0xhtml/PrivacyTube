@@ -5,7 +5,7 @@ window.addEventListener("load", () => {
 
 function setupStorage() {
     setupStorageItem("subscriptions", {});
-    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/")
+    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/");
 }
 
 function setupStorageItem(key, value) {
@@ -35,7 +35,7 @@ function renderSubscriptions(elem) {
     }
     for (const video of videos) {
         const a = document.createElement("a");
-        a.setAttribute("href", "https://www.youtube.com/watch?v="+video.id);
+        a.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
         a.innerHTML = '<img src="' + video.thumbnail + '">';
         a.innerHTML += '<p>' + video.title + '</p>';
         a.innerHTML += '<p>' + video.channel + '</p>';
@@ -77,7 +77,7 @@ function subscribe(channel) {
             }
         }
     ).then(
-        res => {return res.json()}
+        res => { return res.json() }
     ).then(
         data => {
             var subscriptions = getItem("subscriptions");
