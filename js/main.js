@@ -1,5 +1,3 @@
-const PROXIE = "https://cors-anywhere.herokuapp.com/"
-
 window.addEventListener("load", () => {
     setupStorage();
     document.querySelectorAll('[data-subscriptions]').forEach(renderSubscriptions);
@@ -7,6 +5,7 @@ window.addEventListener("load", () => {
 
 function setupStorage() {
     setupStorageItem("subscriptions", {});
+    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/")
 }
 
 function setupStorageItem(key, value) {
@@ -69,7 +68,7 @@ function parseChannel(json) {
 
 function subscribe(channel) {
     fetch(
-        PROXIE + "https://youtube.com/channel/" + channel + "/videos?pbj=1",
+        getItem("proxie") + "https://youtube.com/channel/" + channel + "/videos?pbj=1",
         {
             headers: {
                 "X-YouTube-Client-Name": "1",
