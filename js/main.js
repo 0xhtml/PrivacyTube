@@ -28,12 +28,17 @@ function renderSubscriptions(elem) {
     var videos = [];
     for (const subscription in subscriptions) {
         if (subscriptions.hasOwnProperty(subscription)) {
-            videos.push(...subscriptions[subscription].videos);
+            for (var video of subscriptions[subscription].videos) {
+                video.channel = subscriptions[subscription].title;
+                videos.push(video);
+            }
         }
     }
     for (const video of videos) {
-        const div = document.createElement("p");
-        div.innerHTML = video.title;
+        const div = document.createElement("div");
+        div.innerHTML = '<img src="' + video.thumbnail + '">';
+        div.innerHTML += '<p>' + video.title + '</p>';
+        div.innerHTML += '<p>' + video.channel + '</p>';
         elem.appendChild(div);
         if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
             break;
