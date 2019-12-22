@@ -68,3 +68,7 @@ h2 {
     width: 100%;
     height: auto;
 }
+
+.grid p:last-child {
+    color: rgba(0,0,0,.4);
+}

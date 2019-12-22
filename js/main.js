@@ -34,11 +34,12 @@ function renderSubscriptions(elem) {
         }
     }
     for (const video of videos) {
-        const div = document.createElement("div");
-        div.innerHTML = '<img src="' + video.thumbnail + '">';
-        div.innerHTML += '<p>' + video.title + '</p>';
-        div.innerHTML += '<p>' + video.channel + '</p>';
-        elem.appendChild(div);
+        const a = document.createElement("a");
+        a.setAttribute("href", "https://www.youtube.com/watch?v="+video.id);
+        a.innerHTML = '<img src="' + video.thumbnail + '">';
+        a.innerHTML += '<p>' + video.title + '</p>';
+        a.innerHTML += '<p>' + video.channel + '</p>';
+        elem.appendChild(a);
         if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
             break;
         }
