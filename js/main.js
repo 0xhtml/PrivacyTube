@@ -43,7 +43,7 @@ function renderSubscriptions(elem) {
         a.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
         a.innerHTML = '<img src="' + video.thumbnail + '">';
         a.innerHTML += '<p>' + video.title + '</p>';
-        a.innerHTML += '<p>' + video.channelName + '</p>';
+        a.innerHTML += '<p>' + video.channelname + '</p>';
         elem.appendChild(a);
         if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
             break;
