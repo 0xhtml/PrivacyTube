@@ -50,6 +50,10 @@ hr {
     max-width: 1140px;
 }
 
+.grid.channels {
+    grid-template-columns: auto auto auto;
+}
+
 .grid img {
     width: 100%;
     height: auto;

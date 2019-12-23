@@ -24,7 +24,7 @@ for (const video of subvideos) {
     </a>
     `;
     i++;
-    if (i == 30) {
+    if (i == 29) {
         break;
     }
 }
