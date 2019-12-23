@@ -7,7 +7,7 @@ function setupStorage() {
     setupStorageItem("subscriptions", {});
     setupStorageItem("uploads", {});
     setupStorageItem("videos", {});
-    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/");
+    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/https://www.youtube.com");
 }
 
 function setupStorageItem(key, value) {
@@ -29,19 +29,26 @@ function renderSubscriptions(elem) {
     const uploads = getItem("uploads");
     const videos = getItem("videos");
 
+    var subvideos = [];
+
     for (const subscription in subscriptions) {
         if (!subscriptions.hasOwnProperty(subscription)) continue;
-        console.log(subscription);
         for (const upload of uploads[subscription]) {
-            const a = document.createElement("a");
-            a.setAttribute("href", "https://www.youtube.com/watch?v=" + upload);
-            a.innerHTML = '<img src="' + videos[upload].thumbnail + '">';
-            a.innerHTML += '<p>' + videos[upload].title + '</p>';
-            a.innerHTML += '<p>' + subscriptions[subscription].title + '</p>';
-            elem.appendChild(a);
-            if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
-                break;
-            }
+            subvideos.push(videos[upload]);
+        }
+    }
+
+    subvideos.sort((a, b) => b.date - a.date);
+
+    for (const video of subvideos) {
+        const a = document.createElement("a");
+        a.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
+        a.innerHTML = '<img src="' + video.thumbnail + '">';
+        a.innerHTML += '<p>' + video.title + '</p>';
+        a.innerHTML += '<p>' + video.channelName + '</p>';
+        elem.appendChild(a);
+        if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
+            break;
         }
     }
 }
@@ -69,18 +76,19 @@ function parseUploads(data) {
 function parseVideo(data) {
     var details = data[3].playerResponse.microformat.playerMicroformatRenderer;
     return {
+        id: data[3].playerResponse.videoDetails.videoId,
         title: details.title.simpleText,
         channel: details.externalChannelId,
         channelname: details.ownerChannelName,
         thumbnail: details.thumbnail.thumbnails[0].url,
         description: details.description.simpleText,
-        date: details.publishDate
+        date: Date.parse(details.publishDate)
     }
 }
 
 function subscribe(channel) {
     fetch(
-        getItem("proxie") + "https://youtube.com/channel/" + channel + "/videos?pbj=1",
+        getItem("proxie") + "/channel/" + channel + "/videos?pbj=1",
         {
             headers: {
                 "X-YouTube-Client-Name": "1",
@@ -108,7 +116,7 @@ function subscribe(channel) {
 
 function loadVideo(id) {
     fetch(
-        getItem("proxie") + "https://youtube.com/watch?v=" + id + "&pbj=1",
+        getItem("proxie") + "/watch?v=" + id + "&pbj=1",
         {
             headers: {
                 "X-YouTube-Client-Name": "1",
