@@ -1,6 +1,5 @@
 window.addEventListener("load", () => {
     setupStorage();
-    document.querySelectorAll('[data-subscriptions]').forEach(renderSubscriptions);
 });
 
 function setupStorage() {
@@ -21,34 +20,6 @@ function setItem(key, value) {
 
 function getItem(key) {
     return JSON.parse(localStorage.getItem(key));
-}
-
-function renderSubscriptions(elem) {
-    const subscriptions = getItem("subscriptions");
-    const videos = getItem("videos");
-
-    var subvideos = [];
-
-    for (const subscription in subscriptions) {
-        if (!subscriptions.hasOwnProperty(subscription)) continue;
-        for (const upload of subscriptions[subscription].uploads) {
-            subvideos.push(videos[upload]);
-        }
-    }
-
-    subvideos.sort((a, b) => b.date - a.date);
-
-    for (const video of subvideos) {
-        const a = document.createElement("a");
-        a.setAttribute("href", "https://www.youtube.com/watch?v=" + video.id);
-        a.innerHTML = '<img src="' + video.thumbnail + '">';
-        a.innerHTML += '<p>' + video.title + '</p>';
-        a.innerHTML += '<p>' + video.channelname + '</p>';
-        elem.appendChild(a);
-        if (elem.childElementCount == elem.getAttribute("data-subscriptions")) {
-            break;
-        }
-    }
 }
 
 function parseChannel(data) {

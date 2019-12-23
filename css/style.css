@@ -1,5 +1,5 @@
 :root {
-    --space: .6em;
+    --space: .6rem;
 }
 
 * {
@@ -25,6 +25,11 @@ nav > a {
     padding: var(--space);
 }
 
+h1 {
+    font-size: 1.5em;
+    margin: var(--space);
+}
+
 h2 {
     text-transform: uppercase;
     color: rgba(0,0,0,.4);
@@ -32,36 +37,17 @@ h2 {
     font-size: 1em;
 }
 
+hr {
+    margin: var(--space);
+    color: rgba(0,0,0,.4);
+}
+
 .grid {
     display: grid;
     grid-gap: var(--space);
-    grid-template-columns: auto;
+    grid-template-columns: auto auto;
     margin: var(--space);
     max-width: 1140px;
-}
-
-@media all and (min-width: 576px) {
-    .grid {
-        grid-template-columns: auto auto;
-    }
-}
-
-@media all and (min-width: 768px) {
-    .grid {
-        grid-template-columns: auto auto auto;
-    }
-}
-
-@media all and (min-width: 992px) {
-    .grid {
-        grid-template-columns: auto auto auto auto;
-    }
-}
-
-@media all and (min-width: 1200px) {
-    .grid {
-        grid-template-columns: auto auto auto auto auto;
-    }
 }
 
 .grid img {
@@ -69,6 +55,35 @@ h2 {
     height: auto;
 }
 
+.grid p {
+    margin: 0;
+}
+
 .grid p:last-child {
     color: rgba(0,0,0,.4);
+}
+
+p {
+    margin: var(--space);
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+.video-channel img {
+    width: 5rem;
+    height: 5rem;
+    margin-right: var(--space);
+}
+
+.video-channel {
+    display: flex;
+    align-items: center;
+}
+
+.video-description {
+    max-height: 15rem;
+    overflow: auto;
 }
