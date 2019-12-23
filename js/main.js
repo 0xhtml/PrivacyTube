@@ -5,9 +5,8 @@ window.addEventListener("load", () => {
 
 function setupStorage() {
     setupStorageItem("subscriptions", {});
-    setupStorageItem("uploads", {});
     setupStorageItem("videos", {});
-    setupStorageItem("proxie", "https://cors-anywhere.herokuapp.com/https://www.youtube.com");
+    setupStorageItem("proxie", "http://127.0.0.1:8080/https://www.youtube.com");
 }
 
 function setupStorageItem(key, value) {
@@ -26,14 +25,13 @@ function getItem(key) {
 
 function renderSubscriptions(elem) {
     const subscriptions = getItem("subscriptions");
-    const uploads = getItem("uploads");
     const videos = getItem("videos");
 
     var subvideos = [];
 
     for (const subscription in subscriptions) {
         if (!subscriptions.hasOwnProperty(subscription)) continue;
-        for (const upload of uploads[subscription]) {
+        for (const upload of subscriptions[subscription].uploads) {
             subvideos.push(videos[upload]);
         }
     }
@@ -55,22 +53,19 @@ function renderSubscriptions(elem) {
 
 function parseChannel(data) {
     var metadata = data[1].response.metadata.channelMetadataRenderer;
+    var tab = data[1].response.contents.twoColumnBrowseResultsRenderer.tabs[1];
+    var contents = tab.tabRenderer.content.sectionListRenderer.contents[0];
+    var items = contents.itemSectionRenderer.contents[0].gridRenderer.items;
+    var uploads = [];
+    for (const item of items) {
+        uploads.push(item.gridVideoRenderer.videoId);
+    }
     return {
         id: metadata.externalId,
         title: metadata.title,
         thumbnail: metadata.avatar.thumbnails[0].url,
+        uploads: uploads
     };
-}
-
-function parseUploads(data) {
-    var tab = data[1].response.contents.twoColumnBrowseResultsRenderer.tabs[1];
-    var contents = tab.tabRenderer.content.sectionListRenderer.contents[0];
-    var items = contents.itemSectionRenderer.contents[0].gridRenderer.items;
-    var videos = [];
-    for (const item of items) {
-        videos.push(item.gridVideoRenderer.videoId);
-    }
-    return videos;
 }
 
 function parseVideo(data) {
@@ -104,12 +99,7 @@ function subscribe(channel) {
             subscriptions[channel.id] = channel;
             setItem("subscriptions", subscriptions);
 
-            var uploads = getItem("uploads");
-            const channeluploads = parseUploads(data);
-            uploads[channel.id] = channeluploads;
-            setItem("uploads", uploads);
-
-            channeluploads.forEach(loadVideo);
+            channel.uploads.forEach(loadVideo);
         }
     );
 }
