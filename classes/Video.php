@@ -30,7 +30,7 @@ class Video
             );
         }
 
-        $data = $system->api("/videos", array("id" => $id, "part" => "snippet"), false);
+        $data = $system->api("/videos", array("id" => $id, "part" => "snippet"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -45,17 +45,6 @@ class Video
         )) {
             die("Can't load Video from id ($id)");
         }
-
-        $system->mysql(
-            "INSERT INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (0, ?, ?, ?, ?, ?, ?)",
-            "ssssss",
-            $id,
-            $data->items[0]->snippet->title,
-            $data->items[0]->snippet->description,
-            $data->items[0]->snippet->channelId,
-            date("Y-m-d H:i:s", strtotime($data->items[0]->snippet->publishedAt)),
-            $data->items[0]->snippet->thumbnails->medium->url
-        );
 
         return new Video(
             $id,
@@ -73,7 +62,7 @@ class Video
         $videos = array();
         
         if ($cache) {
-            $result = $system->mysql("SELECT * FROM videos WHERE channel = ? AND sql_state = 1 ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
+            $result = $system->mysql("SELECT * FROM videos WHERE channel = ? ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
             if ($result->num_rows !== 0) {
                 while ($data = $result->fetch_object()) {
                     $videos[] = new Video(
@@ -90,7 +79,7 @@ class Video
             }
         }
 
-        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50), false);
+        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50));
         if (!isset($data->items)) {
             die("Can't load Video from Channel (" . $channel->getId() . ")");
         }
@@ -111,7 +100,7 @@ class Video
             }
 
             $system->mysql(
-                "INSERT IGNORE INTO videos(sql_state, id, title, description, channel, date, thumbnail) VALUES (1, ?, ?, ?, ?, ?, ?)",
+                "INSERT IGNORE INTO videos(id, title, description, channel, date, thumbnail) VALUES (?, ?, ?, ?, ?, ?)",
                 "ssssss",
                 $video->snippet->resourceId->videoId,
                 $video->snippet->title,
@@ -152,43 +141,6 @@ class Video
 
         krsort($result);
         $result = array_slice($result, 0, $max);
-        return $result;
-    }
-
-    public static function fromRegion(string $region, System $system, int $max = 50): array
-    {
-        $result = array();
-
-        $data = $system->api("/videos", array("chart" => "mostPopular", "regionCode" => $region, "maxResults" => $max, "part" => "snippet"));
-        if (!isset($data->items)) {
-            die("Can't load trends of $region");
-        }
-
-        foreach ($data->items as $video) {
-            if (!isset(
-                $video->snippet,
-                $video->snippet->title,
-                $video->snippet->description,
-                $video->snippet->channelId,
-                $video->snippet->publishedAt,
-                $video->snippet->thumbnails,
-                $video->snippet->thumbnails->medium,
-                $video->snippet->thumbnails->medium->url
-            )) {
-                die("Can't load video of trends $region");
-            }
-
-            $result[] = new self(
-                $video->id,
-                null,
-                $video->snippet->title,
-                $video->snippet->description,
-                new Channel($video->snippet->channelId, $video->snippet->channelTitle, null, null),
-                strtotime($video->snippet->publishedAt),
-                $video->snippet->thumbnails->medium->url
-            );
-        }
-
         return $result;
     }
 

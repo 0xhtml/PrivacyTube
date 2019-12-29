@@ -1,5 +1,5 @@
 <?php
-require_once "../classes/Search.php";
+require_once "../classes/Channel.php";
 require_once "../classes/System.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
@@ -12,16 +12,35 @@ if (!isset($_GET["q"])) {
     die();
 }
 
-$video_preview_template = new Template("../templates/videoPreview.html");
+if (isset($_POST["id"]) and strlen($_POST["id"]) == 24) {
+    $channel = new Channel($_POST["id"], null, null, null);
+    if (isset($_POST["subscribe"])) {
+        $user = new User(true);
+        $user->subscribe($channel, $system);
+    } elseif (isset($_POST["unsubscribe"])) {
+        $user = new User(true);
+        $user->unsubscribe($channel, $system);
+    }
+}
+
+$channel_preview_template = new Template("../templates/channelPreview.html");
 $results_html = "";
 
-foreach (Search::fromQuery($_GET["q"], $system) as $video) {
-    $video_preview_template->set_var("title", $video->getTitle());
-    $video_preview_template->set_var("thumbnail", $video->getThumbnail());
-    $video_preview_template->set_var("channel", $video->getChannel()->getName());
-    $video_preview_template->set_var("channelId", $video->getChannel()->getId());
-    $video_preview_template->set_var("id", $video->getId());
-    $results_html .= $video_preview_template->render($user, $system);
+foreach (Channel::fromQuery($_GET["q"], $system) as $channel) {
+    $channel_preview_template->set_var("name", $channel->getName());
+    $channel_preview_template->set_var("image", $channel->getImage());
+    $channel_preview_template->set_var("id", $channel->getId());
+
+    $channel_preview_template->set_var("action", "./search?q=" . $_GET["q"]);
+    if ($user->getLoggedin() and $user->isSubscribed($channel, $system)) {
+        $channel_preview_template->set_var("actionName", "unsubscribe");
+        $channel_preview_template->set_var("actionValue", "Unsubscribe");
+    } else {
+        $channel_preview_template->set_var("actionName", "subscribe");
+        $channel_preview_template->set_var("actionValue", "Subscribe");
+    }
+
+    $results_html .= $channel_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/search.html");

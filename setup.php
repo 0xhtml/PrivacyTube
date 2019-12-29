@@ -4,13 +4,6 @@ require_once "classes/System.php";
 System::setupConfig();
 $system = new System("");
 
-$system->mysql("CREATE TABLE IF NOT EXISTS cache(
-    sql_id int AUTO_INCREMENT PRIMARY KEY,
-    sql_date timestamp DEFAULT CURRENT_TIMESTAMP,
-    url text,
-    params text,
-    data mediumtext
-)");
 $system->mysql("CREATE TABLE IF NOT EXISTS channels(
     sql_id int AUTO_INCREMENT PRIMARY KEY,
     sql_date timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +26,6 @@ $system->mysql("CREATE TABLE IF NOT EXISTS subscriptions(
 $system->mysql("CREATE TABLE IF NOT EXISTS videos(
     sql_id int AUTO_INCREMENT PRIMARY KEY,
     sql_date timestamp DEFAULT CURRENT_TIMESTAMP,
-    sql_state int,
     id varchar(11) UNIQUE,
     title text,
     description text,

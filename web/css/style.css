@@ -5,44 +5,18 @@ body {
 
 header {
     display: flex;
-    background: white;
+    justify-content: space-between;
     box-shadow: 0 0 .2em rgba(17, 17, 17, .2);
 }
 
-header form {
-    margin-left: auto;
+header form, nav {
     display: flex;
     align-items: center;
-}
-
-nav {
-    display: flex;
-    margin-left: auto;
 }
 
 header a {
     padding: .5em;
     color: black;
-}
-
-header a:hover {
-    background: rgba(17, 17, 17, .1);
-}
-
-@media all and (max-width: 26em) {
-    nav a:first-child {
-        display: none;
-    }
-}
-
-@media all and (max-width: 22em) {
-    header>a {
-        display: none;
-    }
-
-    nav a:first-child {
-        display: inherit;
-    }
 }
 
 main {
@@ -102,25 +76,26 @@ section {
     margin: 0 -.25em;
 }
 
-.videos div {
+.videos a {
     width: calc(20% - .5em);
     margin: 0 .25em .5em;
+    display: block;
+    color: inherit;
 }
 
-.videos img {
-    width: 100%;
-}
-
-.videos a:not(:first-child) {
-    color: black;
+.videos span {
     display: block;
     max-height: 2em;
     line-height: 1em;
     overflow: hidden;
 }
 
-.videos a:last-child {
+.videos span:last-child {
     color: rgba(0, 0, 0, .7);
+}
+
+.videos img {
+    width: 100%;
 }
 
 @media all and (max-width: 53em) {
@@ -147,15 +122,22 @@ section {
     }
 }
 
-#video {
-    padding: 0;
+.channels div {
+    margin: .5em 0;
+    display: flex;
+    align-items: center;
 }
 
-@media all and (max-width: 31.8rem) and (orientation: portrait) {
-    #video {
-        position: sticky;
-        top: 0;
-    }
+.channels img {
+    margin-right: .5em;
+}
+
+.channels form {
+    margin-left: auto;
+}
+
+#video {
+    padding: 0;
 }
 
 #video video, #video iframe {
@@ -181,7 +163,7 @@ section {
     width: 5em;
 }
 
-#videoInfo div a:first-child {
+#videoInfo div img {
     height: 5em;
 }
 

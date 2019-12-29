@@ -6,16 +6,10 @@
         <h1>{{videoTitle}}</h1>
         <hr>
         <div>
-            <a href="./channel?c={{channelId}}"><img alt="Channel image of {{channelName}}" src="{{channelImage}}"></a>
-            <p><a href="./channel?c={{channelId}}">{{channelName}}</a><br>Uploaded on {{videoDate}}</p>
+            <img alt="Channel image of {{channelName}}" src="{{channelImage}}">
+            <p>{{channelName}}<br>Uploaded on {{videoDate}}</p>
         </div>
         <hr>
         <p>{{videoDescription}}</p>
-    </section>
-    <section id="related">
-        <h2>Related</h2>
-        <div class="videos">
-            {{related}}
-        </div>
     </section>
 </main>

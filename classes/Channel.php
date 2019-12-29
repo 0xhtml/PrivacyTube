@@ -21,7 +21,7 @@ class Channel
             );
         }
 
-        $data = $system->api("/channels", array("id" => $id, "part" => "snippet,contentDetails"), false);
+        $data = $system->api("/channels", array("id" => $id, "part" => "snippet,contentDetails"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -54,7 +54,39 @@ class Channel
         );
     }
 
-    public function __construct(string $id, string $name, ?string $image, ?string $uploadsId)
+    public static function fromQuery(string $q, System $system, int $max = 50): array
+    {
+        $result = array();
+
+        $channels = $system->api("/search", array("q" => $q, "part" => "snippet", "type" => "channel", "maxResults" => $max));
+        if (!isset($channels->items)) {
+            die("Can't load searched channels");
+        }
+
+        foreach ($channels->items as $channel) {
+            if (!isset(
+                $channel->snippet,
+                $channel->snippet->channelId,
+                $channel->snippet->channelTitle,
+                $channel->snippet->thumbnails,
+                $channel->snippet->thumbnails->default,
+                $channel->snippet->thumbnails->default->url
+            )) {
+                die("Can't load searched channel");
+            }
+    
+            $result[] = new Channel(
+                $channel->snippet->channelId,
+                $channel->snippet->channelTitle,
+                $channel->snippet->thumbnails->default->url,
+                null
+            );
+        }
+
+        return $result;
+    }
+
+    public function __construct(string $id, ?string $name, ?string $image, ?string $uploadsId)
     {
         $this->id = $id;
         $this->name = $name;
