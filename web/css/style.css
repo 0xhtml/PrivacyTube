@@ -99,25 +99,25 @@ section {
 }
 
 @media all and (max-width: 53em) {
-    .videos div {
+    .videos a {
         width: calc(25% - .5em);
     }
 }
 
 @media all and (max-width: 42.4em) {
-    .videos div {
+    .videos a {
         width: calc(33.333333333% - .5em);
     }
 }
 
 @media all and (max-width: 31.8em) {
-    .videos div {
+    .videos a {
         width: calc(50% - .5em);
     }
 }
 
 @media all and (max-width: 21.2em) {
-    .videos div {
+    .videos a {
         width: calc(100% - .5em);
     }
 }
