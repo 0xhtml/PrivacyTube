@@ -8,18 +8,27 @@ $system = new System();
 $user = new User(true);
 
 $video_preview_template = new Template("../templates/videoPreview.html");
-$subscriptions_html = "";
 
+$ai_html = "";
+foreach (Video::fromAI($user, $system, 5) as $video) {
+    $video_preview_template->set_var("title", $video->getTitle());
+    $video_preview_template->set_var("thumbnail", $video->getThumbnail());
+    $video_preview_template->set_var("channel", $video->getChannel()->getName());
+    $video_preview_template->set_var("id", $video->getId());
+    $ai_html .= $video_preview_template->render($user, $system);
+}
+
+$subscriptions_html = "";
 foreach (Video::fromUser($user, $system) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
-    $video_preview_template->set_var("channelId", $video->getChannel()->getId());
     $video_preview_template->set_var("id", $video->getId());
     $subscriptions_html .= $video_preview_template->render($user, $system);
 }
 
 $template = new Template("../templates/index.html");
+$template->set_var("ai", $ai_html, true);
 $template->set_var("subscriptions", $subscriptions_html, true);
 
 $header_template = new Template("../templates/header.html");

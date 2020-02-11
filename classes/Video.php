@@ -144,7 +144,71 @@ class Video
         return $result;
     }
 
-    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, string $description, Channel $channel, int $date, string $thumbnail)
+    public static function fromAI(User $user, System $system, int $max = 50): array
+    {
+        $videos = array();
+        $subscriptions = $user->getSubscriptions($system);
+
+        $result = $system->mysql("SELECT * FROM ai WHERE user = ? ORDER BY eval DESC", "i", $user->getUser());
+        while ($data = $result->fetch_object()) {
+            if (!in_array($data->channel, $subscriptions)) {
+                $videos[] = new Video(
+                    $data->id,
+                    null,
+                    $data->title,
+                    null,
+                    new Channel($data->channel, $data->channelname, null, null),
+                    null,
+                    $data->thumbnail
+                );
+            }
+        }
+
+        $videos = array_slice($videos, 0, $max);
+        return $videos;
+    }
+
+    public static function fromVideo(Video $video, System $system, int $max = 50): array
+    {
+        $videos = array();
+
+        $data = $system->api("/search", array("relatedToVideoId" => $video->getId(), "part" => "snippet", "type" => "video", "maxResults" => $max));
+        if (!isset($data->items)) {
+            die("Can't load videos from video (" . $video->getId() . ")");
+        }
+
+        foreach ($data->items as $aivideo) {
+            if (!isset(
+                $aivideo->snippet,
+                $aivideo->snippet->publishedAt,
+                $aivideo->snippet->title,
+                $aivideo->snippet->description,
+                $aivideo->snippet->thumbnails,
+                $aivideo->snippet->thumbnails->medium,
+                $aivideo->snippet->thumbnails->medium->url,
+                $aivideo->snippet->channelId,
+                $aivideo->snippet->channelTitle,
+                $aivideo->id,
+                $aivideo->id->videoId
+            )) {
+                die("Can't load video from video (" . $video->getId() . ")");
+            }
+
+            $videos[] = new Video(
+                $aivideo->id->videoId,
+                null,
+                $aivideo->snippet->title,
+                $aivideo->snippet->description,
+                new Channel($aivideo->snippet->channelId, $aivideo->snippet->channelTitle, null, null),
+                strtotime($aivideo->snippet->publishedAt),
+                $aivideo->snippet->thumbnails->medium->url
+            );
+        }
+
+        return $videos;
+    }
+
+    public function __construct(string $id, ?VideoSrc $videoSrc, string $title, ?string $description, Channel $channel, ?int $date, string $thumbnail)
     {
         $this->id = $id;
         $this->videoSrc = $videoSrc;

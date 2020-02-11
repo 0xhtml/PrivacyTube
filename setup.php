@@ -33,3 +33,14 @@ $system->mysql("CREATE TABLE IF NOT EXISTS videos(
     date timestamp null,
     thumbnail text
 )");
+$system->mysql("CREATE TABLE IF NOT EXISTS ai(
+    sql_id int AUTO_INCREMENT PRIMARY KEY,
+    user int,
+    id varchar(11),
+    title text,
+    channel varchar(24),
+    channelname text,
+    thumbnail text,
+    eval int,
+    FOREIGN KEY (user) REFERENCES users(sql_id) ON DELETE CASCADE ON UPDATE CASCADE
+)");

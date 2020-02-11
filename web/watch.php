@@ -14,6 +14,34 @@ $user = new User();
 
 $video = Video::fromId($_GET["v"], $system);
 
+if ($user->getLoggedin()) {
+    $system->mysql("UPDATE ai SET eval = 0 WHERE user = ? AND id = ?", "is", $user->getUser(), $video->getId());
+    if ($user->isSubscribed($video->getChannel(), $system)) {
+        $subscriptions = $user->getSubscriptions($system);
+        $ai = Video::fromVideo($video, $system);
+        foreach ($ai as $aiVideo) {
+            if (in_array($aiVideo->getChannel()->getId(), $subscriptions)) {
+                continue;
+            }
+            $result = $system->mysql("SELECT * FROM ai WHERE user = ? AND id = ?", "is", $user->getUser(), $aiVideo->getId());
+            if ($result->num_rows === 1) {
+                $system->mysql("UPDATE ai SET eval = eval + 1 WHERE user = ? AND id = ? AND eval > 0", "is", $user->getUser(), $aiVideo->getId());
+            } else {
+                $system->mysql(
+                    "INSERT INTO ai(user, id, title, channel, channelname, thumbnail, eval) VALUES (?, ?, ?, ?, ?, ?, 1)",
+                    "isssss",
+                    $user->getUser(),
+                    $aiVideo->getId(),
+                    $aiVideo->getTitle(),
+                    $aiVideo->getChannel()->getId(),
+                    $aiVideo->getChannel()->getName(),
+                    $aiVideo->getThumbnail()
+                );
+            }
+        }
+    }
+}
+
 $template = new Template("../templates/watch.html");
 $template->set_var("videoId", $video->getId());
 $template->set_var("videoSrc", $video->getVideoSrc()->getHtml(), true);
