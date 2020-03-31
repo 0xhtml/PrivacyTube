@@ -24,10 +24,10 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
 
 $header_template = new Template("../templates/header.html");
 if ($user->getLoggedin()) {
-    $header_template->set_var("login", "logout");
+    $header_template->set_var("login", "logout.php");
     $header_template->set_var("loginl", "Logout");
 } else {
-    $header_template->set_var("login", "login");
+    $header_template->set_var("login", "login.php");
     $header_template->set_var("loginl", "Login");
 }
 

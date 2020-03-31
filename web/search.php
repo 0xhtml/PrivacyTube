@@ -31,8 +31,7 @@ foreach (Channel::fromQuery($_GET["q"], $system) as $channel) {
     $channel_preview_template->set_var("image", $channel->getImage());
     $channel_preview_template->set_var("id", $channel->getId());
 
-    $channel_preview_template->set_var("action", "./search?q=" . $_GET["q"]);
-    if ($user->getLoggedin() and $user->isSubscribed($channel, $system)) {
+    $channel_preview_template->set_var("action", "./search.php?q=" . $_GET["q"]);
         $channel_preview_template->set_var("actionName", "unsubscribe");
         $channel_preview_template->set_var("actionValue", "Unsubscribe");
     } else {
@@ -50,10 +49,10 @@ $template->set_var("results", $results_html, true);
 $header_template = new Template("../templates/header.html");
 $header_template->set_var("search", $_GET["q"]);
 if ($user->getLoggedin()) {
-    $header_template->set_var("login", "logout");
+    $header_template->set_var("login", "logout.php");
     $header_template->set_var("loginl", "Logout");
 } else {
-    $header_template->set_var("login", "login");
+    $header_template->set_var("login", "login.php");
     $header_template->set_var("loginl", "Login");
 }
 

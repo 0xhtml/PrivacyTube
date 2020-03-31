@@ -55,7 +55,7 @@ class User
         } else {
             $this->loggedin = false;
             if ($redirect) {
-                header("Location: ./login");
+                header("Location: ./login.php");
                 die();
             }
         }
