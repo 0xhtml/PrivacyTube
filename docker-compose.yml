@@ -7,7 +7,7 @@ services:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: privacytube
         volumes:
-            - mysql_data:/var/lib/mysql
+            - ./mysql_data:/var/lib/mysql
 
     privacytube:
         image: 0xhtml/privacytube:latest
