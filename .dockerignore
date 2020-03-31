@@ -4,4 +4,3 @@ mysql_data/
 .gitignore
 LICENSE
 README.md
-nginx.conf
