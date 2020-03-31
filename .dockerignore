@@ -1,5 +1,6 @@
-.vscode/
 .git/
+.vscode/
+mysql_data/
 .gitignore
 LICENSE
 README.md
