@@ -6,15 +6,14 @@ PrivacyTube is a privacy oriented YouTube frontend. PrivacyTube uses the Google 
 It has it's own account system with that you can subscribe to channels.
 
 ## Installation
-1. Install `php-curl` and of course a MySQL-server, a webserver and PHP 7.2.
-2. Setup database:
-    1. Create a database.
-    2. Run the setup script: `php setup.php`.
-    3. Put your MySQL-host, -user, password and -database into the `config.json`.
-    4. Run the setup script again: `php setup.php`.
-3. Get an API-Key from Google and put it into the `config.json` aswell.
-4. Set the webservers root directory to `web`.
-5. You're ready!
+1. Clone the repository for experimental features or download the latest release.
+2. Build the docker image: `docker build -t 0xhtml/privacytube:latest .`
+3. Get an API-Key from Google and put it into `.env`
+
+    `api_key=AI***********************************Ud`
+
+3. Run docker-compose: `docker-compose up -d`
+4. Connect to `localhost:8080`.
 
 ## Community
 You can help making PrivacyTube better! Erveryone can create a pull request and develop PrivacyTube. I would also love to see feature request for this project.
