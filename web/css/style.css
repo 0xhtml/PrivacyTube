@@ -170,10 +170,3 @@ section {
 #videoInfo div p {
     margin: 0 0 0 .5em;
 }
-
-#videoInfo>p:last-child {
-    margin-top: 0;
-    max-height: 10em;
-    line-height: 1em;
-    overflow: auto;
-}
