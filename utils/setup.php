@@ -1,4 +1,9 @@
 <?php
+$exit_code = 1;
+function shutdown() {
+    exit($exit_code);
+}
+register_shutdown_function("shutdown");
 
 require_once "classes/Main.php";
 
@@ -44,3 +49,5 @@ $main->mysql("CREATE TABLE IF NOT EXISTS ai(
     eval int,
     FOREIGN KEY (user) REFERENCES users(sql_id) ON DELETE CASCADE ON UPDATE CASCADE
 )");
+
+$exit_code = 0;

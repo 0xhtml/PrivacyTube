@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+    mysql:
+        image: mysql:5
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: privacytube
+
+    privacytube:
+        image: 0xhtml/privacytube:latest
+        depends_on:
+            - mysql
+        environment:
+            mysql_host: mysql
+            mysql_pass: root
+            api_key: 123
+        ports:
+            - 8080:80
