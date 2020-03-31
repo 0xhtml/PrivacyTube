@@ -1,6 +1,6 @@
 <?php
 require_once "Channel.php";
-require_once "System.php";
+require_once "Main.php";
 require_once "User.php";
 require_once "VideoSrc.php";
 
@@ -14,9 +14,9 @@ class Video
     private $date;
     private $thumbnail;
 
-    public static function fromId(string $id, System $system): Video
+    public static function fromId(string $id, Main $main): Video
     {
-        $result = $system->mysql("SELECT * FROM videos WHERE id = ?", "s", $id);
+        $result = $main->mysql("SELECT * FROM videos WHERE id = ?", "s", $id);
         if ($result->num_rows === 1) {
             $data = $result->fetch_object();
             return new Video(
@@ -24,13 +24,13 @@ class Video
                 VideoSrc::fromId($id),
                 $data->title,
                 $data->description,
-                Channel::fromId($data->channel, $system),
+                Channel::fromId($data->channel, $main),
                 strtotime($data->date),
                 $data->thumbnail
             );
         }
 
-        $data = $system->api("/videos", array("id" => $id, "part" => "snippet"));
+        $data = $main->api("/videos", array("id" => $id, "part" => "snippet"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -51,18 +51,18 @@ class Video
             VideoSrc::fromId($id),
             $data->items[0]->snippet->title,
             $data->items[0]->snippet->description,
-            Channel::fromId($data->items[0]->snippet->channelId, $system),
+            Channel::fromId($data->items[0]->snippet->channelId, $main),
             strtotime($data->items[0]->snippet->publishedAt),
             $data->items[0]->snippet->thumbnails->medium->url
         );
     }
 
-    public static function fromChannel(Channel $channel, System $system, int $max = 50, bool $cache = true): array
+    public static function fromChannel(Channel $channel, Main $main, int $max = 50, bool $cache = true): array
     {
         $videos = array();
         
         if ($cache) {
-            $result = $system->mysql("SELECT * FROM videos WHERE channel = ? ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
+            $result = $main->mysql("SELECT * FROM videos WHERE channel = ? ORDER BY date DESC LIMIT ?", "si", $channel->getId(), $max);
             if ($result->num_rows !== 0) {
                 while ($data = $result->fetch_object()) {
                     $videos[] = new Video(
@@ -79,7 +79,7 @@ class Video
             }
         }
 
-        $data = $system->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50));
+        $data = $main->api("/playlistItems", array("playlistId" => $channel->getUploadsId(), "part" => "snippet", "maxResults" => 50));
         if (!isset($data->items)) {
             die("Can't load Video from Channel (" . $channel->getId() . ")");
         }
@@ -99,7 +99,7 @@ class Video
                 die("Can't load Video from Channel (" . $channel->getId() . ")");
             }
 
-            $system->mysql(
+            $main->mysql(
                 "INSERT IGNORE INTO videos(id, title, description, channel, date, thumbnail) VALUES (?, ?, ?, ?, ?, ?)",
                 "ssssss",
                 $video->snippet->resourceId->videoId,
@@ -125,14 +125,14 @@ class Video
         return $videos;
     }
 
-    public static function fromUser(User $user, System $system, int $max = 50): array
+    public static function fromUser(User $user, Main $main, int $max = 50): array
     {
         $result = array();
 
-        $subscriptions = $user->getSubscriptions($system);
+        $subscriptions = $user->getSubscriptions($main);
 
         foreach ($subscriptions as $subscription) {
-            $videos = self::fromChannel(Channel::fromId($subscription, $system), $system);
+            $videos = self::fromChannel(Channel::fromId($subscription, $main), $main);
 
             foreach ($videos as $video) {
                 $result[$video->getDate()] = $video;
@@ -144,12 +144,12 @@ class Video
         return $result;
     }
 
-    public static function fromAI(User $user, System $system, int $max = 50): array
+    public static function fromAI(User $user, Main $main, int $max = 50): array
     {
         $videos = array();
-        $subscriptions = $user->getSubscriptions($system);
+        $subscriptions = $user->getSubscriptions($main);
 
-        $result = $system->mysql("SELECT * FROM ai WHERE user = ? ORDER BY eval DESC", "i", $user->getUser());
+        $result = $main->mysql("SELECT * FROM ai WHERE user = ? ORDER BY eval DESC", "i", $user->getUser());
         while ($data = $result->fetch_object()) {
             if (!in_array($data->channel, $subscriptions)) {
                 $videos[] = new Video(
@@ -168,11 +168,11 @@ class Video
         return $videos;
     }
 
-    public static function fromVideo(Video $video, System $system, int $max = 50): array
+    public static function fromVideo(Video $video, Main $main, int $max = 50): array
     {
         $videos = array();
 
-        $data = $system->api("/search", array("relatedToVideoId" => $video->getId(), "part" => "snippet", "type" => "video", "maxResults" => $max));
+        $data = $main->api("/search", array("relatedToVideoId" => $video->getId(), "part" => "snippet", "type" => "video", "maxResults" => $max));
         if (!isset($data->items)) {
             die("Can't load videos from video (" . $video->getId() . ")");
         }

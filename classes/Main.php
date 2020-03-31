@@ -1,41 +1,16 @@
 <?php
 
-class System
+class Main
 {
     private const API_URL = "https://www.googleapis.com/youtube/v3";
-    private const CONFIG_FILE = "config.json";
     private $mysqli;
-    private $config;
 
-    public static function setupConfig()
+    public function __construct()
     {
-        if (!file_exists(self::CONFIG_FILE)) {
-            file_put_contents(self::CONFIG_FILE, json_encode([
-                "mysql_host" => "localhost",
-                "mysql_user" => "root",
-                "mysql_pass" => "",
-                "mysql_db" => "PrivacyTube",
-                "api_key" => ""
-            ]));
-        }
-    }
-
-    public function __construct(string $configPath = "../")
-    {
-        if (!file_exists($configPath . self::CONFIG_FILE)) {
-            die("Can't find config file");
-        }
-        $this->config = json_decode(file_get_contents($configPath . self::CONFIG_FILE), true);
-
-        $this->mysqli = mysqli_connect($this->config("mysql_host"), $this->config("mysql_user"), $this->config("mysql_pass"), $this->config("mysql_db"));
+        $this->mysqli = mysqli_connect($_ENV["mysql_host"], $_ENV["mysql_user"], $_ENV["mysql_pass"], $_ENV["mysql_db"]);
         if (!$this->mysqli) {
             die("Can't connect to MySQL: " . mysqli_connect_error());
         }
-    }
-
-    public function config(string $var)
-    {
-        return $this->config[$var];
     }
 
     public function mysql(string $sql, string $parameter_types = null, ...$parameters)
@@ -58,7 +33,7 @@ class System
 
     public function api(string $url, array $params)
     {
-        $params["key"] = $this->config("api_key");
+        $params["key"] = $_ENV["api_key"];
         $full_url = self::API_URL . $url . "?" . http_build_query($params);
 
         $curl = curl_init($full_url);

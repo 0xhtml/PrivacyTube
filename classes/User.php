@@ -1,17 +1,17 @@
 <?php
-require_once "System.php";
+require_once "Main.php";
 
 class User
 {
     private $loggedin;
     private $user;
 
-    public static function login(string $username, string $password, System $system): bool
+    public static function login(string $username, string $password, Main $main): bool
     {
         $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
-        $result = $system->mysql("SELECT * FROM users WHERE username = ? AND password = ?", "ss", $username, $password);
+        $result = $main->mysql("SELECT * FROM users WHERE username = ? AND password = ?", "ss", $username, $password);
         if ($result->num_rows !== 1) {
             return false;
         }
@@ -24,17 +24,17 @@ class User
         die();
     }
 
-    public static function register(string $username, string $password, System $system): bool
+    public static function register(string $username, string $password, Main $main): bool
     {
         $username = hash("sha256", $username);
         $password = hash("sha256", $password);
 
-        $result = $system->mysql("SELECT * FROM users WHERE username = ?", "s", $username);
+        $result = $main->mysql("SELECT * FROM users WHERE username = ?", "s", $username);
         if ($result->num_rows !== 0) {
             return false;
         }
 
-        $result = $system->mysql("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
+        $result = $main->mysql("INSERT INTO users(username, password) VALUES (?, ?)", "ss", $username, $password);
 
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -61,19 +61,19 @@ class User
         }
     }
 
-    public function subscribe(Channel $channel, System $system)
+    public function subscribe(Channel $channel, Main $main)
     {
-        $system->mysql("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "is", $this->user, $channel->getId());
+        $main->mysql("INSERT INTO subscriptions(user, channel) VALUES (?, ?)", "is", $this->user, $channel->getId());
     }
 
-    public function unsubscribe(Channel $channel, System $system)
+    public function unsubscribe(Channel $channel, Main $main)
     {
-        $system->mysql("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
+        $main->mysql("DELETE FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
     }
 
-    public function isSubscribed(Channel $channel, System $system): bool
+    public function isSubscribed(Channel $channel, Main $main): bool
     {
-        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
+        $result = $main->mysql("SELECT * FROM subscriptions WHERE user = ? AND channel = ?", "is", $this->user, $channel->getId());
         return $result->num_rows === 1;
     }
 
@@ -82,10 +82,10 @@ class User
         session_destroy();
     }
 
-    public function getSubscriptions(System $system): array
+    public function getSubscriptions(Main $main): array
     {
         $subscriptions = array();
-        $result = $system->mysql("SELECT * FROM subscriptions WHERE user = ?", "i", $this->user);
+        $result = $main->mysql("SELECT * FROM subscriptions WHERE user = ?", "i", $this->user);
         while ($row = $result->fetch_object()) {
             $subscriptions[] = $row->channel;
         }

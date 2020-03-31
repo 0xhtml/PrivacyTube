@@ -1,5 +1,5 @@
 <?php
-require_once "System.php";
+require_once "Main.php";
 
 class Channel
 {
@@ -8,9 +8,9 @@ class Channel
     private $image;
     private $uploadsId;
 
-    public static function fromId(string $id, System $system)
+    public static function fromId(string $id, Main $main)
     {
-        $result = $system->mysql("SELECT * FROM channels WHERE id = ?", "s", $id);
+        $result = $main->mysql("SELECT * FROM channels WHERE id = ?", "s", $id);
         if ($result->num_rows === 1) {
             $data = $result->fetch_object();
             return new Channel(
@@ -21,7 +21,7 @@ class Channel
             );
         }
 
-        $data = $system->api("/channels", array("id" => $id, "part" => "snippet,contentDetails"));
+        $data = $main->api("/channels", array("id" => $id, "part" => "snippet,contentDetails"));
         if (!isset(
             $data->items,
             $data->items[0],
@@ -37,7 +37,7 @@ class Channel
             die("Can't load Channel from id ($id)");
         }
 
-        $system->mysql(
+        $main->mysql(
             "INSERT INTO channels(id, name, image, uploadsId) VALUES (?, ?, ?, ?)",
             "ssss",
             $id,
@@ -54,11 +54,11 @@ class Channel
         );
     }
 
-    public static function fromQuery(string $q, System $system, int $max = 50): array
+    public static function fromQuery(string $q, Main $main, int $max = 50): array
     {
         $result = array();
 
-        $channels = $system->api("/search", array("q" => $q, "part" => "snippet", "type" => "channel", "maxResults" => $max));
+        $channels = $main->api("/search", array("q" => $q, "part" => "snippet", "type" => "channel", "maxResults" => $max));
         if (!isset($channels->items)) {
             die("Can't load searched channels");
         }

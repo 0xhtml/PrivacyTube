@@ -1,30 +1,30 @@
 <?php
-require_once "../classes/System.php";
+require_once "../classes/Main.php";
 require_once "../classes/Template.php";
 require_once "../classes/User.php";
 require_once "../classes/Video.php";
 
-$system = new System();
+$main = new Main();
 $user = new User(true);
 
 $video_preview_template = new Template("../templates/videoPreview.html");
 
 $ai_html = "";
-foreach (Video::fromAI($user, $system, 5) as $video) {
+foreach (Video::fromAI($user, $main, 5) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
     $video_preview_template->set_var("id", $video->getId());
-    $ai_html .= $video_preview_template->render($user, $system);
+    $ai_html .= $video_preview_template->render($user, $main);
 }
 
 $subscriptions_html = "";
-foreach (Video::fromUser($user, $system) as $video) {
+foreach (Video::fromUser($user, $main) as $video) {
     $video_preview_template->set_var("title", $video->getTitle());
     $video_preview_template->set_var("thumbnail", $video->getThumbnail());
     $video_preview_template->set_var("channel", $video->getChannel()->getName());
     $video_preview_template->set_var("id", $video->getId());
-    $subscriptions_html .= $video_preview_template->render($user, $system);
+    $subscriptions_html .= $video_preview_template->render($user, $main);
 }
 
 $template = new Template("../templates/index.html");
@@ -42,7 +42,7 @@ if ($user->getLoggedin()) {
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "PrivacyTube");
-$page_template->set_var("header", $header_template->render($user, $system), true);
-$page_template->set_var("main", $template->render($user, $system), true);
+$page_template->set_var("header", $header_template->render($user, $main), true);
+$page_template->set_var("main", $template->render($user, $main), true);
 
-echo $page_template->render($user, $system);
+echo $page_template->render($user, $main);
