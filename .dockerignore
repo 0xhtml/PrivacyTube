@@ -1,6 +1,7 @@
 .git/
 .vscode/
 mysql_data/
+.env
 .gitignore
 LICENSE
 README.md
