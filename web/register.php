@@ -23,7 +23,7 @@ if (isset($_POST["username"], $_POST["password"], $_POST["password2"])) {
 }
 
 $header_template = new Template("../templates/header.html");
-$header_template->set_var("login", $user->getLoggedin() ? "in" : "out");
+$header_template->set_var("login", !$user->getLoggedin() ? "in" : "out");
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Register - PrivacyTube");

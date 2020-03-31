@@ -49,7 +49,7 @@ $template->set_var("results", $results_html, true);
 
 $header_template = new Template("../templates/header.html");
 $header_template->set_var("search", $_GET["q"]);
-$header_template->set_var("login", $user->getLoggedin() ? "in" : "out");
+$header_template->set_var("login", !$user->getLoggedin() ? "in" : "out");
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "Search - PrivacyTube");

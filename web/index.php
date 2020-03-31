@@ -32,7 +32,7 @@ $template->set_var("ai", $ai_html, true);
 $template->set_var("subscriptions", $subscriptions_html, true);
 
 $header_template = new Template("../templates/header.html");
-$header_template->set_var("login", $user->getLoggedin() ? "in" : "out");
+$header_template->set_var("login", !$user->getLoggedin() ? "in" : "out");
 
 $page_template = new Template("../templates/page.html");
 $page_template->set_var("title", "PrivacyTube");

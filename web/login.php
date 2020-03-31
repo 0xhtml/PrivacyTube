@@ -16,7 +16,7 @@ if (isset($_POST["username"], $_POST["password"])) {
 }
 
 $header_template = new Template("../templates/header.html");
-$header_template->set_var("login", $user->getLoggedin() ? "in" : "out");
+$header_template->set_var("login", !$user->getLoggedin() ? "in" : "out");
 
 
 $page_template = new Template("../templates/page.html");
