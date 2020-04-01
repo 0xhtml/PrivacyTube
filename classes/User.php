@@ -3,8 +3,8 @@ require_once "Main.php";
 
 class User
 {
-    private $loggedin;
-    private $user;
+    protected $loggedin;
+    protected $user;
 
     public static function login(string $username, string $password, Main $main): bool
     {
