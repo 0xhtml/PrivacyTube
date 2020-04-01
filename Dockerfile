@@ -16,4 +16,4 @@ RUN echo "0 * * * * cd /usr/src/PrivacyTube && php utils/cron.php >> /var/log/cr
 RUN chmod 0644 /etc/cron.d/privacytube
 RUN crontab /etc/cron.d/privacytube
 
-CMD ./utils/wait-for-mysql.sh && php utils/setup.php && cron && php -S 0.0.0.0:80 -t web
+CMD ./utils/wait-for-mysql.sh && php utils/setup.php && php utils/cron.php && cron && php -S 0.0.0.0:80 -t web
