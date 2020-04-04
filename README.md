@@ -5,16 +5,6 @@ PrivacyTube is a privacy oriented YouTube frontend. PrivacyTube uses the Google 
 
 It has it's own account system with that you can subscribe to channels.
 
-## Installation
-1. Clone the repository for experimental features or download the latest release.
-2. Build the docker image: `docker build -t 0xhtml/privacytube:latest .`
-3. Get an API-Key from Google and put it into `.env`
-
-    `api_key=AI***********************************Ud`
-
-3. Run docker-compose: `docker-compose up -d`
-4. Connect to `localhost:8080`.
-
 ## Community
 You can help making PrivacyTube better! Erveryone can create a pull request and develop PrivacyTube. I would also love to see feature request for this project.
 
