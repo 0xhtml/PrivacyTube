@@ -8,9 +8,10 @@ title: Home
 <section id="subscriptions">
     <h2>Subscriptions</h2>
     <div class="flex four">
-        <a v-for="video in subscriptions" v-bind:href="'https://youtube.com/watch?v=' + video.videoId">
+        <div v-for="video in subscriptions">
             <img class="stack" v-bind:src="video.videoThumbnails[0].url">
-            <span class="stack">{{"{{"}}video.title}}</span>
-        </a>
+            <a class="stack max-two-lines" v-bind:href="'https://youtube.com/watch?v=' + video.videoId"
+                v-bind:title="video.title">{{"{{"}}video.title}}</a>
+        </div>
     </div>
 </section>
