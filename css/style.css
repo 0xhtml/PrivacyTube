@@ -1,0 +1,13 @@
+main {
+    padding-top: 3em;
+}
+
+h1, h2 {
+    padding: 0;
+    margin: .6em 0;
+}
+
+section {
+    margin: 0 auto;
+    max-width: 53em;
+}

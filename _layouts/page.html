@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - PrivacyTube</title>
+    <link rel="stylesheet" href="https://unpkg.com/picnic@6.5.2/picnic.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="./" class="brand">PrivacyTube</a>
+        <form class="menu" action="search.html" method="GET">
+            <input type="search" name="q" placeholder="Search">
+        </form>
+    </nav>
+    <main>
+        {{ content }}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

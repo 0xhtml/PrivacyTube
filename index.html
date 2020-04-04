@@ -1,0 +1,16 @@
+---
+title: Home
+---
+<section id="ai">
+    <h2>AI</h2>
+    <p>Coming soon...</p>
+</section>
+<section id="subscriptions">
+    <h2>Subscriptions</h2>
+    <div class="flex four">
+        <a v-for="video in subscriptions" v-bind:href="'https://youtube.com/watch?v=' + video.videoId">
+            <img class="stack" v-bind:src="video.videoThumbnails[0].url">
+            <span class="stack">{{"{{"}}video.title}}</span>
+        </a>
+    </div>
+</section>

@@ -1,0 +1,13 @@
+defaults:
+  -
+    scope:
+      path: "" # all files
+    values:
+      layout: "page"
+
+exclude:
+  - classes
+  - templates
+  - utils
+  - web
+  - README.md
