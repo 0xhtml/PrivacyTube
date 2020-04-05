@@ -1,0 +1,16 @@
+---
+title: Watch
+---
+<section id="video">
+    <video controls>
+        <source v-for="src in video.adaptiveFormats" v-bind:src="src.url" v-bind:type="src.type">
+    </video>
+    <h2>{{"{{"}}video.title}}</h2>
+    <hr>
+    <div class="flex nine pb0 aic">
+        <img v-bind:src="video.authorThumbnails[5].url">
+        <span class="four-fifth">{{"{{"}}video.author}}<br>Uploaded on {{"{{"}}video.publishedText}}</span>
+    </div>
+    <hr>
+    <div v-html="video.descriptionHtml"></div>
+</section>

@@ -15,7 +15,6 @@ dev_subscriptions.forEach(channel => {
         Array.prototype.push.apply(app.subscriptions, req.response.latestVideos);
         app.subscriptions.sort((a, b) => {return b.published-a.published});
         app.subscriptions.splice(20);
-        console.log(app.subscriptions[0]);
     });
     req.send();
 });

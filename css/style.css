@@ -12,12 +12,24 @@ section {
     max-width: 53em;
 }
 
+video {
+    width: 100%;
+}
+
 .black {
     color: #111;
 }
 
 .gray {
     color: #777;
+}
+
+.pb0, .pb0 > * {
+    padding-bottom: 0;
+}
+
+.aic {
+    align-items: center;
 }
 
 .max-two-lines {
