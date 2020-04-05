@@ -2,9 +2,7 @@
 title: Watch
 ---
 <section id="video">
-    <video controls>
-        <source v-for="src in video.adaptiveFormats" v-bind:src="src.url" v-bind:type="src.type">
-    </video>
+    <video controls v-bind:src="'https://invidio.us/latest_version?itag=22&id=' + video.videoId"></video>
     <h2>{{"{{"}}video.title}}</h2>
     <hr>
     <div class="flex nine pb0 aic">
