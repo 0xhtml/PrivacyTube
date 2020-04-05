@@ -7,7 +7,7 @@ title: Home
 </section>
 <section id="subscriptions">
     <h2>Subscriptions</h2>
-    <div class="flex four" id="pseudoFlex">
+    <div class="flex four">
         <div v-for="video in subscriptions">
             <a v-bind:href="'./watch.html?v=' + video.videoId" v-bind:title="video.title">
                 <img class="stack" v-bind:src="thumbnail(video.videoThumbnails, 4)">

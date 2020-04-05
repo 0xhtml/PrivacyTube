@@ -1,16 +1,5 @@
-function thumbnail(thumbnails) {
-    for (const thumbnail of thumbnails) {
-        if (thumbnail.quality == "medium") {
-            return thumbnail.url;
-        }
-    }
-}
-
-var app = new Vue({
-    el: 'main',
-    data: {
-        subscriptions: []
-    }
+var app = newVue({
+    subscriptions: []
 });
 
 var dev_subscriptions = ["UCDrekHmOnkptxq3gUU0IyfA", "UCY1kMZp36IQSyNx_9h4mpCg"];

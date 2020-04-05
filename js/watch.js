@@ -1,14 +1,3 @@
-function thumbnail(thumbnails) {
-    if (typeof thumbnails == "undefined") {
-        return null;
-    }
-    for (const thumbnail of thumbnails) {
-        if (thumbnail.width == 100) {
-            return thumbnail.url;
-        }
-    }
-}
-
 const ESC = {
     '<': '&lt;',
     '>': '&gt;',
@@ -20,11 +9,8 @@ function escape(s) {
     return s.replace(/[<>"&]/g, a => {ESC[a] || a});
 }
 
-var app = new Vue({
-    el: 'main',
-    data: {
-        video: {}
-    }
+var app = newVue({
+    video: {}
 });
 
 var req = new XMLHttpRequest();

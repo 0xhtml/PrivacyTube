@@ -1,0 +1,13 @@
+---
+title: Search
+---
+<section id="search">
+    <h2>Search results for '{{"{{"}}q}}'</h2>
+    <div v-for="video in results">
+        <div class="flex nine aic pb0">
+            <img v-bind:src="authorThumbnail(video.authorThumbnails)">
+            <span class="four-fifth">{{"{{"}}video.author}}</span>
+        </div>
+        <hr>
+    </div>
+</section>
