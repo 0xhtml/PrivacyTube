@@ -6,8 +6,5 @@ defaults:
       layout: "page"
 
 exclude:
-  - classes
-  - templates
-  - utils
-  - web
+  - LICENSE
   - README.md
