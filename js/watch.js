@@ -1,3 +1,14 @@
+function thumbnail(thumbnails) {
+    if (typeof thumbnails == "undefined") {
+        return null;
+    }
+    for (const thumbnail of thumbnails) {
+        if (thumbnail.width == 100) {
+            return thumbnail.url;
+        }
+    }
+}
+
 var app = new Vue({
     el: 'main',
     data: {

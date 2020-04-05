@@ -1,3 +1,11 @@
+function thumbnail(thumbnails) {
+    for (const thumbnail of thumbnails) {
+        if (thumbnail.quality == "medium") {
+            return thumbnail.url;
+        }
+    }
+}
+
 var app = new Vue({
     el: 'main',
     data: {
