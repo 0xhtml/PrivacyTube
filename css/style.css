@@ -12,6 +12,14 @@ section {
     max-width: 53em;
 }
 
+.black {
+    color: #111;
+}
+
+.gray {
+    color: #777;
+}
+
 .max-two-lines {
     overflow: hidden;
     text-overflow: ellipsis;
