@@ -3,10 +3,11 @@ title: Search
 ---
 <section id="search">
     <h2>Search results for '{{"{{"}}q}}'</h2>
-    <div v-for="video in results">
-        <div class="flex nine aic pb0">
-            <img v-bind:src="authorThumbnail(video.authorThumbnails)">
-            <span class="four-fifth">{{"{{"}}video.author}}</span>
+    <div v-for="channel in results">
+        <div class="flex ten aic pb0">
+            <img v-bind:src="authorThumbnail(channel.authorThumbnails)">
+            <span class="four-fifth">{{"{{"}}channel.author}}</span>
+            <button v-on:click="subscribe(channel.authorId)">Subscribe</button>
         </div>
         <hr>
     </div>

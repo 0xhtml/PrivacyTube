@@ -19,7 +19,16 @@ function newVue(data) {
                         return thumbnail.url;
                     }
                 }
+            },
+            "subscribe": channelId => {
+                var subscriptions = JSON.parse(localStorage.getItem("subscriptions"));
+                subscriptions.push(channelId);
+                localStorage.setItem("subscriptions", JSON.stringify(subscriptions));
             }
         }
     });
+}
+
+if (localStorage.getItem("subscriptions") == null) {
+    localStorage.setItem("subscriptions", JSON.stringify([]));
 }
