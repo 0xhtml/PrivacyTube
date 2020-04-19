@@ -5,11 +5,8 @@ var app = newVue({
     results: []
 });
 
-var req = new XMLHttpRequest();
-req.open("GET", "https://invidio.us/api/v1/search/?type=channel&q=" + q);
-req.responseType = "json";
-req.addEventListener("load", () => {
-    Array.prototype.push.apply(app.results, req.response);
-    app.$forceUpdate();
+fetch("https://invidio.us/api/v1/search/?type=channel&q=" + q).then(result => {
+    return result.json();
+}).then(json => {
+    app.results = json;
 });
-req.send();

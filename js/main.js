@@ -1,7 +1,15 @@
+Vue.use(VueLocalStorage);
+
 function newVue(data) {
     return new Vue({
         el: 'main',
         data: data,
+        localStorage: {
+            subscriptions: {
+                type: Array,
+                default: []
+            }
+        },
         methods: {
             authorThumbnail: thumbnails => {
                 if (typeof thumbnails == "undefined") {
@@ -20,15 +28,11 @@ function newVue(data) {
                     }
                 }
             },
-            "subscribe": channelId => {
-                var subscriptions = JSON.parse(localStorage.getItem("subscriptions"));
+            subscribe (channelId) {
+                var subscriptions = this.$localStorage.get("subscriptions");
                 subscriptions.push(channelId);
-                localStorage.setItem("subscriptions", JSON.stringify(subscriptions));
+                this.$localStorage.set("subscriptions", subscriptions);
             }
         }
     });
-}
-
-if (localStorage.getItem("subscriptions") == null) {
-    localStorage.setItem("subscriptions", JSON.stringify([]));
 }
