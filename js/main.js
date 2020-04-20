@@ -19,6 +19,19 @@ function authorThumbnail(thumbnails) {
     }
 }
 
+Vue.component("subscribe", {
+    template: "#subscribe",
+    props: ["channel"],
+    methods: {
+        subscriptions (func) {
+            var subscriptions = this.$localStorage.get("subscriptions");
+            Array.prototype[func].call(subscriptions, this.channel);
+            this.$localStorage.set("subscriptions", subscriptions);
+            this.$forceUpdate();
+        }
+    }
+});
+
 new Vue({
     el: "#app",
     data: {
@@ -74,13 +87,7 @@ new Vue({
                     }
                 },
                 methods: {
-                    authorThumbnail,
-                    subscribe (channelId) {
-                        var subscriptions = this.$localStorage.get("subscriptions");
-                        subscriptions.push(channelId);
-                        this.$localStorage.set("subscriptions", subscriptions);
-                        this.$forceUpdate();
-                    }
+                    authorThumbnail
                 }
             }}
         ]

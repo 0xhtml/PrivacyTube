@@ -39,7 +39,8 @@
             <hr>
             <div class="flex ten pb0 aic">
                 <img v-bind:src="authorThumbnail(video.authorThumbnails)">
-                <span class="four-fifth">{{video.author}}<br>Uploaded {{video.publishedText}}</span>
+                <span class="full-grow">{{video.author}}<br>Uploaded {{video.publishedText}}</span>
+                <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
             </div>
             <hr>
             <p v-html="video.descriptionHtml"></p>
@@ -54,13 +55,16 @@
                         <img v-bind:src="authorThumbnail(channel.authorThumbnails)">
                         <footer>
                             <h4>{{channel.author}}</h4>
-                            <button v-if="$localStorage.subscriptions.includes(channel.authorId)" v-on:click="unsubscribe(channel.authorId)" class="pseudo">Unsubscribe</button>
-                            <button v-else v-on:click="subscribe(channel.authorId)">Subscribe</button>
+                            <subscribe v-bind:channel="channel.authorId"></subscribe>
                         </footer>
                     </div>
                 </div>
             </div>
         </main>
+    </script>
+    <script type="text/x-template" id="subscribe">
+        <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>
+        <button v-else v-on:click="subscriptions('push')">Subscribe</button>
     </script>
 
     <script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
