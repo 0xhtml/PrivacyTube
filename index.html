@@ -34,15 +34,15 @@
     </script>
     <script type="text/x-template" id="watch">
         <main>
-                <video controls v-bind:src="'https://invidio.us/latest_version?itag=22&id=' + video.videoId"></video>
-                <h2>{{video.title}}</h2>
-                <hr>
-                <div class="flex ten pb0 aic">
-                    <img v-bind:src="authorThumbnail(video.authorThumbnails)">
-                    <span class="four-fifth">{{video.author}}<br>Uploaded on {{video.publishedText}}</span>
-                </div>
-                <hr>
-                <p v-html="video.descriptionHtml"></p>
+            <video controls v-bind:src="'https://invidio.us/latest_version?itag=22&id=' + video.videoId"></video>
+            <h2>{{video.title}}</h2>
+            <hr>
+            <div class="flex ten pb0 aic">
+                <img v-bind:src="authorThumbnail(video.authorThumbnails)">
+                <span class="four-fifth">{{video.author}}<br>Uploaded {{video.publishedText}}</span>
+            </div>
+            <hr>
+            <p v-html="video.descriptionHtml"></p>
         </main>
     </script>
     <script type="text/x-template" id="search">
@@ -54,7 +54,7 @@
                         <img v-bind:src="authorThumbnail(channel.authorThumbnails)">
                         <footer>
                             <h4>{{channel.author}}</h4>
-                            <button v-if="$localStorage.get('subscriptions').includes(channel.authorId)" v-on:click="unsubscribe(channel.authorId)" class="pseudo">Unsubscribe</button>
+                            <button v-if="$localStorage.subscriptions.includes(channel.authorId)" v-on:click="unsubscribe(channel.authorId)" class="pseudo">Unsubscribe</button>
                             <button v-else v-on:click="subscribe(channel.authorId)">Subscribe</button>
                         </footer>
                     </div>

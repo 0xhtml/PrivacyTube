@@ -2,23 +2,10 @@ Vue.use(VueRouter);
 Vue.use(VueLocalStorage);
 Vue.use(AsyncComputed);
 
-const ESC = {
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    '&': '&amp;'
-}
-
-function escape(s) {
-    return s.replace(/[<>"&]/g, a => {ESC[a] || a});
-}
-
-function thumbnail(thumbnails) {
-    for (const thumbnail of thumbnails) {
-        if (thumbnail.quality == "medium") {
-            return thumbnail.url;
-        }
-    }
+function api(url) {
+    return fetch("https://invidio.us/api/v1/" + url).then(result => {
+        return result.json();
+    });
 }
 
 function authorThumbnail(thumbnails) {
@@ -45,9 +32,7 @@ new Vue({
                     videos () {
                         var promises = [];
                         this.$localStorage.get("subscriptions").forEach(channelId => {
-                            promises.push(fetch("https://invidio.us/api/v1/channels/" + channelId).then(result => {
-                                return result.json();
-                            }));
+                            promises.push(api("channels/" + channelId));
                         });
                         return Promise.all(promises).then(channels => {
                             var videos = [];
@@ -61,20 +46,20 @@ new Vue({
                     }
                 },
                 methods: {
-                    thumbnail
+                    thumbnail (thumbnails) {
+                        for (const thumbnail of thumbnails) {
+                            if (thumbnail.quality == "medium") {
+                                return thumbnail.url;
+                            }
+                        }
+                    }
                 }
             }},
             {path: "/watch", component: {
                 template: "#watch",
                 asyncComputed: {
                     video () {
-                        return fetch("https://invidio.us/api/v1/videos/" + this.$route.query.v).then(result => {
-                            return result.json();
-                        }).then(json => {
-                            json.publishedText = new Date(json.published * 1000).toLocaleDateString("en-GB", {month: "long", day: "numeric", year: "numeric"});
-                            json.descriptionHtml = escape(json.description).replace(new RegExp("\n", "g"), "<br>");
-                            return json;
-                        });
+                        return api("videos/" + this.$route.query.v);
                     }
                 },
                 methods: {
@@ -85,9 +70,7 @@ new Vue({
                 template: "#search",
                 asyncComputed: {
                     search () {
-                        return fetch("https://invidio.us/api/v1/search/?type=channel&q=" + this.$route.query.q).then(result => {
-                            return result.json();
-                        });
+                        return api("search/?type=channel&q=" + this.$route.query.q);
                     }
                 },
                 methods: {
@@ -97,17 +80,12 @@ new Vue({
                         subscriptions.push(channelId);
                         this.$localStorage.set("subscriptions", subscriptions);
                         this.$forceUpdate();
-                        loadSubscriptions(this);
                     }
                 }
             }}
         ]
     }),
     localStorage: {
-        subscription_videos: {
-            type: Array,
-            default: []
-        },
         subscriptions: {
             type: Array,
             default: []
