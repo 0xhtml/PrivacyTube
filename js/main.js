@@ -3,9 +3,7 @@ Vue.use(VueLocalStorage);
 Vue.use(AsyncComputed);
 
 function api(url) {
-    return fetch("https://invidio.us/api/v1/" + url).then(result => {
-        return result.json();
-    });
+    return fetch("https://invidio.us/api/v1/" + url).then(result => result.json());
 }
 
 function authorThumbnail(thumbnails) {
