@@ -6,17 +6,6 @@ function api(url) {
     return fetch("https://invidio.us/api/v1/" + url).then(result => result.json());
 }
 
-function authorThumbnail(thumbnails) {
-    if (typeof thumbnails == "undefined") {
-        return null;
-    }
-    for (const thumbnail of thumbnails) {
-        if (thumbnail.width == 100) {
-            return thumbnail.url;
-        }
-    }
-}
-
 Vue.component("subscribe", {
     template: "#subscribe",
     props: ["channel"],
@@ -55,15 +44,6 @@ new Vue({
                             return videos;
                         })
                     }
-                },
-                methods: {
-                    thumbnail (thumbnails) {
-                        for (const thumbnail of thumbnails) {
-                            if (thumbnail.quality == "medium") {
-                                return thumbnail.url;
-                            }
-                        }
-                    }
                 }
             }},
             {path: "/watch", component: {
@@ -72,9 +52,6 @@ new Vue({
                     video () {
                         return api("videos/" + this.$route.query.v);
                     }
-                },
-                methods: {
-                    authorThumbnail
                 }
             }},
             {path: "/search", component: {
@@ -83,9 +60,6 @@ new Vue({
                     search () {
                         return api("search/?type=channel&q=" + this.$route.query.q);
                     }
-                },
-                methods: {
-                    authorThumbnail
                 }
             }}
         ]
