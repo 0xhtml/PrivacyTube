@@ -38,7 +38,9 @@
     </script>
     <script type="text/x-template" id="watch">
         <main v-if="video !== null">
-            <video controls v-bind:src="'https://invidio.us/latest_version?itag=22&id=' + video.videoId"></video>
+            <video controls>
+                <source v-for="src in video.formatStreams" v-bind:src="src.url">
+            </video>
             <h2>{{video.title}}</h2>
             <hr>
             <div class="flex ten pb0 aic">
