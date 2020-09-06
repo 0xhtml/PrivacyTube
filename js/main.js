@@ -19,6 +19,10 @@ Vue.component("subscribe", {
     }
 });
 
+Vue.component("loading", {
+    template: '#loading'
+});
+
 new Vue({
     el: "#app",
     data: {

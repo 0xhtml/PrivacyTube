@@ -19,7 +19,7 @@
     </div>
 
     <script type="text/x-template" id="index">
-        <main>
+        <main v-if="videos !== null">
             <h2>Subscriptions</h2>
             <div class="flex four">
                 <div v-for="video in videos">
@@ -34,9 +34,10 @@
                 </div>
             </div>
         </main>
+        <loading v-else></loading>
     </script>
     <script type="text/x-template" id="watch">
-        <main>
+        <main v-if="video !== null">
             <video controls v-bind:src="'https://invidio.us/latest_version?itag=22&id=' + video.videoId"></video>
             <h2>{{video.title}}</h2>
             <hr>
@@ -48,9 +49,10 @@
             <hr>
             <p v-html="video.descriptionHtml"></p>
         </main>
+        <loading v-else></loading>
     </script>
     <script type="text/x-template" id="search">
-        <main>
+        <main v-if="search !== null">
             <h2>Search results for {{$route.query.q}}</h2>
             <div class="flex five">
                 <div v-for="channel in search">
@@ -67,10 +69,16 @@
                 </div>
             </div>
         </main>
+        <loading v-else></loading>
     </script>
     <script type="text/x-template" id="subscribe">
         <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>
         <button v-else v-on:click="subscriptions('push')">Subscribe</button>
+    </script>
+    <script type="text/x-template" id="loading">
+        <main>
+            <p>Loading...</p>
+        </main>
     </script>
 
     <script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
