@@ -24,10 +24,7 @@
             <div class="flex four">
                 <div v-for="video in videos">
                     <router-link v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
-                        <picture class="stack">
-                            <source v-for="thumbnail in video.videoThumbnails" v-bind:srcset="thumbnail.url">
-                            <img src="https://via.placeholder.com/320x180">
-                        </picture>
+                        <vue-picture class="stack" v-bind:sources="video.videoThumbnails" width="4"></vue-picture>
                         <span class="stack max-two-lines black">{{video.title}}</span>
                         <span class="stack gray">{{video.author}}</span>
                     </router-link>
@@ -44,7 +41,7 @@
             <h2>{{video.title}}</h2>
             <hr>
             <div class="flex ten pb0 aic">
-                <img v-bind:src="authorThumbnail(video.authorThumbnails)">
+                <vue-picture v-bind:sources="video.authorThumbnails" width="10"></vue-picture>
                 <span class="full-grow">{{video.author}}<br>Uploaded {{video.publishedText}}</span>
                 <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
             </div>
@@ -59,10 +56,7 @@
             <div class="flex five">
                 <div v-for="channel in search">
                     <div class="card">
-                        <picture>
-                            <source v-for="thumbnail in channel.authorThumbnails" v-bind:srcset="thumbnail.url">
-                            <img src="https://via.placeholder.com/88x88">
-                        </picture>
+                        <vue-picture v-bind:sources="channel.authorThumbnails" width="5"></vue-picture>
                         <footer>
                             <h4>{{channel.author}}</h4>
                             <subscribe v-bind:channel="channel.authorId"></subscribe>
@@ -76,6 +70,12 @@
     <script type="text/x-template" id="subscribe">
         <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>
         <button v-else v-on:click="subscriptions('push')">Subscribe</button>
+    </script>
+    <script type="text/x-template" id="picture">
+         <picture>
+             <source v-for="source in calc(sources)" v-if="!source.url.includes('invidio')" v-bind:srcset="source.url" v-bind:media="'(min-width: ' + (source.minwidth * width) + 'px) and (max-width: ' + (source.maxwidth * width) + 'px)'">
+             <img>
+         </picture>
     </script>
     <script type="text/x-template" id="loading">
         <main>

@@ -19,6 +19,41 @@ Vue.component("subscribe", {
     }
 });
 
+Vue.component("vue-picture", {
+    template: '#picture',
+    props: ["sources", "width"],
+    methods: {
+        calc (sources) {
+            var widths = [];
+            for (var source of sources) {
+                widths.push(source.width);
+            }
+            var widths = [...new Set(widths)].sort((a, b) => a - b);
+            var newSources = [];
+            for (var source of sources) {
+                var minwidth = widths.indexOf(source.width);
+                if (minwidth > 0) {
+                    minwidth = widths[minwidth - 1];
+                }
+                var maxwidth = widths.indexOf(source.width);
+                if (maxwidth < widths.length - 1) {
+                    maxwidth = source.width;
+                } else {
+                    maxwidth = 10000;;
+                }
+                newSources.push({
+                    url: source.url,
+                    minwidth: minwidth,
+                    maxwidth: maxwidth
+                });
+            }
+            console.log(sources);
+            console.log(newSources);
+            return newSources;
+        }
+    }
+});
+
 Vue.component("loading", {
     template: '#loading'
 });
