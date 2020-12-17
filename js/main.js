@@ -22,35 +22,19 @@ Vue.component("subscribe", {
     }
 });
 
-Vue.component("vue-picture", {
-    template: '#picture',
+Vue.component("vue-img", {
+    template: '#img',
     props: ["sources", "width"],
     methods: {
-        calc (sources) {
-            var widths = [];
-            for (var source of sources) {
-                widths.push(source.width);
-            }
-            var widths = [...new Set(widths)].sort((a, b) => a - b);
-            var newSources = [];
-            for (var source of sources) {
-                var minwidth = widths.indexOf(source.width);
-                if (minwidth > 0) {
-                    minwidth = widths[minwidth - 1];
+        calc () {
+            const width = this.width * window.getComputedStyle(document.body).getPropertyValue("font-size").match(/\d+/)[0];
+            const sources = this.sources.concat().sort((a, b) => a.width - b.width)
+            for (const source of sources) {
+                if (source.width > width && !["start", "middle", "end"].includes(source.quality)) {
+                    return source.url;
                 }
-                var maxwidth = widths.indexOf(source.width);
-                if (maxwidth < widths.length - 1) {
-                    maxwidth = source.width;
-                } else {
-                    maxwidth = 10000;;
-                }
-                newSources.push({
-                    url: source.url,
-                    minwidth: minwidth,
-                    maxwidth: maxwidth
-                });
             }
-            return newSources;
+            return "https://dummyimage.com/" + width + "x" + Math.round(width * 9/16) + "&text=Thumbnail+Not+Found";
         }
     }
 });

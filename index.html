@@ -21,8 +21,8 @@
         <main v-if="videos !== null">
             <h2>Subscriptions</h2>
             <div v-if="videos.length > 0" class="row">
-                <router-link v-for="video in videos" v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
-                    <vue-picture v-bind:sources="video.videoThumbnails" width="4"></vue-picture>
+                <router-link v-for="video in videos" v-bind:key="video.videoId" v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
+                    <vue-img v-bind:sources="video.videoThumbnails" width="10"></vue-img>
                     <h3>{{video.title}}</h3>
                     <p>{{video.author}}</p>
                 </router-link>
@@ -39,7 +39,7 @@
             </video>
             <h2>{{video.title}}</h2>
             <hr>
-            <vue-picture v-bind:sources="video.authorThumbnails" width="10"></vue-picture>
+            <vue-img v-bind:sources="video.authorThumbnails" width="5"></vue-img>
             <p>{{video.author}}<br>Uploaded {{video.publishedText}}</p>
             <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
             <hr>
@@ -52,7 +52,7 @@
             <h2>Search results for {{$route.query.q}}</h2>
             <div class="row">
                 <div v-for="channel in search">
-                    <vue-picture v-bind:sources="channel.authorThumbnails" width="5"></vue-picture>
+                    <vue-img v-bind:sources="channel.authorThumbnails" width="10"></vue-img>
                     <h3>{{channel.author}}</h3>
                     <subscribe v-bind:channel="channel.authorId"></subscribe>
                 </div>
@@ -64,11 +64,8 @@
         <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>
         <button v-else v-on:click="subscriptions('push')">Subscribe</button>
     </script>
-    <script type="text/x-template" id="picture">
-         <picture>
-             <source v-for="source in calc(sources)" v-if="!source.url.includes('invidio')" v-bind:srcset="source.url" v-bind:media="'(min-width: ' + (source.minwidth * width) + 'px) and (max-width: ' + (source.maxwidth * width) + 'px)'">
-             <img>
-         </picture>
+    <script type="text/x-template" id="img">
+         <img v-bind:src="calc()">
     </script>
     <script type="text/x-template" id="loading">
         <main>
