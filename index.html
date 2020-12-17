@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrivacyTube</title>
-    <link rel="stylesheet" href="https://unpkg.com/picnic@6.5.2/picnic.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div id="app">
         <nav>
-            <router-link to="/" class="brand">PrivacyTube</router-link>
+            <h1><router-link to="/" class="brand">PrivacyTube</router-link></h1>
             <form class="menu" @submit.prevent="$router.push('/search?q=' + search_term)">
                 <input type="search" placeholder="Search" v-model="search_term">
             </form>
@@ -21,14 +20,12 @@
     <script type="text/x-template" id="index">
         <main v-if="videos !== null">
             <h2>Subscriptions</h2>
-            <div v-if="videos.length > 0" class="flex four">
-                <div v-for="video in videos">
-                    <router-link v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
-                        <vue-picture class="stack" v-bind:sources="video.videoThumbnails" width="4"></vue-picture>
-                        <span class="stack max-two-lines black">{{video.title}}</span>
-                        <span class="stack gray">{{video.author}}</span>
-                    </router-link>
-                </div>
+            <div v-if="videos.length > 0" class="row">
+                <router-link v-for="video in videos" v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
+                    <vue-picture v-bind:sources="video.videoThumbnails" width="4"></vue-picture>
+                    <h3>{{video.title}}</h3>
+                    <p>{{video.author}}</p>
+                </router-link>
             </div>
             <p v-else-if="$localStorage.subscriptions.length > 0">No videos available</p>
             <p v-else>You aren&apos;t subscribed to any channels. You can search for a channel to subscribe to it.</p>
@@ -42,11 +39,9 @@
             </video>
             <h2>{{video.title}}</h2>
             <hr>
-            <div class="flex ten pb0 aic">
-                <vue-picture v-bind:sources="video.authorThumbnails" width="10"></vue-picture>
-                <span class="full-grow">{{video.author}}<br>Uploaded {{video.publishedText}}</span>
-                <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
-            </div>
+            <vue-picture v-bind:sources="video.authorThumbnails" width="10"></vue-picture>
+            <p>{{video.author}}<br>Uploaded {{video.publishedText}}</p>
+            <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
             <hr>
             <p v-html="video.descriptionHtml"></p>
         </main>
@@ -55,15 +50,11 @@
     <script type="text/x-template" id="search">
         <main v-if="search !== null">
             <h2>Search results for {{$route.query.q}}</h2>
-            <div class="flex five">
+            <div class="row">
                 <div v-for="channel in search">
-                    <div class="card">
-                        <vue-picture v-bind:sources="channel.authorThumbnails" width="5"></vue-picture>
-                        <footer>
-                            <h4>{{channel.author}}</h4>
-                            <subscribe v-bind:channel="channel.authorId"></subscribe>
-                        </footer>
-                    </div>
+                    <vue-picture v-bind:sources="channel.authorThumbnails" width="5"></vue-picture>
+                    <h3>{{channel.author}}</h3>
+                    <subscribe v-bind:channel="channel.authorId"></subscribe>
                 </div>
             </div>
         </main>
