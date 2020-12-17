@@ -21,7 +21,7 @@
     <script type="text/x-template" id="index">
         <main v-if="videos !== null">
             <h2>Subscriptions</h2>
-            <div class="flex four">
+            <div v-if="videos.length > 0" class="flex four">
                 <div v-for="video in videos">
                     <router-link v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
                         <vue-picture class="stack" v-bind:sources="video.videoThumbnails" width="4"></vue-picture>
@@ -30,6 +30,8 @@
                     </router-link>
                 </div>
             </div>
+            <p v-else-if="$localStorage.subscriptions.length > 0">No videos available</p>
+            <p v-else>You aren&apos;t subscribed to any channels. You can search for a channel to subscribe to it.</p>
         </main>
         <loading v-else></loading>
     </script>
