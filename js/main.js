@@ -2,8 +2,11 @@ Vue.use(VueRouter);
 Vue.use(VueLocalStorage);
 Vue.use(AsyncComputed);
 
+var instances = ["invidious.snopyta.org", "invidious.kavin.rocks", "invidious.snopyta.org", "vid.mint.lgbt", "invidiou.site", "invidious.xyz", "tube.connect.cafe", "invidious.fdn.fr", "invidious.site"];
+
 function api(url) {
-    return fetch("https://invidio.us/api/v1/" + url).then(result => result.json());
+    var instance = instances[Math.floor((Math.random() * instances.length))];
+    return fetch("https://" + instance + "/api/v1/" + url).then(result => result.json());
 }
 
 Vue.component("subscribe", {
@@ -47,8 +50,6 @@ Vue.component("vue-picture", {
                     maxwidth: maxwidth
                 });
             }
-            console.log(sources);
-            console.log(newSources);
             return newSources;
         }
     }
