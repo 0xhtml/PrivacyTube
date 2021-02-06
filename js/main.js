@@ -2,7 +2,15 @@ Vue.use(VueRouter);
 Vue.use(VueLocalStorage);
 Vue.use(AsyncComputed);
 
-var instances = ["invidious.snopyta.org", "invidious.kavin.rocks", "invidious.snopyta.org", "vid.mint.lgbt", "invidiou.site", "invidious.xyz", "invidious.fdn.fr", "invidious.site"];
+var instances = [
+    "invidious.snopyta.org",
+    "invidious.tube",
+    "au.ytprivate.com",
+    "ytprivate.com",
+    "invidious.zee.li",
+    "vid.puffyan.us",
+    "invidious.namazso.eu"
+];
 
 function api(url) {
     var instance = instances[Math.floor((Math.random() * instances.length))];
