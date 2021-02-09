@@ -4,17 +4,43 @@ Vue.use(AsyncComputed);
 
 var instances = [
     "invidious.snopyta.org",
+    "yewtu.be",
     "invidious.tube",
-    "au.ytprivate.com",
+    "invidious.xyz",
+    "invidious.kavin.rocks",
+    "invidious.048596.xyz",
     "ytprivate.com",
+    "au.ytprivate.com",
     "invidious.zee.li",
     "vid.puffyan.us",
+    "inv.skyn3t.in",
+    "invidious.ethibox.fr",
+    "tube.connect.cafe",
+    "invidious.site",
+    "vid.mint.lgbt",
+    "invidiou.site",
+    "invidious.fdn.fr",
+    "invidious.zapashcanon.fr",
     "invidious.namazso.eu"
 ];
 
 function api(url) {
-    var instance = instances[Math.floor((Math.random() * instances.length))];
-    return fetch("https://" + instance + "/api/v1/" + url).then(result => result.json());
+    const i = Math.floor((Math.random() * instances.length));
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    return fetch("https://" + instances[i] + "/api/v1/" + url, {signal:controller.signal})
+        .then(result => {
+            clearTimeout(timeout);
+            if (result.status != 200) {
+                throw "err";
+            }
+            return result.json();
+        })
+        .catch(err => {
+            clearTimeout(timeout);
+            instances.splice(i, 1);
+            return api(url);
+        });
 }
 
 Vue.component("subscribe", {
