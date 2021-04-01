@@ -2,47 +2,6 @@ Vue.use(VueRouter);
 Vue.use(VueLocalStorage);
 Vue.use(AsyncComputed);
 
-var instances = [
-    "invidious.snopyta.org",
-    "yewtu.be",
-    "invidious.tube",
-    "invidious.xyz",
-    "invidious.kavin.rocks",
-    "invidious.048596.xyz",
-    "ytprivate.com",
-    "au.ytprivate.com",
-    "invidious.zee.li",
-    "vid.puffyan.us",
-    "inv.skyn3t.in",
-    "invidious.ethibox.fr",
-    "tube.connect.cafe",
-    "invidious.site",
-    "vid.mint.lgbt",
-    "invidiou.site",
-    "invidious.fdn.fr",
-    "invidious.zapashcanon.fr",
-    "invidious.namazso.eu"
-];
-
-function api(url) {
-    const i = Math.floor((Math.random() * instances.length));
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 2000);
-    return fetch("https://" + instances[i] + "/api/v1/" + url, {signal:controller.signal})
-        .then(result => {
-            clearTimeout(timeout);
-            if (result.status != 200) {
-                throw "err";
-            }
-            return result.json();
-        })
-        .catch(err => {
-            clearTimeout(timeout);
-            instances.splice(i, 1);
-            return api(url);
-        });
-}
-
 Vue.component("subscribe", {
     template: "#subscribe",
     props: ["channel"],
@@ -80,7 +39,18 @@ Vue.component("loading", {
 new Vue({
     el: "#app",
     data: {
-        search_term: null
+        search_term: null,
+        cache: {}
+    },
+    asyncComputed: {
+        instances () {
+            return fetch("https://api.invidious.io/instances.json")
+                .then(res => res.json())
+                .then(res => res
+                    .map(item => item[0])
+                    .filter(item => !item.endsWith(".onion") && !item.endsWith(".i2p"))
+                );
+        }
     },
     router: new VueRouter({
         routes: [
@@ -88,19 +58,13 @@ new Vue({
                 template: "#index",
                 asyncComputed: {
                     videos () {
-                        var promises = [];
-                        this.$localStorage.get("subscriptions").forEach(channelId => {
-                            promises.push(api("channels/" + channelId));
-                        });
-                        return Promise.all(promises).then(channels => {
-                            var videos = [];
-                            channels.forEach(channel => {
-                                Array.prototype.push.apply(videos, channel.latestVideos);
-                            });
-                            videos.sort((a, b) => {return b.published-a.published});
-                            videos.splice(20);
-                            return videos;
-                        })
+                        return Promise.all(
+                            this.$localStorage["subscriptions"].map(i => this.$root.api("channels/" + i))
+                        ).then(res => res
+                            .flatMap(i => i.latestVideos)
+                            .sort((a, b) => b.published - a.published)
+                            .slice(0, 20)
+                        );
                     }
                 }
             }},
@@ -108,7 +72,7 @@ new Vue({
                 template: "#watch",
                 asyncComputed: {
                     video () {
-                        return api("videos/" + this.$route.query.v);
+                        return this.$root.api("videos/" + this.$route.query.v);
                     }
                 }
             }},
@@ -116,7 +80,10 @@ new Vue({
                 template: "#search",
                 asyncComputed: {
                     search () {
-                        return api("search/?type=channel&q=" + this.$route.query.q);
+                        return Promise.all([
+                            this.$root.api("search/?type=all&q=" + this.$route.query.q),
+                            this.$root.api("search/?type=alli&page=2&q=" + this.$route.query.q)
+                        ]).then(res => res.flat().filter(i => i.type == "channel"));
                     }
                 }
             }}
@@ -126,6 +93,32 @@ new Vue({
         subscriptions: {
             type: Array,
             default: []
+        }
+    },
+    methods: {
+        api (url) {
+            if (url in this.cache) return Promise.resolve(this.cache[url]);
+            if (this.instances.length == 0) return Promise.resolve([]);
+
+            const i = Math.floor((Math.random() * this.instances.length));
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 2000);
+
+            return fetch("https://" + this.instances[i] + "/api/v1/" + url, {signal: controller.signal})
+                .then(res => {
+                    clearTimeout(timeout);
+                    if (res.status != 200) throw "err";
+                    return res.json();
+                })
+                .then(res => {
+                    if (Array.isArray(res) && res.length == 0) throw "err";
+                    this.cache[url] = res;
+                    return res;
+                })
+                .catch(err => {
+                    clearTimeout(timeout);
+                    return this.api(url);
+                });
         }
     }
 });

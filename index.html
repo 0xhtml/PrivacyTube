@@ -14,7 +14,8 @@
                 <input type="search" placeholder="Search" v-model="search_term">
             </form>
         </nav>
-        <router-view></router-view>
+        <router-view v-if="instances !== null"></router-view>
+        <loading v-else></loading>
     </div>
 
     <script type="text/x-template" id="index">
