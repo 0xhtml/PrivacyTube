@@ -20,9 +20,7 @@ main, nav {
 nav {
     padding: .5em 3em;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-weight: 600;
 }
 
 a {
@@ -31,7 +29,12 @@ a {
 }
 
 nav h1 {
-    margin: 0;
+    margin: 0 1em 0 0;
+    font-weight: 600;
+}
+
+nav form {
+    margin-left: auto;
 }
 
 .row {

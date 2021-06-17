@@ -9,7 +9,8 @@
 <body>
     <div id="app">
         <nav>
-            <h1><router-link to="/" class="brand">PrivacyTube</router-link></h1>
+            <h1><router-link to="/">PrivacyTube</router-link></h1>
+            <router-link to="/instanceSelection">Select instance</router-link>
             <form class="menu" @submit.prevent="$router.push('/search?q=' + search_term)">
                 <input type="search" placeholder="Search" v-model="search_term">
             </form>
@@ -60,6 +61,18 @@
             </div>
         </main>
         <loading v-else></loading>
+    </script>
+    <script type="text/x-template" id="instanceSelection">
+        <main>
+            <h2>Select an instance</h2>
+            <p>
+                <select v-model="$localStorage.instance">
+                    <option>Auto</option>
+                    <option v-for="instance in $root.instances">{{instance}}</option>
+                </select>
+            </p>
+            <router-link to="/">Go to Home</router-link>
+        </main>
     </script>
     <script type="text/x-template" id="subscribe">
         <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>

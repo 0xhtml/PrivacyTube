@@ -86,6 +86,9 @@ new Vue({
                         ]).then(res => res.flat().filter(i => i.type == "channel"));
                     }
                 }
+            }},
+            {path: "/instanceSelection", component: {
+                template: "#instanceSelection"
             }}
         ]
     }),
@@ -93,6 +96,10 @@ new Vue({
         subscriptions: {
             type: Array,
             default: []
+        },
+        instance: {
+            type: String,
+            default: "Auto"
         }
     },
     methods: {
@@ -100,11 +107,17 @@ new Vue({
             if (url in this.cache) return Promise.resolve(this.cache[url]);
             if (this.instances.length == 0) return Promise.resolve([]);
 
-            const i = Math.floor((Math.random() * this.instances.length));
+            let instance = this.$localStorage["instance"];
+
+            if (instance == "Auto") {
+                const i = Math.floor((Math.random() * this.instances.length));
+                instance = this.instances[i];
+            }
+
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 2000);
 
-            return fetch("https://" + this.instances[i] + "/api/v1/" + url, {signal: controller.signal})
+            return fetch("https://" + instance + "/api/v1/" + url, {signal: controller.signal})
                 .then(res => {
                     clearTimeout(timeout);
                     if (res.status != 200) throw "err";
@@ -117,7 +130,11 @@ new Vue({
                 })
                 .catch(err => {
                     clearTimeout(timeout);
-                    return this.api(url);
+                    if (this.$localStorage["instance"] == "Auto") {
+                        return this.api(url);
+                    } else {
+                        this.$router.push("/instanceSelection");
+                    }
                 });
         }
     }
