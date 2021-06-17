@@ -11,7 +11,7 @@
         <nav>
             <h1><router-link to="/">PrivacyTube</router-link></h1>
             <router-link to="/instanceSelection">Select instance</router-link>
-            <form class="menu" @submit.prevent="$router.push('/search?q=' + search_term)">
+            <form class="menu" @submit.prevent="$router.push('/search?q=' + search_term); search_term=''">
                 <input type="search" placeholder="Search" v-model="search_term">
             </form>
         </nav>
