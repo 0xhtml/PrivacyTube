@@ -10,87 +10,17 @@
     <div id="app">
         <nav>
             <h1><router-link to="/">PrivacyTube</router-link></h1>
-            <router-link to="/instanceSelection">Select instance</router-link>
-            <form class="menu" @submit.prevent="$router.push('/search?q=' + search_term); search_term=''">
+            <form @submit.prevent="$router.push('/search?q=' + search_term)">
                 <input type="search" placeholder="Search" v-model="search_term">
             </form>
         </nav>
-        <router-view v-if="instances !== null"></router-view>
-        <loading v-else></loading>
+
+        <main v-if="instances === null"><p>Loading instances...</p></main>
+        <router-view v-else></router-view>
     </div>
 
-    <script type="text/x-template" id="index">
-        <main v-if="videos !== null">
-            <h2>Subscriptions</h2>
-            <div v-if="videos.length > 0" class="row">
-                <router-link v-for="video in videos" v-bind:key="video.videoId" v-bind:to="'./watch?v=' + video.videoId" v-bind:title="video.title">
-                    <vue-img v-bind:sources="video.videoThumbnails" width="10"></vue-img>
-                    <h3>{{video.title}}</h3>
-                    <p>{{video.author}}</p>
-                </router-link>
-            </div>
-            <p v-else-if="$localStorage.subscriptions.length > 0">No videos available</p>
-            <p v-else>You aren&apos;t subscribed to any channels. You can search for a channel to subscribe to it.</p>
-        </main>
-        <loading v-else></loading>
-    </script>
-    <script type="text/x-template" id="watch">
-        <main v-if="video !== null">
-            <video controls>
-                <source v-for="src in video.formatStreams" v-bind:src="src.url">
-            </video>
-            <h2>{{video.title}}</h2>
-            <hr>
-            <vue-img v-bind:sources="video.authorThumbnails" width="5"></vue-img>
-            <p>{{video.author}}<br>Uploaded {{video.publishedText}}</p>
-            <subscribe class="fifth" v-bind:channel="video.authorId"></subscribe>
-            <hr>
-            <p v-html="video.descriptionHtml"></p>
-        </main>
-        <loading v-else></loading>
-    </script>
-    <script type="text/x-template" id="search">
-        <main v-if="search !== null">
-            <h2>Search results for {{$route.query.q}}</h2>
-            <div class="row">
-                <div v-for="channel in search">
-                    <vue-img v-bind:sources="channel.authorThumbnails" width="10"></vue-img>
-                    <h3>{{channel.author}}</h3>
-                    <subscribe v-bind:channel="channel.authorId"></subscribe>
-                </div>
-            </div>
-        </main>
-        <loading v-else></loading>
-    </script>
-    <script type="text/x-template" id="instanceSelection">
-        <main>
-            <h2>Select an instance</h2>
-            <p>
-                <select v-model="$localStorage.instance">
-                    <option>Auto</option>
-                    <option v-for="instance in $root.instances">{{instance}}</option>
-                </select>
-            </p>
-            <router-link to="/">Go to Home</router-link>
-        </main>
-    </script>
-    <script type="text/x-template" id="subscribe">
-        <button v-if="$localStorage.subscriptions.includes(channel)" v-on:click="subscriptions('pop')" class="pseudo">Unsubscribe</button>
-        <button v-else v-on:click="subscriptions('push')">Subscribe</button>
-    </script>
-    <script type="text/x-template" id="img">
-         <img v-bind:src="calc()">
-    </script>
-    <script type="text/x-template" id="loading">
-        <main>
-            <p>Loading...</p>
-        </main>
-    </script>
-
-    <script src="https://unpkg.com/vue@2.6.12/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.min.js"></script>
-    <script src="https://unpkg.com/vue-localstorage@0.6.2/dist/vue-local-storage.min.js"></script>
-    <script src="https://unpkg.com/vue-async-computed@3.9.0/dist/vue-async-computed.js"></script>
-    <script src="js/main.js"></script>
+    <script src="https://unpkg.com/vue@3.2.29/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4.0.5/dist/vue-router.global.js"></script>
+    <script src="js/app.js" type="module"></script>
 </body>
 </html>

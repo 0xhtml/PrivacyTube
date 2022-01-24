@@ -59,3 +59,7 @@ hr {
     border-color: #dbdbdb;
     max-width: 20em;
 }
+
+video {
+    width: 100%;
+}
