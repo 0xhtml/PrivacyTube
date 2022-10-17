@@ -7,7 +7,7 @@ export default {
             <h2>Search results for {{$route.query.q}}</h2>
             <div v-if="results.length > 0" class="row">
                 <div v-for="channel in results">
-                    <vue-img :sources="channel.authorThumbnails" :width="10"></vue-img>
+                    <vue-img :sources="channel.authorThumbnails" :width="12"></vue-img>
                     <h3>{{channel.author}}</h3>
                     <subscribe :channel="channel.authorId"></subscribe>
                 </div>

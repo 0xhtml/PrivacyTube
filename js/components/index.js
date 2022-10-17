@@ -7,7 +7,7 @@ export default {
             <h2>Subscriptions</h2>
             <div v-if="videos.length > 0" class="row">
                 <router-link v-for="video in videos" :key="video.videoId" :to="'./watch?v=' + video.videoId" :title="video.title">
-                    <vue-img :sources="video.videoThumbnails" :width="10"></vue-img>
+                    <vue-img :sources="video.videoThumbnails" :width="12"></vue-img>
                     <h3>{{video.title}}</h3>
                     <p>{{video.author}}</p>
                 </router-link>

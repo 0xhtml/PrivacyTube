@@ -45,7 +45,7 @@ nav form {
 }
 
 .row div, .row a {
-    width: 10em;
+    width: 12em;
     margin: 0 .5em 2em;
     padding: 0 0 1em;
     box-shadow: 0 5px 15px rgba(0,0,0,.1);
@@ -53,6 +53,13 @@ nav form {
 
 .row img {
     width: 100%;
+}
+
+.row h3, .row p {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    overflow: hidden;
 }
 
 hr {
