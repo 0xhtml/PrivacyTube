@@ -30,6 +30,11 @@ export default {
         ).then(res => res
             .flatMap(i => i.latestVideos)
             .sort((a, b) => b.published - a.published)
+            .map(vid => Object.assign(vid, {
+                videoThumbnails: vid.videoThumbnails.map(thumb => Object.assign(thumb, {
+                    url: thumb.url.replace(/^https?:\/\/[^\/]*/, "https://i.ytimg.com")
+                }))
+            }))
         ).then(res => this.videos = res);
     }
 };

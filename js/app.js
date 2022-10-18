@@ -18,7 +18,7 @@ const app = Vue.createApp({
             .then(res => this.instances = res);
     },
     methods: {
-        api (url) {
+        api(url) {
             if (this.instances === null) return null;
             if (this.instances.length == 0) return null;
 
@@ -53,23 +53,16 @@ app.use(router);
 
 app.component("vue-img", {
     template: `
-         <img :src="calc()">
+        <img :src="src.url">
     `,
     props: {
         sources: Array,
         width: Number
     },
-    methods: {
-        calc() {
-            const width = this.width * window.getComputedStyle(document.body).getPropertyValue("font-size").match(/\d+/)[0];
-            const sources = this.sources.concat().sort((a, b) => a.width - b.width)
-            for (const source of sources) {
-                if (source.width > width && !["start", "middle", "end"].includes(source.quality)) {
-                    return source.url;
-                }
-            }
-            return "https://dummyimage.com/" + width + "x" + Math.round(width * 9/16) + "&text=Thumbnail+Not+Found";
-        }
+    created() {
+        const width = this.width * window.getComputedStyle(document.body).getPropertyValue("font-size").match(/\d+/)[0];
+        const sources = this.sources.filter(src => !["start", "middle", "end"].includes(src.quality));
+        this.src = sources.sort((a, b) => a.width - b.width).find(src => src.width >= width) || sources.at(-1);
     }
 });
 
