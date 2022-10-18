@@ -12,8 +12,10 @@ const app = Vue.createApp({
         fetch("https://api.invidious.io/instances.json")
             .then(res => res.json())
             .then(res => res
-                .map(item => item[0])
-                .filter(item => !item.endsWith(".onion") && !item.endsWith(".i2p"))
+                .map(item => item[1])
+                .filter(item => item.type == "https" && item.cors && item.api)
+                .sort(() => Math.random() - .5)
+                .map(item => item.uri)
             )
             .then(res => this.instances = res);
     },
@@ -28,19 +30,20 @@ const app = Vue.createApp({
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 2000);
 
-            return fetch("https://" + instance + "/api/v1/" + url, {signal: controller.signal})
+            return fetch(instance + "/api/v1/" + url, {signal: controller.signal})
                 .then(res => {
                     clearTimeout(timeout);
-                    if (res.status != 200) throw "err";
+                    if (res.status < 200 || res.status >= 300) throw "not 2xx";
                     return res.json();
                 })
                 .then(res => {
-                    if (Array.isArray(res) && res.length == 0) throw "err";
+                    if (Array.isArray(res) && res.length == 0) throw "empty result";
                     this.cache[url] = res;
                     return res;
                 })
                 .catch(err => {
                     clearTimeout(timeout);
+                    console.log(instance, err);
                     this.instances.splice(this.instances.indexOf(instance), 1);
                     this.instances.push(instance);
                     return this.api(url);
