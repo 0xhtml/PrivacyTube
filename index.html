@@ -10,8 +10,8 @@
     <div id="app">
         <nav>
             <h1><router-link to="/">PrivacyTube</router-link></h1>
-            <form @submit.prevent="$router.push('/search?q=' + search_term)">
-                <input type="search" placeholder="Search" v-model="search_term">
+            <form @submit.prevent="$router.push({path: '/search', query: {q}})">
+                <input type="search" placeholder="Search" v-model="q">
             </form>
         </nav>
 
@@ -20,7 +20,7 @@
     </div>
 
     <script src="https://unpkg.com/vue@3.2.29/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/vue-router@4.0.5/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4.1.5/dist/vue-router.global.js"></script>
     <script src="js/app.js" type="module"></script>
 </body>
 </html>

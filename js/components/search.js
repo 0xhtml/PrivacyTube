@@ -23,9 +23,14 @@ export default {
             results: null
         }
     },
-    mounted() {
-        this.$root.api("search/?type=all&q=" + this.$route.query.q)
+    beforeRouteUpdate(to, from) {
+        this.results = null;
+        this.$options.mounted.call(this, to.query.q);
+    },
+    mounted(q) {
+        if (typeof q === "undefined") q = this.$route.query.q;
+        this.$root.api("search/?type=all&q=" + q)
             .then(res => res.filter(i => i.type == "channel"))
-            .then(res => this.results = res)
+            .then(res => this.results = res);
     }
 };

@@ -4,7 +4,7 @@ const app = Vue.createApp({
     data() {
         return {
             instances: null,
-            search_term: "",
+            q: "",
             cache: {}
         }
     },
